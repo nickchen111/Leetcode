@@ -1,10 +1,8 @@
-# binary_search_tree
+/*
+二叉搜索樹的增刪查code
+*/
 
-
-二叉搜尋樹的增刪查改：
-
-
-增： 插入一個數
+//增： 插入一個數
 TreeNode* insertIntoBST(TreeNode* root, int val) {
     // 找到空位置插入新节点
     if (root == nullptr) return new TreeNode(val);
@@ -17,7 +15,7 @@ TreeNode* insertIntoBST(TreeNode* root, int val) {
     return root;
 }
 
-刪：
+//刪：
 // 在 BST 中删除节点
 TreeNode deleteNode(TreeNode root, int key) {
     // 当根节点为空，则直接返回 null
@@ -48,7 +46,7 @@ TreeNode getMin(TreeNode node) {
     return node;
 }
 
-查：
+//查：
 TreeNode* searchBST(TreeNode* root, int target) {
     if (root == nullptr) {
         return nullptr;
