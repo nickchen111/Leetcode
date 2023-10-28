@@ -2,52 +2,44 @@
 886. Possible Bipartition
 */
 
+//DFS TC:O(V+E) SC:O(V)
 class Solution {
-    //dfs
-public:
-    vector<bool> color;
+    bool flag = true;
     vector<bool> visited;
-    bool ok = true;
+    vector<bool> color;
+public:
     bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
-        color.resize(n + 1);
-        visited.resize(n + 1);
-        vector<vector<int>> graph = vector<vector<int>>(n+1);
-        graph = buildgraph(n, dislikes);
+        //DFS
+        //先建個鄰接表 某某不喜歡的人都加一加
+        vector<vector<int>> graph(n+1);
+        visited = vector<bool>(n+1,0);
+        color = vector<bool>(n+1);
+        
+        for(int i = 0; i<dislikes.size(); i++){
+            graph[dislikes[i][0]].push_back(dislikes[i][1]);
+            graph[dislikes[i][1]].push_back(dislikes[i][0]);
+        }
 
         for(int i = 1; i<=n; i++){
-            if(!visited[i]){
-                traverse(graph, i);
-            }
+            if(visited[i]) continue;
+            DFS(graph, i);
         }
 
-        return ok;
+        return flag;
     }
-    vector<vector<int>> buildgraph(int n, vector<vector<int>>& dislikes){
-        vector<vector<int>> graph(n+1, vector<int>());
+    void DFS(vector<vector<int>>& graph, int cur){
+        if(flag == false) return;
 
-        for(auto edge:dislikes){
-            int v = edge[1];
-            int w = edge[0];
-            //無向圖相當於雙向圖
-
-            graph[v].push_back(w);
-            graph[w].push_back(v);
-        }
-
-        return graph;
-    }
-    void traverse(vector<vector<int>>& graph, int v){
-        if(!ok) return;
-        visited[v] = true;
-        for(auto w: graph[v]){//dfs
-            if(!visited[w]){//如果沒有遍歷過
-                visited[w] = true; //改成遍歷過了
-                color[w] = !color[v];//兩色問題 鄰居顏色不同
-                traverse(graph, w);
+        visited[cur] = true;
+        for(auto neighbor:graph[cur]){
+            if(!visited[neighbor]){
+                color[neighbor] = !color[cur];
+                visited[neighbor] = true;
+                DFS(graph,neighbor);
             }
-            else{
-                if(color[v] == color[w]){
-                    ok = false;
+            else {
+                if(color[cur] == color[neighbor]){
+                    flag = false;
                     return;
                 }
             }
@@ -55,6 +47,7 @@ public:
     }
 };
 
+// BFS:TC:O(V+E) SC:O(V)
 class Solution {
     //bfs
 public:
