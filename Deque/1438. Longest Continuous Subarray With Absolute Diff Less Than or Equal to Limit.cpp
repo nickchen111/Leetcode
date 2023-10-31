@@ -26,7 +26,7 @@ public:
     }
 };
 
-// Deque  TC:O(n) SC:O(n)
+// Deque  TC:O(n) SC:O(n) 固定右端點寫法
 class Solution {
 public:
     int longestSubarray(vector<int>& nums, int limit) {
@@ -67,6 +67,43 @@ public:
                 qmin.pop_front();
                 mn = nums[qmin.front()];
             }
+        }
+
+        return res;
+    }
+};
+
+
+// Deque 固定左端點 個人覺得比較直觀
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums, int limit) {
+        int n = nums.size();
+        int res = 0;
+        //滑動窗口紀錄最大最小值
+        deque<int> qmax;
+        deque<int> qmin;
+
+        int i = 0;
+        for(int j = 0; j < n; j++){
+            while(!qmax.empty() && nums[qmax.back()] <= nums[j]){
+                qmax.pop_back();
+            }
+
+            while(!qmin.empty() && nums[qmin.back()] >= nums[j]){
+                qmin.pop_back();
+            }
+
+            qmax.push_back(j);
+            qmin.push_back(j);
+
+            while(!qmax.empty() && !qmin.empty() && nums[qmax.front()] - nums[qmin.front()] > limit){
+                if(!qmax.empty() &&qmax.front() <= i) qmax.pop_front();
+                if(!qmin.empty() && qmin.front() <= i) qmin.pop_front();
+                i++;
+            }
+            if(i == n) break;
+            res = max(res, j-i+1);
         }
 
         return res;
