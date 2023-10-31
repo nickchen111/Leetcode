@@ -43,6 +43,54 @@ public:
     }
 };
 
+// no two pointer 
+class Solution {
+public:
+    string reverseWords(string s) {
+        //將字串分割存取然後拼接
+        vector<string> temp;
+        string res="";
+        int n = s.size();
+        //先將頭尾的空格去掉
+        int index = 0;
+        for(int i = 0; i<n; i++){
+            if(s[i] != ' '){
+                index = i;
+                break;
+            }
+        }
+
+        s =s.substr(index);
+        while(s.back() == ' '){
+            s.pop_back();
+        }
+
+        n = s.size();
+        string cur;
+        for(int i = 0; i<n; i++){
+            if(s[i] != ' '){
+                cur.push_back(s[i]);
+            }
+            else{
+                if(s[i+1] != ' '){
+                    temp.push_back(cur);
+                    cur.clear();
+                }
+                else continue;
+            }
+        }
+
+        temp.push_back(cur);
+
+        for(int i = temp.size()-1; i>=0; i--){
+            res+=temp[i]+" ";
+        }
+        res.pop_back();
+        
+        return res;
+    }
+};
+
 /*
 分三段處理
 1.找到非空白的頭尾段
