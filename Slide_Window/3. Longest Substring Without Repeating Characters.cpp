@@ -26,32 +26,28 @@ public:
     }
 };
 
-
-//自己寫的答案 太冗長了 可以寫得更乾淨
+// 11/1
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
-       int left = 0;
-       int count = 1;
-       int ans = 1;
-       int j = 0;
-       int i = 1;
-       int n = s.length();
-       unordered_set<char> set = {s[0]};
-       while(i < n && j < n){
-           if(set.find(s[i]) == set.end()){
-           set.insert(s[i++]);
-           count++;
-           ans = max(ans, count);
-           }
-           if(set.find(s[i]) != set.end()){
-               set.erase(s[j++]);
-               count--;
-           }
-       }
-       return ans;
+        int n = s.size();
+        int i = 0;
+        int res = 0;
+        unordered_map<char,int> map;
+        for(int j=0; j<n; j++){
+            while(map[s[j]] > 0){
+                map[s[i]]-=1;
+                i++;
+            }
+            res = max(res, j-i+1);
+            map[s[j]]+=1;
+        }
+
+        return res;
     }
 };
+
+
 
 //slide window 直接將two pointer當作count 不用另外多設一個count time:o(n) space: o(n)
 class Solution1 {
