@@ -2,11 +2,6 @@
 344. Reverse String
 */
 
-
-#include <iostream>
-#include <string>
-using namespace std;
-
 class Solution {
 public:
     void reverseString(vector<char>& s) {
