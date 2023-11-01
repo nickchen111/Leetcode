@@ -2,23 +2,33 @@
 19. Remove Nth Node From End of List
 */
 
+// 11/1 TC:O(n) SC:O(1)
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        //倒數第n個也就是在多走n步就會出界 要找到倒數n+1個
+        //這題就是讓p1跟p2永遠差n的距離 當p1到頭 p2就會是倒數n個
+        ListNode* dummy = new ListNode(-1);
+        dummy->next = head;
 
-#include <iostream>
-#include <queue>
-using namespace std;
+        ListNode* p1 = dummy;
+        for(int i = 0; i<n+1; i++){
+            p1 = p1->next;
+        }
+        ListNode* p2 = dummy;
+        while(p1 != NULL){
+            p1 = p1->next;
+            p2 = p2->next;
+        }
 
-//Definition for singly-linked list.
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode() : val(0), next(nullptr) {}
-    ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
+        //此時p2就會是倒數n+1個
+        p2->next = p2->next->next;
+        return dummy->next;
+    }
 };
 
-
 // 此題是想讓你將一串linked list裡面的倒數第n個元素給刪掉
-//tc: o(n) sc:o(1)
+//TC:O(n) SC:O(1)
 class Solution {
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
