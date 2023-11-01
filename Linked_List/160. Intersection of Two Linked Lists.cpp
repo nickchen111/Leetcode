@@ -2,20 +2,9 @@
 160. Intersection of Two Linked Lists
 */
 
-#include <iostream>
-#include <unordered_map>
-using namespace std;
-
-//Definition for singly-linked list.
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
 
 
-//使用two pointer方式
-// tc: o(n+k) n為heada長度 k為headb長度 sc:o(1)
+// Two pointer TC:O(n+k) n為headA長度 k為headB長度 SC:O(1)
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
@@ -32,7 +21,7 @@ public:
     }
 };
 
-// 使用hash table tc: o(m+n) sc: o(m)
+// hash table TC:O(m+n) SC:O(m)
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
