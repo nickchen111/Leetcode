@@ -25,40 +25,40 @@ public:
     }
 };
 
-//slide window tc: o(n) sc:o(k)
+//slide window TC:O(n) SC::O(k) k種字母
 class Solution {
 public:
     bool checkInclusion(string s1, string s2) {
-        int left = 0, right = 0;
-        unordered_map<char, int> need, window;
+        int n = s1.size(); int m = s2.size();
+        unordered_map<char,int> need,window;
+        for(auto s:s1){
+            need[s]+=1;
+        }
+
+        int left = 0;
+        int right = 0;
         int valid = 0;
-        for(char c:s1){
-            need[c]++;
-        }
-
-        while(right < s2.size()){
-            char s = s2[right];
+        while(right < m){
+            char d = s2[right];
             right++;
-            if(need.count(s)){
-                window[s]++;
-                if(window[s] == need[s]){
-                    valid++;
+            if(need.count(d)){
+                window[d]+=1;
+                if(window[d] == need[d]){
+                    valid+=1;
                 }
             }
 
-            while(right - left >=s1.size()){//這裡也可寫成if畢竟是不變大小的窗口
+            while(right-left>=n){
                 if(valid == need.size()) return true;
-
-                char d = s2[left];
-                left++;
-                if(need.count(d)){
-                    if(window[d] == need[d]){
-                        valid--;
-                    }
-                    window[d]--;
+                char c = s2[left];
+                left+=1;
+                if(need.count(c)){
+                    if(window[c] == need[c]) valid-=1;
+                    window[c]-=1;
                 }
             }
         }
+
         return false;
     }
 };
