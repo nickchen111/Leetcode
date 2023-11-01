@@ -3,7 +3,7 @@
 */
 
 
-//求最長回文串問題  tc: o(2* n^2) sc: o(n) 
+//求最長回文串問題 TC:O(2* n^2) SC:O(n) 
 class Solution {
 public:
     string longestPalindrome(string s) {
