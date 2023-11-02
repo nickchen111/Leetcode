@@ -2,6 +2,34 @@
 496. Next Greater Element I
 */
 
+// TC: O(n+m) SC: O(n+m) 11/2
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        int m = nums1.size(); int n = nums2.size();
+        stack<int> s;//單調遞減一但遇到比他高的當下index下一個元素就是他
+        unordered_map<int,int> index;
+        vector<int> nxt(n,-1);
+        for(int i = 0; i<n; i++){
+            index[nums2[i]] = i;
+            while(!s.empty() && nums2[s.top()] < nums2[i]){
+                nxt[s.top()] = nums2[i];
+                s.pop();
+            }
+            s.push(i);
+        }
+
+        vector<int> res;
+        for(int i = 0; i<m; i++){
+            int num = nums1[i];
+            int idx = index[nums1[i]];//nums2所在的index
+            res.push_back(nxt[idx]);
+        }
+
+        return res;
+    }
+};
+
 class Solution {
 public:
     vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
