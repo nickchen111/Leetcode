@@ -2,6 +2,26 @@
 503. Next Greater Element II
 */
 
+// TC : O(2n) SC: O(n) 11/2
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        //變成考環形數組    
+        stack<int> s;
+        int n = nums.size();
+        vector<int> res(n,-1);
+        for(int i = 0; i<2*n; i++){
+            while(!s.empty() && nums[s.top()%n] < nums[i%n]){
+                res[s.top()%n] = nums[i%n];
+                s.pop();
+            }
+            s.push(i);
+        }
+
+        return res;
+    }
+};
+
 class Solution {
 public:
     vector<int> nextGreaterElements(vector<int>& nums) {
