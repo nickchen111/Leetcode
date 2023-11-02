@@ -2,6 +2,42 @@
 71. Simplify Path
 */
 
+// TC:O(n) SC:O(n) 11/2
+class Solution {
+public:
+    string simplifyPath(string path) {
+        stack<string> s;
+        string res;
+        for(int i = 0; i<path.size(); i++){
+            if(path[i] == '/') continue;
+            string temp;
+            while(i < path.size() && path[i] != '/'){
+                temp+=path[i];
+                i++;
+            }
+
+            if(temp == ".."){
+                if(!s.empty()){
+                    s.pop();
+                }
+                else continue;
+            }
+
+            else if(temp == ".") continue;
+
+            else s.push(temp);
+        }
+
+        while(!s.empty()){
+            res = "/" + s.top() + res;
+            s.pop();
+        }
+
+        if(res.size() == 0) return "/";
+        return res;
+    }
+};
+
 // TC:O(n) SC:O(n)
 class Solution {
 public:
