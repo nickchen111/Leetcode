@@ -1,8 +1,41 @@
 /*
 402. Remove K Digits
-
 */
 
+// TC:O(n) SC:O(n)
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        int n = num.size();
+        stack<int> s;
+        int count = 0;
+        string res;
+        for(int i = 0; i<n; i++){
+            while(!s.empty() && num[s.top()] > num[i] && count < k){
+                count+=1;
+                res.pop_back();
+                s.pop();
+            }
+            
+            res+=num[i];
+            s.push(i);
+        }
+
+        while(count < k){
+            res.pop_back();
+            count+=1;
+        }
+
+        while(res[0] == '0'){
+            res = res.substr(1);
+        }
+
+        return res == "" ? "0":res;
+    }
+};
+
+
+// TC: O(n+ nlgn) SC:O(n)
 class Solution {
 public:
     string removeKdigits(string num, int k) {
