@@ -2,10 +2,45 @@
 451. Sort Characters By Frequency
 */
 
+// TC:O(nlgn) SC:O(n) 11/3
+class Solution {
+public:
+    string frequencySort(string s) {
+        unordered_map<char,int> map;
+        for(auto ch:s){
+            map[ch]+=1;
+        }
+
+        auto cmp = [](pair<int,char>& a, pair<int,char>& b){
+            if(a.first != b.first){
+                return a.first < b.first;
+            }
+            else return a.second > b.second;
+        };
+
+        priority_queue<pair<int,char>, vector<pair<int,char>>, decltype(cmp)> pq;
+
+        for(auto p:map){
+            pq.push({p.second,p.first});
+        }
+
+        string res;
+        while(!pq.empty()){
+            auto cur = pq.top();
+            int freq = cur.first;
+            while(freq > 0){
+                res.push_back(cur.second);
+                freq-=1;
+            }
+            pq.pop();
+        }
+
+        return res;
+    }
+};
+
 //"tc: o(nlgn) sc: o(n) 但如果是在頻率一樣的字很多的時候 用string(3, 'a')這種操作可以大幅降低時間複雜度"
 // pq+hash table 但沒有用string(3, 'a');
-
-
 class Solution {
 public:
     string frequencySort(string s) {
@@ -64,10 +99,8 @@ public:
     }
 };
 
-//加上string 操作
-
+//加上string 操作 labuladong
 class Solution {
-    //la大
 public:
     string frequencySort(string s) {
         vector<char> chars(s.begin(), s.end());
