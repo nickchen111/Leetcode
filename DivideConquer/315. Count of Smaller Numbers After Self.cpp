@@ -2,8 +2,63 @@
 315. Count of Smaller Numbers After Self
 */
 
+// TC:O(nlgnlgn) SC:O(n)
+class Solution {
+    vector<int> res;
+    int temp[100002];
+public:
+    vector<int> countSmaller(vector<int>& nums) {
+        int n = nums.size();
+        res.resize(n);
+        auto sorted = nums;
+        DivideConquer(nums,sorted,0,n-1);//放的是index
+        return res;
+    }
 
-//
+    void DivideConquer(vector<int>& nums,vector<int>& sorted, int a, int b){
+        if(a >= b) return;
+        int mid = a+(b-a)/2;
+        DivideConquer(nums,sorted,a,mid);
+        DivideConquer(nums,sorted,mid+1,b);
+
+        for(int i = a; i<=mid; i++){
+            //這裡體現出為何要創sorted 因為要找的nums[i]位置不能被改變  
+            auto x = lower_bound(sorted.begin()+mid+1, sorted.begin()+b+1, nums[i]);
+            res[i]+=(x-(sorted.begin()+mid+1));
+        }
+
+        int i = a; int j = mid+1; int p = 0;
+        while( i <= mid && j <= b){
+            if(sorted[i] > sorted[j]){
+                temp[p] = sorted[j];
+                j++;
+            }
+            else{
+                temp[p] = sorted[i];
+                i++;
+            }
+            p++;
+        }
+
+        while(i<=mid){
+            temp[p] = sorted[i];
+            i++;
+            p++;
+        }
+        while(j<=b){
+            temp[p] = sorted[j];
+            j++;
+            p++;
+        }
+
+        for(int i = 0; i<b-a+1; i++){
+            sorted[i+a] = temp[i];
+        }
+    }
+};
+
+
+// 使用函式
 class Solution {
 public:
     vector<int> countSmaller(vector<int>& nums) {
