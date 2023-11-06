@@ -2,7 +2,7 @@
 327. Count of Range Sum
 */
 
-// TC: O(nlgn) SC:O(n) 11/6
+// TC: O(nlgnlgn) SC:O(n) 11/6 第二個lgn來自upper_bound lower_bound
 class Solution {
     int res = 0;
     long temp[100002];
