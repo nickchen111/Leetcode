@@ -2,7 +2,7 @@
 303. Range Sum Query - Immutable
 */
 
-
+//TC: O(n) SC:O(n)
 class NumArray {
 vector<int> presum;
 public:
@@ -20,11 +20,6 @@ public:
     }
 };
 
-/**
- * Your NumArray object will be instantiated and called as such:
- * NumArray* obj = new NumArray(nums);
- * int param_1 = obj->sumRange(left,right);
- */
 
  /*
  此題為前綴和相關題 
