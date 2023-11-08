@@ -2,7 +2,7 @@
 901. Online Stock Span
 */
 
-// TC:O(n) SC:O(n)
+// TC:O(n) 均攤下來會是O(1) SC:O(n)
 class StockSpanner {
     vector<int> arr;
     stack<int> s;
