@@ -24,8 +24,8 @@ public:
         while(i < str.size()){
             //找到每次/出現的位置 一個/ 對應一個字串
             int found = str.find("/",i);
-            int len = stoi(s.substr(i,found-i));
-            string temp = s.substr(found+1,len);
+            int len = stoi(str.substr(i,found-i));
+            string temp = str.substr(found+1,len);
             res.push_back(temp);
             i = found+1+len;
         }
