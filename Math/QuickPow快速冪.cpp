@@ -8,9 +8,9 @@ public:
         }
         LL y = quickMul(x, n / 2) % M;
         if(n%2){
-          return y*y*x;
+          return (y*y%M)*(x%M);
         }
-        else return y*y;
+        else return y*y%M;
     }
 
     double quickMul(double x, long long n) {
