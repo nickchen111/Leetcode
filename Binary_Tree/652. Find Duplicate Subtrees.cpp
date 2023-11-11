@@ -2,18 +2,41 @@
 652. Find Duplicate Subtrees
 */
 
+// TC:O(n) SC:O(n) 11/11
+class Solution {
+    vector<TreeNode*> res;
+    unordered_map<string,int> key2Id;
+    unordered_map<string,int> key2Count;
+public:
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        getId(root);
+        
+        return res;
+    }
+    int getId(TreeNode* root){
+        if(root == NULL) return -1;
+        string key = to_string(root->val)+"#"+ to_string(getId(root->left)) + "#" + to_string(getId(root->right));
+        if(key2Id.find(key) == key2Id.end()){
+            key2Id[key] = key2Id.size();
+            key2Count[key] = 1;
+        }
+        else{
+            key2Count[key]+=1;
+            if(key2Count[key] == 2) res.push_back(root);
+        }
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+        return key2Id[key];
+    }
+};
+
+/*
+這題首先想到要如何快速判別是否存在相同子樹->遍歷 但是如果每個都重投遍歷就會是n方的時間
+需要利用樹的遍歷性質來做 就不用每個點都重複遍歷 
+第二個問題是如果遍歷出來的長度太長 不想拖著這麼長的序列化結果走 ->將他再轉乘獨特的數字
+*/
+
+
+// 
 class Solution {
 public:
     unordered_map<string, int> key2id;
