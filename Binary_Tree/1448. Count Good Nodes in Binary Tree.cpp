@@ -2,6 +2,27 @@
 1448. Count Good Nodes in Binary Tree
 */
 
+// TC:O(n) SC:O(lgn) 11/11
+class Solution {
+    int res = 0;
+public:
+    int goodNodes(TreeNode* root) {
+        //preorder + DFS
+        DFS(root,root->val);
+        return res;
+    }
+
+    void DFS(TreeNode* root,int maxNum){
+        if(root == NULL) return;
+
+        if(root->val >= maxNum) res+=1;
+
+        maxNum = max(maxNum, root->val);
+        DFS(root->left,maxNum);
+        DFS(root->right,maxNum);
+    }
+};
+
  
 // DFS+ max_element  TC:O(n) SC:O(lgn)
 class Solution {
