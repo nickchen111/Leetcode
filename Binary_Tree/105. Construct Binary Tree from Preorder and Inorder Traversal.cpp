@@ -21,7 +21,7 @@ public:
         int idx = map[root_val];//在inorder中的idx在哪
         int leftsize = idx - inStart;
         TreeNode* root = new TreeNode(root_val);
-        root->left = traverse(preorder, preStart+1, preStart+leftsize, inorder, inStart, inStart+idx-1);
+        root->left = traverse(preorder, preStart+1, preStart+leftsize, inorder, inStart, inStart+leftsize-1);
         root->right = traverse(preorder, preStart+1+leftsize,preEnd,inorder,inStart+1+leftsize, inEnd);
 
         return root;
