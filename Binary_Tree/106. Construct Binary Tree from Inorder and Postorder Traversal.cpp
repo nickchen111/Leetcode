@@ -20,7 +20,7 @@ public:
         int idx = map[root_val];//inorder root_index
         int leftsize = idx - inStart;
         TreeNode* root = new TreeNode(root_val);
-        root->left = traverse(inorder, inStart, inStart+leftsize, postorder, poStart, poStart+leftsize-1);
+        root->left = traverse(inorder, inStart, inStart+leftsize-1, postorder, poStart, poStart+leftsize-1);
         root->right = traverse(inorder, inStart+1+leftsize,inEnd, postorder, poStart+leftsize,poEnd-1);
 
         return root;
