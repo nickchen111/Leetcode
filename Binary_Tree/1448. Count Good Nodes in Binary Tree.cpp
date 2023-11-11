@@ -73,3 +73,35 @@ public:
 
     }
 };
+
+//BFS
+class Solution {
+public:
+    int goodNodes(TreeNode* root) {
+        //BFS
+        if(root == NULL) return 0;
+        queue<pair<TreeNode*,int>> q;
+        int maxNum = INT_MIN;
+        q.push({root,maxNum});
+        int res = 0;
+        while(!q.empty()){
+            int sz = q.size();
+            for(int i = 0; i < sz; i++){
+                int num = q.front().second;
+                TreeNode* node = q.front().first;
+                q.pop();
+                if(node->val >= num){
+                    res+=1;
+                    if(node->left) q.push({node->left,node->val});
+                    if(node->right) q.push({node->right,node->val});
+                }
+                else{
+                    if(node->left) q.push({node->left,num});
+                    if(node->right) q.push({node->right,num});
+                }
+            }
+        }
+
+        return res;
+    }
+};
