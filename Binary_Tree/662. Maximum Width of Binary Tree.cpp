@@ -2,18 +2,51 @@
 662. Maximum Width of Binary Tree
 */
 
+// TC:O(n) SC:O(w) 11/12
+class Solution {
+    using LL = long long;
+    long long M = 1e11;
+public:
+    int widthOfBinaryTree(TreeNode* root) {
+        //找出每層最左邊最右邊元素 並且給他標號
+        // BFS
+        if(root == NULL) return 0;
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+        root->val=0;
+        vector<TreeNode*> q;
+        q.push_back(root);
+
+        int res = 0;
+        while(!q.empty()){
+            int sz= q.size();
+            res = max(res,q.back()->val - q[0]->val +1);
+            
+            vector<TreeNode*> p;
+            vector<LL> vals;
+            for(int i =0; i<sz; i++){
+                TreeNode* cur = q[i];
+                if(cur->left) {
+                    p.push_back(cur->left);
+                    vals.push_back((LL)cur->val*2+1);
+                }
+                if(cur->right) {
+                    p.push_back(cur->right);
+                    vals.push_back((LL)cur->val*2+2);
+                }
+            }
+            if(!q.empty()){
+                for(int i = 0; i<p.size(); i++){
+                    p[i]->val = (int)(vals[i]-vals[0]);
+                }
+            }
+            q = p;
+        }
+        
+        return res;
+    }
+};
+
+//
 class Solution {
     struct dataNode{
         TreeNode* node;
