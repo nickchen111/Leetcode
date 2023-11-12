@@ -20,7 +20,7 @@ public:
     }
 };
 
-//dfs概念但不用recursion 直接用stack
+//直接用stack simulate recursion
 class Solution2 {
 public:
     vector<int> inorderTraversal(TreeNode* root) {
