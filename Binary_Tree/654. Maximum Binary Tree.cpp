@@ -2,20 +2,34 @@
 654. Maximum Binary Tree
 */
 
-//Definition for a binary tree node.
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- };
+// TC:O(nlgn) SC:O(n)
+class Solution {
+public:
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        // left root right 
+        return traverse(nums,0,nums.size()-1);
+    }
 
-#include <iostream>
-#include <vector>
-#include <cmath>
-using namespace std;
+    TreeNode* traverse(vector<int>& nums, int left, int right){
+        if(left > right) return NULL; 
+        if(left == right) return new TreeNode(nums[left]);
+        int root_val = -1;
+        int idx = -1;
+        for(int i = left; i<=right; i++){
+            if(nums[i] > root_val){
+                root_val = nums[i];
+                idx = i;
+            }
+        }
+
+        TreeNode* root = new TreeNode(root_val);
+
+        root->left = traverse(nums,left,idx-1);
+        root->right = traverse(nums,idx+1,right);
+
+        return root;
+    }
+};
 
 //此題給你一串數組 說最大值的左邊數組為他的左子樹 右邊為右子樹 要求你重組他們的數組成binary tree的型態
 class Solution {
@@ -40,6 +54,7 @@ public:
         return root;
     }
 };
+
 /*
 解題思路
 此題就是想要你構造出一個二叉樹
