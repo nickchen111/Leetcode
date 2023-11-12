@@ -5,7 +5,6 @@
 // TC:O(n) SC:O(w) 11/12
 class Solution {
     using LL = long long;
-    long long M = 1e11;
 public:
     int widthOfBinaryTree(TreeNode* root) {
         //找出每層最左邊最右邊元素 並且給他標號
