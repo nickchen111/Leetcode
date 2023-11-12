@@ -2,9 +2,6 @@
 637. Average of Levels in Binary Tree
 */
 
-//此題要去計算每一層的總和平均值
-//人生好難
-//binary tree 題型 可用bfs or dfs
 
 //BFS TC:(n) SC:O(w)
 class Solution {
