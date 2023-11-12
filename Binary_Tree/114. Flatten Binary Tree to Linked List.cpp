@@ -2,6 +2,32 @@
 114. Flatten Binary Tree to Linked List
 */
 
+// 11/12
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        if(root == NULL) return;
+        //左邊已經是空
+        if(root->left == NULL){
+            flatten(root->right);
+            return;
+        }
+        //左邊鍊子頭跟右邊鍊子頭先保存起來
+        TreeNode* l = root->left;
+        TreeNode* r = root->right;
+
+        //左邊不為空 右邊為空不違法
+        flatten(root->left);
+        flatten(root->right);
+
+        root->right = l;
+        root->left = NULL;
+        while(l->right != NULL){
+            l = l->right;
+        }
+        l->right = r;
+    }
+};
 
 class Solution {
 public:
