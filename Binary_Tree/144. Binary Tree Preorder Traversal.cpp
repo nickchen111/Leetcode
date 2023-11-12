@@ -2,18 +2,31 @@
 144. Binary Tree Preorder Traversal
 */
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+// Stack to simulate recursion TC:O(n) SC:O(n)
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> stack;
 
+        TreeNode* cur = root;
+        while(!stack.empty() || cur != NULL){
+            while(cur != NULL){
+                res.push_back(cur->val);
+                stack.push(cur);
+                cur = cur->left;
+            }
+            cur = stack.top();
+            stack.pop();
+            cur = cur->right;
+        }
+
+        return res;
+    }
+};
+
+
+// 分解問題 
 class Solution {
     //分解問題算法
 public:
@@ -31,21 +44,21 @@ public:
     }
 };
 
+// DFS TC:O(n) SC:O(lgn)
 class Solution {
-    //遍歷 回溯算法
-    vector<int> ans;
+    vector<int> res;
 public:
     vector<int> preorderTraversal(TreeNode* root) {
-        traverse(root);
+        //DFS
+        DFS(root);
 
-        return ans;
+        return res;
     }
+    void DFS(TreeNode* root){
+        if(root == NULL) return;
 
-    void traverse(TreeNode* root){
-        
-        if(root == nullptr) return;
-        ans.push_back(root->val);
-        traverse(root->left);
-        traverse(root->right);
+        res.push_back(root->val);
+        DFS(root->left);
+        DFS(root->right);
     }
 };
