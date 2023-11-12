@@ -2,7 +2,38 @@
 116. Populating Next Right Pointers in Each Node
 */
 
+//BFS  TC:O(n) SC:O(n)
+class Solution {
+public:
+    Node* connect(Node* root) {
+        traverse(root);
 
+        return root;
+    }
+
+    void traverse(Node* root){
+        if(root == NULL) {
+            return;
+        }
+        queue<Node*> q;
+        q.push(root);
+        while(!q.empty()){
+            int sz = q.size();
+            for(int i =0; i<sz; i++){
+                Node* cur = q.front();
+                q.pop();
+                if(i == sz-1) cur->next = NULL;
+                else{
+                    cur->next = q.front();
+                }
+                if(cur->left) q.push(cur->left);
+                if(cur->right) q.push(cur->right);
+            }
+        }
+    }
+};
+
+// DFS TC:O(n) SC:O(lgn)
 class Solution {
 public:
     Node* connect(Node* root) {
@@ -31,5 +62,4 @@ public:
 
 传统的 traverse 函数是遍历二叉树的所有节点，但现在我们想遍历的其实是两个相邻节点之间的「空隙」。
 现在，我们只要实现一个 traverse 函数来遍历这棵三叉树，每个「三叉树节点」需要做的事就是把自己内部的两个二叉树节点穿起来
-tc: o(n) sc: o(lgn)
 */
