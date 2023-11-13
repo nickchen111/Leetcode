@@ -2,7 +2,7 @@
 108. Convert Sorted Array to Binary Search Tree
 */
 
-// Divide and Conquer TC: O(nlgn) SC:O(n)
+// Divide and Conquer TC:O(n) SC:O(lgn) 時間分析 T(N) = 2*T(N/2)+O(1) 如果O(1)為O(n)就變成 nlgn
 class Solution {
 public:
     TreeNode* sortedArrayToBST(vector<int>& nums) {
