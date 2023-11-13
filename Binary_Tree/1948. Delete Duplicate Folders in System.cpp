@@ -2,6 +2,7 @@
 1948. Delete Duplicate Folders in System
 */
 
+// TC:O(n) SC:O(n)
 class Solution {
     struct TreeNode{
         string val;
