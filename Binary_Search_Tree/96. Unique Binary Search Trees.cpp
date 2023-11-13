@@ -2,7 +2,25 @@
 96. Unique Binary Search Trees
 */
 
+// DP
+class Solution {
+public:
+    int numTrees(int n) {
+        //DP
+        vector<int> dp(n+1,0);
+        dp[0] = 1;
+        //計算出有n個節點狀態時可以有多少種組合 所以由小到大
+        for(int i=1; i<=n; i++){
+            for(int k=1; k<=i; k++){
+                dp[i]+= dp[k-1]*dp[i-k];
+            }
+        }
 
+        return dp[n];
+    }
+};
+
+// Backtrack
 class Solution {
 public:
     int memo[20][20] = {0};
@@ -36,5 +54,4 @@ public:
 因為可能會有重複項 所以可以用備忘錄來記取答案 
 1.定義備忘錄數組的大小
 2.建立一個函式來數數 開始遍歷
-tc: o(n^2) sc:o(1)
 */
