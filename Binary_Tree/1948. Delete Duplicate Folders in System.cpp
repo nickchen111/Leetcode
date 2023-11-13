@@ -37,8 +37,8 @@ public:
     }
 
     int getId(TreeNode* node){
-        if (node==NULL)
-            return 0;
+        //if (node==NULL)
+         //   return 0;可不加
         
         string key;
         for (auto x: node->next)
