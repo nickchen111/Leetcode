@@ -2,17 +2,7 @@
 95. Unique Binary Search Trees II
 */
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+// TC SC: O(4^n / n^(3/2))
 class Solution {
 public:
     vector<TreeNode*> generateTrees(int n) {
