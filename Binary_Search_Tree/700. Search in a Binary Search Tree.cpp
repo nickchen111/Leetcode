@@ -2,7 +2,7 @@
 700. Search in a Binary Search Tree
 */
 
-//比較慢
+//Binary Tree寫法比較慢
 class Solution {
 public:
     TreeNode* searchBST(TreeNode* root, int val) {
