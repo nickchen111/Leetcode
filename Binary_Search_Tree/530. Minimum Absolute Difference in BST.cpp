@@ -3,23 +3,7 @@
 */
 
 
-#include <iostream>
-#include <cmath>
-using namespace std;
-
-//Definition for a binary tree node.
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
-
-//此題想求在bst中任意兩個node的最小值 特別需要注意兩個位置！ 往左邊後突然往右變大的值 有可能會跟root產生最小值 or 往右變大時突然往左變小的也是一樣 
-//所以要用inorder的特性去遍歷tree 搭配preva去記錄先前的node 如此才能兼顧到
-//tc: o(n) sc:o(n)
+//TC: o(n) SC:o(h)
 class Solution {
 public:
     int getMinimumDifference(TreeNode* root) {
