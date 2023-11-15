@@ -2,6 +2,38 @@
 332. Reconstruct Itinerary
 */
 
+//改成用queue更容易理解
+class Solution {
+    unordered_map<string, queue<string>> map;
+public:
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        sort(tickets.begin(),tickets.end());
+        for(auto ticket:tickets){
+            map[ticket[0]].push(ticket[1]);
+        }
+
+        return DFS("JFK");
+    }
+
+    vector<string> DFS(string start){
+        vector<vector<string>> path;
+
+        while(map[start].size() > 0){
+            string next = map[start].front();
+            map[start].pop();
+            path.push_back(DFS(next));
+        }
+
+        vector<string> res({start});
+        for(int i = path.size()-1; i>=0; i--){
+            for(auto p:path[i]){
+                res.push_back(p);
+            }
+        }
+
+        return res;
+    }
+};
 
 //構築路徑方式 B + path2 + path1  TC:O(ElgE) SC:O(E)
 class Solution {
