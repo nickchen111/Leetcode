@@ -10,8 +10,7 @@ public:
         //此即分配問題 並且將分配到最多的盡量最小化
         this->k = k;
         int n = cookies.size();
-        sort(cookies.begin(),cookies.end());
-        reverse(cookies.begin(),cookies.end());
+        sort(cookies.rbegin(),cookies.rend());
         int low = cookies[n-1];
         int high = accumulate(cookies.begin(),cookies.end(), 0);
         while(low < high){
