@@ -26,7 +26,7 @@ public:
             auto iter = map.begin();
             // x 的數值
             while(iter != map.end() && iter->first <= a){
-                //在看的數值
+                //在看y的數值
                 set<pair<int,int>>& s = iter->second;//這樣子才不用複製一份並且可提供修改
                 auto iter2 = s.begin();
                 while(iter2 != s.end() && iter2->first <=b){
