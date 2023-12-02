@@ -67,31 +67,34 @@ public:
 class Solution {
 public:
     int beautifulSubsets(vector<int>& nums, int k) {
-        unordered_map<int,int>count;
-        for(auto x:nums){
-            count[x]+=1;
+        // DP
+        int n = nums.size();
+        unordered_map<int,int> count;
+        //先去重
+        for(int i = 0; i<n; i++){
+            count[nums[i]]++;
         }
-        unordered_map<int,vector<pair<int,int>>> map;
-        for(auto [val,freq]:count){
+        unordered_map<int, vector<pair<int,int>>> map; // remainder-> val, freq
+        for(const auto& [val,freq]: count){
             map[val%k].push_back({val,freq});
         }
 
-        int res =1;
-        for(auto [r,arr]:map){
+        int res = 1;
+        for(auto &[r,arr]:map){
             sort(arr.begin(),arr.end());
-            int take = 0, notake = 1;
-            for(int i = 0; i<arr.size(); i++){
-                int take_tmp = take; int notake_tmp = notake;
+            int take = 0, notake = 1;//at first we couldn't take any number->0 / we can take nothing->1
+            for(int i = 0; i < arr.size(); i++){
+                int take_tmp = take, notake_tmp = notake;
                 if(i > 0 && abs(arr[i].first - arr[i-1].first) == k){
-                    take = notake_tmp*(pow(2,arr[i].second)-1);//減一減掉都不取的空集合
-                    notake = (take_tmp+notake_tmp)*1;
+                    take = notake_tmp * (pow(2, arr[i].second)-1);
+                    notake = (take_tmp + notake_tmp)*1;
                 }
-                else{
-                    take = (take_tmp+notake_tmp)*(pow(2,arr[i].second)-1);
-                    notake = (take_tmp+notake_tmp)*1;
+                else {
+                    take = (take_tmp + notake_tmp) * (pow(2, arr[i].second)-1);
+                    notake = (take_tmp + notake_tmp)*1;
                 }
             }
-            res = res*(take+notake);
+            res *= (take+notake);
         }
 
         return res-1;
