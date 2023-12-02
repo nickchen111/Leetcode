@@ -15,7 +15,7 @@ public:
         for(int i = 0; i < cur; i++){
             
             if(((state>>i)&1) && abs(nums[i] - nums[cur]) == k){
-                //用這個方法就不票用排序 直接用狀態來判斷
+                //用這個方法就不用排序 直接用狀態來判斷
                 flag = 0;
                 break;
             }
@@ -40,7 +40,7 @@ public:
         sort(nums.begin(),nums.end());
         backtrack(nums,0);
 
-        return res-1;
+        return res-1;// 因為包含了空集
     }
     
     void backtrack(vector<int>& nums, int cur){
