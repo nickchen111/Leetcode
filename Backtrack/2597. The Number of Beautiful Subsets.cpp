@@ -2,6 +2,31 @@
 2597. The Number of Beautiful Subsets
 */
 
+// 狀態壓縮 Backtrack
+class Solution {
+public:
+    int beautifulSubsets(vector<int>& nums, int k) {
+        return DFS(nums,k, 0, 0)-1;// 因為包含了空集
+    }
+    int DFS(vector<int>& nums, int k, int cur, int state){
+        if(cur == nums.size()) return 1;
+
+        bool flag = 1;
+        for(int i = 0; i < cur; i++){
+            
+            if(((state>>i)&1) && abs(nums[i] - nums[cur]) == k){
+                //用這個方法就不票用排序 直接用狀態來判斷
+                flag = 0;
+                break;
+            }
+        }
+        int take = DFS(nums, k , cur+1, state + (1<<cur));
+        int notake = DFS(nums, k, cur+1, state);
+        if(flag == 0) return notake;
+        else return take + notake;
+    }
+};
+
 // Backtrack+Hash Map
 class Solution {
     int k,n;
@@ -35,6 +60,8 @@ public:
      // 2 3 4 5 9 10   
     }
 };
+
+
 
 //DP TC:O(n) SC:O(n)
 class Solution {
