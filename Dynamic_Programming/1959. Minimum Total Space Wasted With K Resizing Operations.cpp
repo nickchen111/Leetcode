@@ -46,8 +46,9 @@ public:
 };
 
 /*
-此題問說如果你可以走一步就改變一個大小讓他去大於等於你目前包含的區間
-問說改動次數最多k次 + 改完後跟所有元素的差最小值為多少?
+此題與1043 1105相似
+此題問說如果你可以走一步就改變一個大小讓他去大於等於某段目前或者之後的區間
+問說改動次數最多k次  改完後跟每次改動後他所負責的那段區間元素的差最小值為多少?
 dp[i][j] : for the first i element, we used j operations. the minimum total space wasted 
 會發現每次你要改動時都會有改動他可以cover的區間 那在他之前的最小值加上改動後的space wasted又可以構成新答案  -> dp
 dp[i][j] = dp[s-1][j-1] + nums[s]*(i-s+1) - intervalSum;
