@@ -19,6 +19,7 @@ public:
                 else{
                     dp[i][j] = dp[i-1][j];
                 }
+                //ex: 上賽道塞住 這次沒有 要更新就從沖成功的最小步數賽道+1
                 minVal = min(minVal, dp[i][j]);
             }
 
