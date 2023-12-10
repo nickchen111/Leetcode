@@ -66,7 +66,7 @@ public:
 此題問說有多少種分法將array分出的子數組跟其他子數組元素不重複
 -> 每個元素都去看她最後一個有重複的位置在哪  一路包含到那去 走的路途中如果又有重複元素那就也要考慮他 -> intervals cover intervals
 Create intervals of [first, last] instances of each number, and count minimum intervals to cover whole range. Answer is 2^(n - 1), modulo 10^9+7.
-求最少需要多少區間的去涵蓋整個區間
+將所有重疊區間merge後最多剩下多少個區間
 xxxxxxx
   xxxxxxx
 */
