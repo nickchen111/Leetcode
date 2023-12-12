@@ -2,6 +2,44 @@
 77. Combinations
 */
 
+// 
+class Solution {
+public:
+    vector<vector<int>> combine(int n, int k) {
+        
+        vector<vector<int>> res;
+        vector<int> comb;
+        for(int i = 1; i <= k; i++){
+            comb.push_back(i);
+        }
+        res.push_back(comb);
+
+        while(1){
+            int i = k - 1;//都先從最後一位檢查
+            while(i >= 0 && comb[i] == i + 1 + n - k) i--;
+            if(i == -1) break;
+            comb[i] += 1;
+            for(int j = i + 1; j < k; j++){
+                comb[j] = comb[j-1] + 1;
+            }
+
+            res.push_back(comb);
+        }
+
+        return res;
+    }
+};
+
+/*
+此題屬於 Combinatorics 的最基礎題型
+類似用字典序greedy的思維構造出每種可能性
+
+[1 2 3 4 5 6 7] n = 7; 
+[1 2 3 4]  k = 4
+ ex : i = 1 -> 2~5
+ 第 i 位 最小必須是i+1 最大會是 i + 1 + n - k
+*/
+
 
 //此題很像permutation 但是結合了subset的只往前走限制 但只收集固定長度的排列組合
 class Solution {
