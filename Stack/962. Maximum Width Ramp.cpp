@@ -3,7 +3,7 @@
 */
 
 
-// TC:O(n) SC:O(n)
+// TC:O(n) SC:O(n) Stack
 class Solution {
 public:
     int maxWidthRamp(vector<int>& nums) {
@@ -26,7 +26,31 @@ public:
     }
 };
 
-// TC:O(nlgn) SC:O(n)
+// 正著寫 Binary Search
+class Solution {
+public:
+    int maxWidthRamp(vector<int>& nums) {
+        vector<int> q;
+        vector<int> idx;
+        int n = nums.size();
+        int res = 0;
+        for(int i = n - 1 ; i >= 0; i--){
+            if(q.empty() || (q.size() > 0 && q.back() < nums[i])){
+                q.push_back(nums[i]);
+                idx.push_back(i);
+            }
+            else {
+                auto iter = lower_bound(q.begin(), q.end(), nums[i]);
+                int index = iter - q.begin();
+                res = max(res, idx[index] - i);
+            }
+        }
+
+        return res;
+    }
+};
+
+// TC:O(nlgn) SC:O(n) Binary Search
 class Solution {
 public:
     int maxWidthRamp(vector<int>& nums) {
