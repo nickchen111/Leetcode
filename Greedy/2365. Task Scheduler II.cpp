@@ -18,7 +18,7 @@ public:
             cur++;
         }
 
-        return cur;
+        return cur;//表示天數
     }
 };
 
