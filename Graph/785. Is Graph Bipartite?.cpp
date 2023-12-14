@@ -2,6 +2,42 @@
 785. Is Graph Bipartite?
 */
 
+// 12/14 DFS
+class Solution {
+    vector<int> color;
+    vector<bool> visited;
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        int n = graph.size();
+        color.resize(n);
+        visited.resize(n);
+
+        for(int i = 0; i < n; i++){
+            if(DFS(graph,i) == false) return false;
+        }
+
+        return true;
+    }
+
+    bool DFS(vector<vector<int>>& graph, int cur){
+        
+        visited[cur] = 1;
+        for(auto neighbor : graph[cur]){
+            if(visited[neighbor] == 1){
+                if(color[neighbor] == color[cur]) return false;
+            }
+            else {
+                color[neighbor] = !color[cur];
+                visited[neighbor] = 1;
+                if(!DFS(graph,neighbor)) return false;
+            }
+        }
+
+        return true;
+    }
+};
+
+
 class Solution {
     //dfs
 public:
