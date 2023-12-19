@@ -79,31 +79,30 @@ class Solution {
 public:
     int longestSubarray(vector<int>& nums, int limit) {
         int n = nums.size();
-        int res = 0;
-        //滑動窗口紀錄最大最小值
         deque<int> qmax;
-        deque<int> qmin;
-
-        int i = 0;
-        for(int j = 0; j < n; j++){
-            while(!qmax.empty() && nums[qmax.back()] <= nums[j]){
+        deque<int> qmin; // 一個隊列只能維護一個最大or最小 用deque只是為了頭好彈出 在他年老色衰的時候
+        int res = 1;
+        int j = 0;
+        for(int i = 0; i < n; i++){
+            while(!qmax.empty() && nums[qmax.back()] < nums[i]){
                 qmax.pop_back();
             }
 
-            while(!qmin.empty() && nums[qmin.back()] >= nums[j]){
+            while(!qmin.empty() && nums[qmin.back()] > nums[i]){
                 qmin.pop_back();
             }
+            qmax.push_back(i);
+            qmin.push_back(i);
 
-            qmax.push_back(j);
-            qmin.push_back(j);
-
-            while(!qmax.empty() && !qmin.empty() && nums[qmax.front()] - nums[qmin.front()] > limit){
-                if(!qmax.empty() &&qmax.front() <= i) qmax.pop_front();
-                if(!qmin.empty() && qmin.front() <= i) qmin.pop_front();
-                i++;
+            while(!qmax.empty()  && !qmin.empty() && nums[qmax.front()] - nums[qmin.front()] > limit){
+                if(qmax.front() == j) qmax.pop_front();
+                if(qmin.front() == j) qmin.pop_front();
+                j++;
             }
-            if(i == n) break;
-            res = max(res, j-i+1);
+
+            if(j == n) break;
+            res = max(res, i-j+1);
+          
         }
 
         return res;
