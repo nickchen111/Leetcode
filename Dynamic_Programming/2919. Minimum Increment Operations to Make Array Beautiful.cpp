@@ -2,7 +2,7 @@
 2919. Minimum Increment Operations to Make Array Beautiful
 */
 
-// TC:O(n) SC:O(n)
+// TC:O(n) SC:O(n) bottom up
 class Solution {
     vector<long long> dp;
     int n;
@@ -24,6 +24,24 @@ public:
         dp[idx] = min(op1, min(op2,op3));
 
         return dp[idx];
+    }
+};
+
+// iterative top down
+class Solution {
+public:
+    long long minIncrementOperations(vector<int>& nums, int k) {
+        // iterative
+        int n = nums.size();
+        vector<long long> dp(n+5,0);
+        for(int i = n-1; i >=0; i--){
+            long long temp = min(dp[i+1], min(dp[i+2], dp[i+3]));
+            dp[i] = temp + max(0, k - nums[i]);
+        }
+
+        long long res = min(dp[0],min(dp[1], dp[2]));
+        
+        return res;
     }
 };
 
