@@ -2,7 +2,114 @@
 2967. Minimum Cost to Make Array Equalindromic
 */
 
-// TC:O(nlgn + n) SC:O(1)
+// 找較大較小回文串 by 貪心 TC:O(nlgn + n) SC:O(1)
+class Solution {
+    using LL = long long;
+public:
+    long long minimumCost(vector<int>& nums) {
+        // find median
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        LL mid = (n-1)/2;
+        LL median = nums[mid];
+        LL res = 0;
+
+        if(check(median)) {
+            for(int i = 0; i < n; i++){
+                res += abs(nums[i] - nums[mid]);
+            }
+            return res;
+        }
+
+        LL candidate1 = nextSmaller(median);
+        LL candidate2 = nextGreater(median);
+
+        LL sum1 = 0;
+        LL sum2 = 0;
+        for(int i = 0; i < n; i++){
+            sum1 += abs(nums[i] - candidate1);
+            sum2 += abs(nums[i] - candidate2);
+        }
+
+        res = min(sum1, sum2);
+
+        return res;
+    }
+    bool check(LL median){
+        LL sum = 0;
+        LL target = median;
+        while(median != 0){
+            sum = sum * 10 + median % 10;
+            median /= 10;
+        }
+
+        return sum == target;
+    }
+
+    LL nextGreater(LL n){
+        string s = to_string(n);
+        string target = to_string(n);
+        int m = s.size();
+        //先嘗試看看他可以自組成怎麼樣的回文串
+        for(int i = 0, j = m-1; i<=j;){
+            s[j--] = s[i++];
+        }
+        
+        if(s > target) return stoll(s);
+        int carry = 1;
+        for(int i = (m-1)/2; i >= 0; i--){
+            int d = s[i] - '0' + carry;
+            if(d <= 9){
+                s[i] = d + '0';
+                carry = 0;
+            }
+            else {
+                s[i] = '0';
+                carry = 1;
+            }
+            s[m-1-i] = s[i];
+        }
+        if(carry == 1) {
+            string str = string(m+1,'0');
+            str[0] = str.back() = '1';
+            return stoll(str);
+        }
+        else return stoll(s);
+    }
+
+    LL nextSmaller(LL n){
+        string s = to_string(n);
+        string target = to_string(n);
+        int m = s.size();
+        //先嘗試看看他可以自組成怎麼樣的回文串
+        for(int i = 0, j = m-1; i<=j;){
+            s[j--] = s[i++];
+        }
+        
+        if(s < target) return stoll(s);
+        int carry = 1;
+        for(int i = (m-1)/2; i >= 0; i--){
+            int d = s[i] - '0' - carry;
+            if(d >= 0){
+                s[i] = d + '0';
+                carry = 0;
+            }
+            else {
+                s[i] = '9';
+                carry = 1;
+            }
+            s[m-1-i] = s[i];
+        }
+        if(s[0] == '0' && m > 1) {
+            string str = string(m-1,'9');
+
+            return stoll(str);
+        }
+        else return stoll(s);
+    }
+};
+
+// 用整數判斷回文串TC:O(nlgn + n) SC:O(1)
 class Solution {
     using LL = long long;
 public:
