@@ -2,7 +2,7 @@
 2140. Solving Questions With Brainpower
 */
 
-// TC:O(n) SC:O(n) RollingMax 正著寫
+// TC:O(n + nlgn) SC:O(n) RollingMax 正著寫
 class Solution {
     using LL = long long;
 public:
