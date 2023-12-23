@@ -2,6 +2,32 @@
 2944. Minimum Number of Coins for Fruits
 */
 
+// 雙狀態 取or不取 
+class Solution {
+    using LL = long long;
+public:
+    int minimumCoins(vector<int>& prices) {
+        int n = prices.size();
+        prices.insert(prices.begin(), -1);
+        vector<LL> dp_take(n+1,INT_MAX/3);
+        vector<LL> dp_notake(n+1,INT_MAX/3);
+        dp_take[1] = prices[1];
+        
+        for(int i = 2; i <= n; i++){
+            for(int j = 1; j < i; j++){
+                if(j + j >= i){
+                    dp_notake[i] = min(dp_notake[i],dp_take[j]);
+                }
+            }
+            dp_take[i] = min(dp_take[i-1], dp_notake[i-1]) + prices[i];
+        }
+
+        int res = min(dp_take[n], dp_notake[n]);
+
+        return res;
+    }
+};
+
 // TC:O(n^2) SC:O(n)
 class Solution {
     using LL = long long;
@@ -36,5 +62,6 @@ dp[i] 目前看到 ith item 可能的最小值為多少 此題不能用取或者
 所以不分兩種狀態 端看現在這點能獲得最小值是多少就好
 
 [1 2 3 4 5 ] -> [1 2] [2 3 4] [3 4 5 6] [4 5 6 7 8] [5 6 7 8 9 10] [6 7 8 9 10 11 12]
+更新： 取or不取是可以做的 關鍵在於 dp 取的那段 每次都要從他前面一個挑 是要取 還是不取的比較小 而不能從 比他前面更久之前的挑 因為在那之前都還沒確定當下的前一個的合法性
 
 */
