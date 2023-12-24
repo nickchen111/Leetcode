@@ -6,7 +6,6 @@
 class Solution {
 public:
     int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
-        vector<vector<int>> graph(n);
         vector<vector<int>> dp(n,vector<int>(n,INT_MAX/3));
 
         for(int i = 0; i < n; i++){
@@ -23,11 +22,7 @@ public:
                 }
             }
         }
-
-        for(auto edge : edges){
-            graph[edge[0]].push_back(edge[1]);
-            graph[edge[1]].push_back(edge[0]);
-        }
+        
 
         //找出最少數量的城市
         int minNumber = INT_MAX;
