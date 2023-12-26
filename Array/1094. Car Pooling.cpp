@@ -2,6 +2,27 @@
 1094. Car Pooling
 */
 
+// TC:O(n) SC:O(n) 12/26
+class Solution {
+    int diff[1002];
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        // diff
+        int n = trips.size();
+        for(auto &trip : trips){
+            diff[trip[1]] += trip[0];
+            diff[trip[2]] -= trip[0];
+        }
+
+        long long sum = 0;
+        for(int i = 0; i <= 1000; i++){
+            sum += diff[i];
+            if(sum > capacity) return false;
+        }
+
+        return true;
+    }
+};
 
 class Solution {
 public:
