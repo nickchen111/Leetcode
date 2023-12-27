@@ -88,3 +88,79 @@ dp[i] 從[1:i] 需要去除的最少字母量
 3. 用trie的話要反過來寫 正著寫會不曉得j會涵蓋到哪裡 只知道要取他前面那串的最小值 但不曉得他有沒有包含了i
 x x x j x x x i
 */
+
+// Trie + DFS -> WA
+class Solution {
+    class TrieNode{
+    public:
+        TrieNode():children(26,NULL), isValid(0){}
+        ~TrieNode(){
+            for(auto &child : children){
+                if(child) delete child;
+            }
+        } 
+        vector<TrieNode*> children; 
+        bool isValid;
+    };
+
+    TrieNode* root;
+    int res = INT_MAX;
+public:
+    int minExtraChar(string s, vector<string>& dictionary) {
+        root = new TrieNode();
+        for(auto &word : dictionary){
+            TrieNode* node = root;
+            for(auto &ch : word){
+                if(node->children[ch-'a'] == NULL) node->children[ch-'a'] = new TrieNode();
+                node = node->children[ch-'a'];
+            }
+            node->isValid = true;
+        }
+
+        int n = s.size();
+        
+        for(int i = 0; i < n; i++){
+            TrieNode* node = root;
+            int sum = i;
+            for(int j = i; j < n; j++){
+                if(node->children[s[j]-'a'] != NULL){
+                    node = node->children[s[j]-'a'];
+                    //這點當切割點往後跑
+                    if(node->isValid == true){
+                        DFS(s, sum, j+1);
+                    }
+                }
+                else break;
+            }
+        }
+       
+
+        return res;
+    }
+
+    void DFS(string& s, int sum, int cur){
+        if(cur == s.size()){
+            res = min(res, sum);
+            return;
+        }
+
+        int n = s.size();
+        //新的開始
+
+        for(int i = cur; i < n; i++){
+            TrieNode* node = root;
+            sum = sum + (i-cur);
+            for(int j = i; j < n; j++){
+                if(node->children[s[j]-'a'] != NULL){
+                    node = node->children[s[j]-'a'];
+                    if(node->isValid == true){
+                        DFS(s, sum, j+1);
+                    }
+                }
+                else break;
+            }
+        }
+
+        res = min(res, sum);
+    }
+};
