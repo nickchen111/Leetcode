@@ -57,7 +57,7 @@ public:
         }
 
         int T = R-L-1;//中間段是肯定要移除的
-        if(T == n) return n-1;
+    
         int res = INT_MAX;
 
         for(int i = 0; i <= L; i++){
