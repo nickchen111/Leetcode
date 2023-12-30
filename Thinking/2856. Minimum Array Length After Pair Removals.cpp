@@ -2,7 +2,7 @@
 2856. Minimum Array Length After Pair Removals
 */
 
-// TC:O(n) SC:O(n)
+// Boyer Moore TC:O(n) SC:O(n)
 class Solution {
 public:
     int minLengthAfterRemovals(vector<int>& nums) {
@@ -19,6 +19,38 @@ public:
 
        if(count == 0) return n%2;
        else return count - (n-count);
+        
+    }
+};
+
+
+// Heap
+class Solution {
+public:
+    int minLengthAfterRemovals(vector<int>& nums) {
+        int n = nums.size();
+        unordered_map<int,int> map;
+        for(int i = 0; i < n; i++){
+            map[nums[i]] += 1;
+        }
+
+        priority_queue<int, vector<int>, less<int>> pq;
+        for(auto &p : map){
+            pq.push(p.second);
+        }
+
+        while(pq.size() >= 2){
+            int freq1 = pq.top();
+            pq.pop();
+            int freq2 = pq.top();
+            pq.pop();
+            freq1 --; freq2 --;
+            if(freq1 > 0) pq.push(freq1);
+            if(freq2 > 0) pq.push(freq2);
+        }
+
+        if(pq.empty()) return 0;
+        else return pq.top(); 
         
     }
 };
