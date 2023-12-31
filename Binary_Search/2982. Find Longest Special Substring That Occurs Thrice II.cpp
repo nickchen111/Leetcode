@@ -32,6 +32,58 @@ public:
     }
 };
 
+// Binary Search + Slide Window TC:O(nlgn) SC:O(n) 
+class Solution {
+public:
+    int maximumLength(string s) {
+        int n = s.size();
+        int low = 0;
+        int high = n-1;
+        int maxLen = -1;
+        //長度
+        while(low < high){
+            int mid = low + (high - low+1)/2;
+            if(check(s,mid)){
+                low = mid;
+                maxLen = max(maxLen, mid);
+            }
+            else high = mid-1;
+        }
+        
+       
+        return maxLen;
+    }
+    
+    bool check(string& s, int len){
+        unordered_map<string, int> map;
+        int n = s.size();
+        int j = 0;
+        int i = 0;
+        string temp;
+        while(j < n){
+            temp += s[j];
+            if(s[j] != s[i]){
+                temp = "";
+                temp += s[j];
+                i = j;
+                j++;
+                continue;
+            }
+            if(temp.size() == len) {
+                map[temp] += 1;
+                if(map[temp] >= 3) return true;
+                temp.erase(0,1); // 這個寫法學起來 可以消除前面元素
+                i++;
+            }
+            
+            j++;
+        }
+        
+        return false;
+    }
+};
+
+
 
 // Binary Search TC:O(nlgn) SC:O(n) -> TLE
 class Solution {
