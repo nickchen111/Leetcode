@@ -2,6 +2,29 @@
 1624. Largest Substring Between Two Equal Characters
 */
 
+//TC:O(n) SC:O(26)
+class Solution {
+public:
+    int maxLengthBetweenEqualCharacters(string s) {
+        vector<int> posStart(26,-1);
+      
+        unordered_map<int,int> map;
+        int n = s.size();
+         int res = -1;
+        for(int i = 0; i < n; i++){
+            if(map[s[i]-'a'] == 0){
+                map[s[i]-'a'] += 1;
+                posStart[s[i]-'a'] = i;
+            }
+            else {
+                res = max(res, i - posStart[s[i]-'a']-1);
+            }
+        }
+
+        return res;
+    }
+};
+
 // TC:O(n) SC:O(26)
 class Solution {
 public:
