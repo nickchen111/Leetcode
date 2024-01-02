@@ -37,6 +37,47 @@ public:
     }
 };
 
+// TC:O(n) SC:O(n) 
+class Solution {
+public:
+    int bagOfTokensScore(vector<int>& tokens, int power) {
+        int n = tokens.size();
+        if(n == 0) return 0;
+        sort(tokens.begin(), tokens.end());
+
+        int score = 0;
+        if(tokens[0] > power) return 0;
+        int res = 0;
+        int j = n - 1;
+        vector<int> visited(n);
+        int i = 0;
+        while(i <= j){
+            if(visited[i]){
+                i++;
+                continue;
+            }
+
+            if(power >= tokens[i]){
+                score += 1;
+                power -= tokens[i];
+                visited[i] = 1;
+                i++;
+            }
+            else if(power < tokens[i]){
+                if(visited[j] == 0 && score > 0){
+                    score -= 1;
+                    power += tokens[j];
+                    visited[j] = 1;
+                    j--;  
+                }
+            }
+            res = max(res, score);
+        }
+
+        return res;
+    }
+};
+
 /*
 給你個初始值 並且分數從０ 開始
 可以任意挑怪打的概念 每打掉一個救得一分 但是初始值會變小
