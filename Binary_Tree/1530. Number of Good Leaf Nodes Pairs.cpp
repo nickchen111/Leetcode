@@ -2,7 +2,39 @@
 1530. Number of Good Leaf Nodes Pairs
 */
 
-// TC:O(n^2*k) k 為每次BFS會加入的節點數量 SC:O(n)  
+// DFS  TC:O(n) SC:O(n)
+class Solution {
+    int res = 0;
+public:
+    int countPairs(TreeNode* root, int distance) {
+        DFS(root, distance);
+        return res;
+    }
+
+    vector<int> DFS(TreeNode* node, int distance){
+        if(node == NULL) return {};
+        //意即上個點根leaf node差距為一
+        if(node -> left == NULL && node -> right == NULL){
+            return {1};
+        }
+        
+        vector<int> left = DFS(node->left, distance);
+        vector<int> right = DFS(node->right, distance);
+        for(auto l : left){
+            for(auto r : right){
+                if(l + r <= distance) res += 1;
+            }
+        }
+
+        vector<int> res;
+        for(auto l : left) res.push_back(l+1);
+        for(auto r : right) res.push_back(r+1);
+
+        return res;
+    }
+};
+
+//BFS + DFS TC:O(n^2*k) k 為每次BFS會加入的節點數量 SC:O(n) 
 class Solution {
     int res = 0;
     unordered_map<TreeNode*, int> leaf;
