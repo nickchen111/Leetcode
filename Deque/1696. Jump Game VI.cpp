@@ -2,8 +2,35 @@
 1696. Jump Game VI
 */
 
+// DP TC:O(n) SC:O(n)
+class Solution {
+public:
+    int maxResult(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<int> dp(n,0);
+        dp[0] = nums[0];
+        deque<int> dq;
+        dq.push_back(0);
+        for(int i = 1; i < n; i++){
+            //太老的不能要
+            while(!dq.empty() && i-k > dq.front()){
+                dq.pop_front();
+            }
+            //update
+            dp[i] = dp[dq.front()] + nums[i];
+            //數值如果比較大 踢掉前面之後不可能被選上的
+            while(!dq.empty() && dp[dq.back()] <= dp[i]){
+                dq.pop_back();
+            }
+            
+            dq.push_back(i);
+        }
 
-//deque 單調遞減隊列
+        return dp[n-1];
+    } 
+};
+
+//deque 單調遞減隊列 TC:O(n) SC:O(k)
 class Solution {
 public:
     int maxResult(vector<int>& nums, int k) {
@@ -83,7 +110,7 @@ public:
     }
 };
 
-//自底向上迭代
+//自底向上迭代 TC:O(n^2) SC:O(n)
 class Solution {
     //向上迭代
 public:
