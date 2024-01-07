@@ -2,6 +2,51 @@
 2653. Sliding Subarray Beauty
 */
 
+// Slide Window  + Ordered_set TC:O(nlgn) SC:O(n)
+class Solution {
+public:
+    vector<int> getSubarrayBeauty(vector<int>& nums, int k, int x) {
+        int n = nums.size();
+        int j = 0;
+        multiset<int> set1,set2;
+        vector<int> res;
+        for(int i = 0; i < n; i++){
+            while(j < n && set1.size() + set2.size() < k){
+                if(set1.size() < x){
+                    set1.insert(nums[j]);
+                }
+                else {
+                    if(*set1.rbegin() > nums[j]){
+                        set2.insert(*set1.rbegin());
+                        set1.erase(--set1.end());
+                        set1.insert(nums[j]);
+                    }
+                    else set2.insert(nums[j]);
+                }
+                j++;
+            }
+            if(set1.size() + set2.size() == k){
+                res.push_back(min(0, *set1.rbegin()));
+            }
+            if(j == n) break;
+            auto iter = set2.find(nums[i]);
+            if(iter != set2.end()){
+                set2.erase(iter);
+            }
+            else {
+                set1.erase(set1.find(nums[i]));
+                if(!set2.empty()){
+                    set1.insert(*set2.begin());
+                    set2.erase(set2.begin());
+                }
+            }
+        }
+
+        return res;
+    }
+};
+
+
 // TC:O(nlgn) SC:O(n)
 class Solution {
 public:
