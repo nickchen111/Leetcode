@@ -2,6 +2,64 @@
 842. Split Array into Fibonacci Sequence
 */
 
+// Fibonacci TC:O(n^2) SC:O(n) n <= 10 
+class Solution {
+public:
+    vector<int> splitIntoFibonacci(string num) {
+        int n = num.size();
+
+        for(int i = 1; i <=n/2; i++){
+            if(i > 10) break;
+            long x = stol(num.substr(0,i));
+            if(x > INT_MAX) break;
+            if(i > 1 && num[0] == '0') break;
+
+            for(int j = 1; j <= n/2; j++){
+                if(j > 10) break;
+                long y = stol(num.substr(i,j));
+                if(y > INT_MAX) break;
+                if(j > 1 && num[i] == '0') continue;
+
+                vector<int> res;
+                res.push_back(x);
+                res.push_back(y);
+
+                long a = x, b = y, c, pos = i + j;
+                bool flag = 1;
+                while(flag){
+                    c = a + b;
+                    if(c > INT_MAX){
+                        flag = 0;
+                        break;
+                    }
+                    string z = to_string(c);
+                    int len = z.size();
+                    if(pos + len > n || num.substr(pos,len) != z){
+                        flag = 0;
+                        break;
+                    }
+
+                    res.push_back(c);
+                    a = b;
+                    b = c;
+                    pos = pos + len;
+                }
+
+                if(pos == n && res.size() > 2) return res;
+            }
+        }
+
+        return {};
+    }
+};
+
+/*
+這題要注意的細節還是挺多的
+1.數字長度不超過10
+2. 數字長度10但是大小不超過INT_MAX
+3. 如果zero開頭長度就只能是1 不合法那就retrun {}
+*/
+
 // TC:O(2^10) SC:O(n)
 class Solution {
     vector<int> track;
