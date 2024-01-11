@@ -2,6 +2,36 @@
 1140. Stone Game II
 */
 
+// Top down Recursion 1/11
+class Solution {
+    int dp[105][105];
+    int presum[105];
+public:
+    int stoneGameII(vector<int>& piles) {
+        int n = piles.size();
+    
+        for(int i = 1; i <= n; i++){
+            presum[i] = presum[i-1] + piles[i-1];
+        }
+
+        return solve(0, 1, piles);
+    }
+    int solve(int cur, int M, vector<int>& piles){
+        if(cur == piles.size()) return 0;
+        int n = piles.size();
+        if(dp[cur][M] != 0) return dp[cur][M];
+
+        
+        for(int x = 1; x <= 2*M; x++){
+            if(x + cur - 1 >= n) break;
+            
+            dp[cur][M] = max(dp[cur][M], presum[n] - presum[cur] - solve(cur+x, max(x,M), piles)); 
+        }
+
+        return dp[cur][M];
+    }
+};
+
 //recursion+memo TC:O(n*M*2M) SC:O(n*M)
 class Solution {
     //recursion+memo
