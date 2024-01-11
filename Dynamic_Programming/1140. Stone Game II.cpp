@@ -2,7 +2,7 @@
 1140. Stone Game II
 */
 
-// Top down Recursion 1/11
+// Top down Recursion 1/11 TC:O(n*2M) SC:O(n*M)
 class Solution {
     int dp[105][105];
     int presum[105];
@@ -32,7 +32,7 @@ public:
     }
 };
 
-//recursion+memo TC:O(n*M*2M) SC:O(n*M)
+//recursion+memo TC:O(n*2M) SC:O(n*M)
 class Solution {
     //recursion+memo
     int memo[101][101];
