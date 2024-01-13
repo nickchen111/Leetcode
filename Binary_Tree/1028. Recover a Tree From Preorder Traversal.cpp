@@ -2,7 +2,49 @@
 1028. Recover a Tree From Preorder Traversal
 */
 
-// TC:O(n) SC:O(n)
+// queue TC:O(n) SC:O(n)
+class Solution {
+    
+public:
+    TreeNode* recoverFromPreorder(string traversal) {
+        //先做字符串處理 將深度取出
+        queue<pair<int,int>> q;
+        for(int i = 0; i < traversal.size(); i++){
+            int j = i;
+            while(j < traversal.size() && traversal[j] == '-'){
+                j++;
+            }  
+            int depth = j-i;
+            i = j;
+            while(j < traversal.size() && isdigit(traversal[j])){
+                j++;
+            }
+            int val = stoi(traversal.substr(i,j-i));
+            i = j - 1;
+            q.push({val, depth});
+        }
+        // 計算每一層的節點數量不包含自己 下面有多少個 可以讓我去避開這些節點找到右子樹的位置
+        return DFS(q);
+    }
+    TreeNode* DFS(queue<pair<int,int>>& q){
+        int cur  = q.front().first;
+        int depth = q.front().second;
+        q.pop();
+        
+        TreeNode* root = new TreeNode(cur);
+        
+        if(depth +1 == q.front().second){
+            root->left = DFS(q);
+        }
+        if(depth +1 == q.front().second){
+            root->right = DFS(q);
+        }
+        
+        return root;
+    }
+};
+
+// TC:O(n) SC:O(n) DFS計算子數節點個數
 class Solution {
     vector<pair<int,int>> nodes;
 public:
