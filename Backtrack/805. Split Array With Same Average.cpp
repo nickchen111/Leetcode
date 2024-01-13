@@ -3,7 +3,7 @@
 */
 
 
-//背包 + bit 狀態壓縮 最優解 
+//背包 + bit 狀態壓縮 最優解  TC:O(n*total) SC:O(n*total)
 class Solution {
     int dp[300005];
 public:
@@ -34,7 +34,7 @@ public:
     }
 };
 
-// 背包次優解 
+// 背包次優解 TC:O(n*total*num) SC:O(n*total*num)
 class Solution {
     bool dp[300005][31];
 public:
