@@ -2,179 +2,106 @@
 1631. Path With Minimum Effort
 */
 
+// 用visited 數組 先彈出來的肯定是最優秀的路徑 TC: O((m * n) log (m * n)) SC: O(m * n)
 class Solution {
-public:
-    int minimumEffortPath(vector<vector<int>>& heights) {
-        //構建graph heights就可以代表我們的graph
-
-        //構建dijkstra表 輸入一個點就可以知道左上角到他的最短距離 直接把dijkstra做成左上到右下
-        int ans = dijkstra(heights);
-
-        return ans;
-    }
-
-    //1.先把二維矩陣轉化為圖
-    vector<vector<int>> dirs ={{0,1}, {1,0}, {0,-1},{-1,0}};
-
-    vector<vector<int>> adj(vector<vector<int>>& heights, int x, int y){
-        vector<vector<int>> neighbor;
-        int m = heights.size(); int n = heights[0].size();
-
-        for(auto dir:dirs){
-            int nx = x + dir[0];
-            int ny = y + dir[1];
-            if(nx < 0 || ny < 0 || nx >=m || ny >= n) continue;
-
-            neighbor.push_back({nx, ny});
-        }
-        return neighbor;
-    }
-
-    int dijkstra(vector<vector<int>>& heights){
-        int m = heights.size(); int n = heights[0].size();
-        vector<vector<int>> distfromstart(m, vector<int>(n, INT_MAX));
-        distfromstart[0][0] = 0;
-
-        //開始找從(0,0)點出發到大家的距離..二維 pair不好用
-        priority_queue<state, vector<state>, comp> pq;
-        pq.push(state(0,0,0));
-
-        while(!pq.empty()){
-            state cur = pq.top();
-            pq.pop();
-            int curx = cur.x;
-            int cury = cur.y;
-            int curEffortFromStart = cur.effortFromStart;
-
-            if(curx == m-1 && cury == n-1) return curEffortFromStart;
-            if(curEffortFromStart > distfromstart[curx][cury]) continue;
-
-            for(auto neigh: adj(heights, curx, cury)){
-                int nextx = neigh[0];
-                int nexty = neigh[1];
-                int nextEffortFromStart = max(distfromstart[curx][cury], abs(heights[curx][cury]-heights[nextx][nexty]));
-                //更新dp table
-                if(distfromstart[nextx][nexty] > nextEffortFromStart){
-                    distfromstart[nextx][nexty] = nextEffortFromStart;
-                    pq.push(state(nextx, nexty, nextEffortFromStart));
-                }
-            }
-        }
-        return -1; //正常情況不會到這裡
-
-    }
-
     struct state{
-        int x;
-        int y;
-        // 从起点 (0, 0) 到当前位置的最小体力消耗（距离）
-        int effortFromStart;
-        state(int x, int y, int effortFromStart){
-            this->x = x;
-            this->y = y;
-            this-> effortFromStart =  effortFromStart;
+        int a, b, dist;
+        state(int dist, int a, int b){
+            this -> a = a;
+            this -> b = b;
+            this -> dist = dist;
+        }
+        bool operator>(const state& other) const{
+            return dist > other.dist;
         }
     };
-    // 重寫仿函式的方式實現優先隊列的比較
-    struct comp{
-        bool operator()(state& a, state& b){
-            return a.effortFromStart > b.effortFromStart;//最小的放在最上面
-        }
-    };
-
-};
-
-//la大 
-class Solution {
 public:
-    // Dijkstra 算法，计算 (0, 0) 到 (m - 1, n - 1) 的最小体力消耗
     int minimumEffortPath(vector<vector<int>>& heights) {
-        int m = heights.size(), n = heights[0].size();
-        // 定义：从 (0, 0) 到 (i, j) 的最小体力消耗是 effortTo[i][j]
-        vector<vector<int>> effortTo(m,vector<int>(n, INT_MAX)); // dp table 初始化为正无穷
-        // base case，起点到起点的最小消耗就是 0
-        effortTo[0][0] = 0;
+        int m = heights.size();
+        int n = heights[0].size();
+        // BFS
+        priority_queue<state, vector<state>, greater<state>> pq;
+        pq.push(state{0,0,0});
 
-        // 优先级队列，effortFromStart 较小的排在前面
-        priority_queue<State,vector<State>,Comp> pq; // 第二个参数就是自定义语法格式，详见下方
-        // 从起点 (0, 0) 开始进行 BFS
-        pq.push(State(0, 0, 0));
-
-        while (!pq.empty()) {
-            State curState = pq.top();
+        vector<bool> visited(m*n+1);
+       
+        vector<int> dirs = {0,1,0,-1,0};
+        
+        while(!pq.empty()){
+            int x = pq.top().a;
+            int y = pq.top().b;
+            int dist = pq.top().dist;
             pq.pop();
-            int curX = curState.x;
-            int curY = curState.y;
-            int curEffortFromStart = curState.effortFromStart;
 
-            // 到达终点提前结束
-            if (curX == m - 1 && curY == n - 1) {
-                return curEffortFromStart;
-            }
-
-            if (curEffortFromStart > effortTo[curX][curY]) {
-                continue;
-            }
-            // 将 (curX, curY) 的相邻坐标装入队列
-            for (auto& neighbor : adj(heights, curX, curY)) {
-                int nextX = neighbor[0];
-                int nextY = neighbor[1];
-                // 计算从 (curX, curY) 达到 (nextX, nextY) 的消耗
-                int effortToNextNode = max(
-                    effortTo[curX][curY],
-                    abs(heights[curX][curY] - heights[nextX][nextY])
-                );
-                // 更新 dp table
-                if (effortTo[nextX][nextY] > effortToNextNode) {
-                    effortTo[nextX][nextY] = effortToNextNode;
-                    pq.push(State(nextX, nextY, effortToNextNode));
-                }
+            if(x == m-1 && y == n-1) return dist;
+            if(visited[x*n+y]) continue;
+            visited[x*n+y] = 1;
+            for(int i = 1; i < dirs.size(); i++){
+                int nx = x + dirs[i-1];
+                int ny = y + dirs[i];
+                if(nx < 0 || ny < 0 || nx >= m || ny >= n) continue;
+                int nextDist = max(dist, abs(heights[x][y] - heights[nx][ny]));
+                pq.push({nextDist, nx, ny});
+                
             }
         }
-        // 正常情况不会达到这个 return
+        
         return -1;
+        
     }
-
-    // 方向数组，上下左右的坐标偏移量
-    vector<vector<int>> dirs {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-
-    // 返回坐标 (x, y) 的上下左右相邻坐标
-    vector<vector<int>> adj(vector<vector<int>>& matrix, int x, int y) {
-        int m = matrix.size(), n = matrix[0].size();
-        // 存储相邻节点
-        vector<vector<int>> neighbors;
-        for (auto& dir : dirs) {
-            int nx = x + dir[0];
-            int ny = y + dir[1];
-            if (nx >= m || nx < 0 || ny >= n || ny < 0) {
-                // 索引越界
-                continue;
-            }
-            neighbors.push_back({nx, ny});
-        }
-        return neighbors;
-    }
-
-    struct State {
-        // 矩阵中的一个位置
-        int x, y;
-        // 从起点 (0, 0) 到当前位置的最小体力消耗（距离）
-        int effortFromStart;
-
-        State(int x, int y, int effortFromStart) {
-            this->x = x;
-            this->y = y;
-            this->effortFromStart = effortFromStart;
-        }
-    };
-
-    struct Comp {
-        bool operator() (State& a, State& b) {
-            return a.effortFromStart > b.effortFromStart;
-        }
-    };
 };
 
+// Dijkstra + prim概念的minDist TC: O((m * n) log (m * n)) SC: O(m * n)
+class Solution {
+    struct state{
+        int a, b, dist;
+        state(int dist, int a, int b){
+            this -> a = a;
+            this -> b = b;
+            this -> dist = dist;
+        }
+        bool operator>(const state& other) const{
+            return dist > other.dist;
+        }
+    };
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        int m = heights.size();
+        int n = heights[0].size();
+        // BFS
+        priority_queue<state, vector<state>, greater<state>> pq;
+        pq.push(state{0,0,0});
+
+        vector<int> minDist(m*n+1, INT_MAX);
+        minDist[0] = 0;
+        vector<int> dirs = {0,1,0,-1,0};
+        
+        while(!pq.empty()){
+            int x = pq.top().a;
+            int y = pq.top().b;
+            int dist = pq.top().dist;
+            pq.pop();
+
+            if(x == m-1 && y == n-1) return dist;
+            if(dist > minDist[x*n+y]) continue;
+
+            for(int i = 1; i < dirs.size(); i++){
+                int nx = x + dirs[i-1];
+                int ny = y + dirs[i];
+                if(nx < 0 || ny < 0 || nx >= m || ny >= n) continue;
+                int nextDist = max(minDist[x*n+y], abs(heights[x][y] - heights[nx][ny]));
+                if(nextDist < minDist[nx*n+ny]){
+                    minDist[nx*n+ny] = nextDist;
+                    pq.push({nextDist,nx,ny});
+                }
+                
+            }
+        }
+        
+        return -1;
+        
+    }
+};
 
 /*
 解題思路：
