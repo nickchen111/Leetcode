@@ -2,6 +2,7 @@
 797. All Paths From Source to Target
 */
 
+// TC: O(2^n) SC: O(n)
 class Solution {
 public:
     vector<int> onpath;
@@ -11,19 +12,21 @@ public:
 
         return ans;
     }
-    void traverse(vector<vector<int>>& graph, int s){
-        int n = graph.size();
-        onpath.push_back(s);
-        if(s == n-1){
-            ans.push_back(onpath);
+    void traverse(vector<vector<int>>& graph, int node){
+        
+        onpath.push_back(node);
+        if(node == graph.size()-1) ans.push_back(onpath);
+
+
+        for(const auto& neighbor : graph[node]){
+            traverse(graph, neighbor);
         }
 
-        for(int v:graph[s]){
-            traverse(graph, v);
-        }
         onpath.pop_back();
+        return;
     }
 };
+
 /*
 解題思路
 此題為dag 沒有環 要求從 0 到終點的走法為何？ 
