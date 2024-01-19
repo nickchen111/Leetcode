@@ -5,36 +5,34 @@
 
 // Slide Window TC:O(n) SC:O(1)
 class Solution {
+    using LL = long long;
 public:
     int minOperations(vector<int>& nums, int x) {
-        long long total = accumulate(nums.begin(),nums.end(),0);
-        total-=x;
         int n = nums.size();
-        if(total < 0) return -1;
-        if(total == 0) return n;
-        //內部要到這個總合才可以開始計算
-        long long presum = 0;
-        int res = 0;
+        vector<LL> presum(n+1);
+        for(int i = 1; i <= n; i++){
+            presum[i] = presum[i-1] + (LL)nums[i-1];
+        }
+        LL target = presum[n] - x;
+        if(target < 0) return -1;
+        //中間某段加總起來最大會到taget的數字
         int j = 0;
-        for(int i = 0; i<nums.size(); i++){
-            while(j < nums.size() && presum+nums[j] < total){
-                presum+=nums[j];
+        LL sum = 0;
+        int res = INT_MAX;
+        for(int i = 0; i < n; i++){
+            while(j < n && sum < target){
+                sum += nums[j];
                 j++;
             }
-            if(j < nums.size() && presum+nums[j] == total){
-                res = max(res, j-i+1);
+            if(sum == target) {
+                res = min(res, n-(j-i));
             }
-            else if(j == nums.size() && presum == total){
-                res = max(res, j-i);
-            }
-            presum-=nums[i];
+            sum -= nums[i];
         }
 
-        if(res == 0) return -1;
-        else return n-res;
+        return res == INT_MAX ? -1 : res; 
     }
 };
-
 //hash+presum TC:O(2*n) SC:O(n)
 class Solution {
 public:
