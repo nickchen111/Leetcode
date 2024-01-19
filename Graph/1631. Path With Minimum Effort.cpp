@@ -39,7 +39,7 @@ public:
             for(int i = 1; i < dirs.size(); i++){
                 int nx = x + dirs[i-1];
                 int ny = y + dirs[i];
-                if(nx < 0 || ny < 0 || nx >= m || ny >= n) continue;
+                if(nx < 0 || ny < 0 || nx >= m || ny >= n || visited[nx*n+ny]) continue;
                 int nextDist = max(dist, abs(heights[x][y] - heights[nx][ny]));
                 pq.push({nextDist, nx, ny});
                 
