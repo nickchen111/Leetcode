@@ -1,5 +1,6 @@
 /*
 286. Walls and Gates🔒
+此題就是要找出每個INT空房間離最近的門距離
 -1 - 墙壁或障碍物。
 0 - 门。
 INF - Infinity是一个空房间。我们使用值 2 ^ 31 - 1 = 2147483647 来表示INF，您可以假设到门的距离小于 2147483647。
@@ -74,7 +75,7 @@ public:
                     int nx = x+dirs[j-1];
                     int ny = y+dirs[j];
                     if(nx<0 || ny<0 || nx>=m || ny>=n) continue;
-                    if(rooms[nx][ny] == 1 || rooms[nx][ny] == 0) continue;
+                    if(rooms[nx][ny] != INT_MAX) continue;
                     q.push(nx,ny);
                 }
             }
