@@ -111,7 +111,7 @@ tc: O((m * n) log (m * n)) sc: O(m * n)
 */
 
 
-// old_type 2023.08在寫一次
+// old_type 2023.08
 class Solution {
 public:
     // Dijkstra 算法，计算 (0, 0) 到 (m - 1, n - 1) 的最小体力消耗
