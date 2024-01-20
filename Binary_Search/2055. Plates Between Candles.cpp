@@ -62,18 +62,20 @@ public:
         }
 
         vector<int> res(queries.size(),0);
+        if(pos.size() == 0){
+            return res;
+        }
         for(int i = 0; i < queries.size(); i++){
             int a = queries[i][0];
             int b = queries[i][1];
-            if(a == b) res[i] = 0;
-            else if(pos.size() > 0){
-                auto iter1 = lower_bound(pos.begin(), pos.end(), a);
-                auto iter2 = upper_bound(pos.begin(), pos.end(), b);
-                iter2 = prev(iter2);
-                if(*iter2 - *iter1 >= 1){
-                    res[i] = presum[*iter2] - presum[*iter1];
-                } 
-            }
+           
+            auto iter1 = lower_bound(pos.begin(), pos.end(), a);
+            auto iter2 = upper_bound(pos.begin(), pos.end(), b);
+            iter2 = prev(iter2);
+            if(iter2 - iter1 >= 1){
+                res[i] = presum[*iter2] - presum[*iter1];
+            } 
+        
         } 
 
         return res;
