@@ -42,7 +42,7 @@ public:
             sum += DFS2(x, cur);
         }
 
-        sum += subtree[cur] - 1;
+        sum += subtree[cur] - 1; // 自己不包含在內 因為leaf node 後面沒有node了 不會貢獻任何路徑
         return sum;
     }
     void DFS3(int cur, int parent){
@@ -58,5 +58,9 @@ public:
 };
 
 /*
-
+此題用到一個經典的概念re-root
+0.pick the root
+1. compute subtree-size of every node
+2. compute f(root)-> distance sum toward root 也是遞歸思想 要算出他的子數作為根後子數所有孩子到子根距離 再加上他全部的孩子  
+3. compute f(node)-> f(root) + a - b -> f(root)+n-2b
 */
