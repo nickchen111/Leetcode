@@ -21,9 +21,7 @@ public:
             while(!q.empty()){
                 int curBox = q.front();
                 q.pop();
-                if(keys[curBox].size() > 0){
-                    for(auto x : keys[curBox]) needkey.insert(x);
-                }
+               
                 if(status[curBox] == 0 && needkey.find(curBox) == needkey.end()) temp.push_back(curBox);
                 else if(status[curBox] == 1 || status[curBox] == 0 && needkey.find(curBox) != needkey.end()){
                     res += candies[curBox];
