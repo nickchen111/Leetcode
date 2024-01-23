@@ -86,8 +86,8 @@ public:
 
 //Union_Find TC:O(N+Elg*E) SC:O(N) N為節點數 E為edge數量
 class Solution {
-    vector<int> parent;
     struct Uf{
+        vector<int> parent;
         UF(int n){
             for(int i = 0; i<n; i++){
                 parent.push_back(i);
