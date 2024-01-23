@@ -2,6 +2,21 @@
 269. Alien Dictionary 🔒
 */
 
+// There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you.
+// You receive a list of non-empty words from the dictionary, where words are sorted lexicographically by the rules of this new language. 
+// Derive the order of letters in this language.
+
+// Example 1:
+
+// Input:
+// [
+//   "wrt",
+//   "wrf",
+//   "er",
+//   "ett",
+//   "rftt"
+// ]
+
 
 //topological sort by BFS TC:O(C+V+E) SC:O(V+E) C為所有字的總數 V為節點總數->字串個數 E為edge數
 class Solution {
@@ -9,7 +24,7 @@ public:
     string alienOrder(vector<string> &words) {
         //topological sort
         //建立一個鄰接表
-        unordered_ma<char, unordered_set<char>> next;
+        unordered_map<char, unordered_set<char>> next;
         unordered_map<char, int> indegree;
         //先將所有出現過的字顯示入度0
         for(auto word:words){
