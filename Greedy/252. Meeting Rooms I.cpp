@@ -50,7 +50,7 @@ public:
     }
 };
 
-//map TC:O(n) SC:O(n)
+//map TC:O(nlgn) SC:O(n)
 class Solution {
 public:
     bool canAttendMeetings(vector<Interval> &intervals) {
