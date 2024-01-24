@@ -6,7 +6,7 @@
 
 // TC:O(n) SC:O(10+n)
 class Solution {
-    int res;
+    int res = 0;
 public:
     int pseudoPalindromicPaths (TreeNode* root) {
         if(root == NULL) return 0;
