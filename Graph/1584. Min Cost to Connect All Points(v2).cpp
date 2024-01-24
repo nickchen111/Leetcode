@@ -110,7 +110,7 @@ public:
             int gmin = INT_MAX;
             int next;
             for(int j = 0; j<n;j++){
-                if(visited[j] == 0 && mindist[j] <= gmin){//所有點都能抵達 找最短的
+                if(visited[j] == 0 && mindist[j] < gmin){//所有點都能抵達 找最短的
                     gmin = mindist[j];
                     next = j;
                 }
