@@ -2,7 +2,7 @@
 1074. Number of Submatrices That Sum to Target
 */
 
-// TC:O(m*m*n*n) SC:O(n)
+// TC:O(m*m*2n) SC:O(n)
 class Solution {
 public:
     int numSubmatrixSumTarget(vector<vector<int>>& matrix, int target) {
