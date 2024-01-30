@@ -2,6 +2,32 @@
 3010. Divide an Array Into Subarrays With Minimum Cost I
 */
 
+// TC:O(nlgn) SC:O(1)
+class Solution {
+public:
+    int minimumCost(vector<int>& nums) {
+        int n = nums.size();
+        int res = nums[0];
+        int start = nums[0];
+        sort(nums.begin(), nums.end());
+        bool flag = 0;
+        int count = 0;
+        for(int i = 0; i < n; i++){
+            if(flag == 0 && nums[i] == start){
+                flag = 1;
+                continue;
+            }
+            else {
+                res += nums[i];
+                count += 1;
+            }
+            if(count == 2) break;
+        }
+        
+        return res;
+    }
+};
+
 // TC:O(n^2) SC:O(1)
 class Solution {
 public:
