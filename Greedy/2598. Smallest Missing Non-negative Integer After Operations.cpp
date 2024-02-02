@@ -2,6 +2,28 @@
 2598. Smallest Missing Non-negative Integer After Operations
 */
 
+// Math TC:O(val) SC:O(val)
+class Solution {
+public:
+    int findSmallestInteger(vector<int>& nums, int val) {
+        vector<int> count(val);
+        for(auto x : nums){
+            count[(x%val + val)%val] += 1;
+        }
+
+        int min_freq = INT_MAX;
+        int r;
+        for(int i = 0; i < val; i++){
+            if(count[i] < min_freq){
+                min_freq = count[i];
+                r = i;
+            }
+        }
+
+        return min_freq*val + r;
+    }
+};
+
 
 //  TC:O(n) SC:O(n)
 class Solution {
