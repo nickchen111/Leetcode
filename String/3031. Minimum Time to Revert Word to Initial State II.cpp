@@ -38,6 +38,19 @@ public:
     }
 };
 
+// STL memcmp
+class Solution {
+public:
+    int minimumTimeToInitialState(string word, int k) {
+        int n = word.size();
+        int t = 1;
+        char* s = &word[0];
+        while(t*k < n && memcmp(s, s+t*k, n-t*k) != 0) t++;
+
+        return t;
+    }
+};
+
 /*
 每次都要從前面移除元素k格然後加入k個 問說最少移動幾次能讓字串變得跟之前一樣
 
