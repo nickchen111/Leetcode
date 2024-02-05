@@ -2,6 +2,57 @@
 227. Basic Calculator II
 */
 
+
+// 2/5 
+class Solution {
+public:
+    int calculate(string s) {
+
+        while(s[0] == ' ') s = s.substr(1);
+        string S = s[0] == '-' ? "-" : "+";
+
+        for(auto ch:s){
+            if(ch == ' ') continue;
+            S+=ch;
+        }
+        s = S;
+
+        int n = s.size();
+        int sum = 0;
+        int sign;
+        stack<int> num;
+        for(int i = 0; i < n; i++){
+            if(s[i] == '+' || s[i] == '-'){
+                sign = s[i] == '+' ? 1 : -1;
+                int j = i+1;
+                while(j < n && isdigit(s[j])) j++;
+                int temp = stoi(s.substr(i+1, j-i-1));
+                temp*=sign;
+                num.push(temp);
+                i = j - 1;
+
+            }
+            else if(s[i] == '*' || s[i] == '/'){
+                int j = i+1;
+                while(j < n && isdigit(s[j])) j++;
+                int temp = stoi(s.substr(i+1, j-i-1));
+                int cur = s[i] == '*' ? num.top()*temp : num.top() / temp;
+                num.pop();
+                num.push(cur);
+                i = j - 1;
+            }
+        }
+
+        int res = 0;
+        while(!num.empty()){
+            res += num.top();
+            num.pop();
+        }
+
+        return res;
+    }
+};
+
 //TC:O(n) SC:O(n)
 class Solution {
 public:
