@@ -2,7 +2,7 @@
 2808. Minimum Seconds to Equalize a Circular Array
 */
 
-// TC:O(n) SC:O(n)
+// TC:O(n*2) SC:O(n*2)
 class Solution {
 public:
     int minimumSeconds(vector<int>& nums) {
@@ -27,6 +27,33 @@ public:
             int res_tmp = 0;
             for(int i = 1; i < m; i++){
                 res_tmp = max(res_tmp, (p.second[i] - p.second[i-1])/2);
+            }
+
+            res = min(res, res_tmp);
+        }
+
+        return res;
+    }
+};
+
+// TC:O(n) SC:O(n)
+class Solution {
+public:
+    int minimumSeconds(vector<int>& nums) {
+        int n = nums.size();
+
+        unordered_map<int, vector<int>> pos;
+        for(int i = 0; i < n; i++){
+            pos[nums[i]].push_back(i);
+        }
+
+        int res = INT_MAX;
+        for(auto [key, arr] : pos){
+            arr.push_back(n + arr[0]);
+            int m = arr.size();
+            int res_tmp = 0;
+            for(int i = 1; i < m; i++){
+                res_tmp = max(res_tmp, (arr[i] - arr[i-1])/2);
             }
 
             res = min(res, res_tmp);
