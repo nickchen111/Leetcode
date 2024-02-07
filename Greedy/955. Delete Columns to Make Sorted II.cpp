@@ -2,7 +2,7 @@
 955. Delete Columns to Make Sorted II
 */
 
-// TC:O(n) SC:O(n)
+// TC:O(n*m) SC:O(n)
 class Solution {
 public:
     int minDeletionSize(vector<string>& strs) {
@@ -14,14 +14,15 @@ public:
             bool flag = 1;
             bool flag2 = 1;
             for(int j = 1; j < n; j++){
-                if(strs[j][i] < strs[j-1][i] && check[j-1] != 1){
+                if(check_new[j-1] == 1) continue;
+                else if(strs[j][i] < strs[j-1][i]){
                     res += 1;
                     flag2 = 0;
                     flag = 0;
                     break;
                 }
                 //有這種曖昧不明的 就還是要比較到下一位
-                else if(strs[j][i] == strs[j-1][i] && check[j-1] != 1){
+                else if(strs[j][i] == strs[j-1][i]){
                    flag = 0;
                 }
                 else {
