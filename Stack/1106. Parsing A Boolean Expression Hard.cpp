@@ -2,6 +2,65 @@
 1106. Parsing A Boolean Expression
 */
 
+// Iterative 2/8
+class Solution {
+public:
+    bool parseBoolExpr(string s) {
+        int n = s.size();
+        stack<char> ops;
+        stack<string> sign;
+        string cur;
+        for(int i = 0; i < n; i++){
+            if(s[i] == '!' || s[i] == '|' || s[i] == '&'){
+                ops.push(s[i]);
+            }
+            else if(s[i] == '('){
+                sign.push(cur);
+                cur = "";
+            }
+            else if(s[i] == ')'){
+                if(!ops.empty()){
+                    if(ops.top() == '|'){
+                        bool flag = 0;
+                        for(int i = 0; i < cur.size(); i++){
+                            if(cur[i] == 't'){
+                                flag = 1;
+                                break;
+                            }
+                        }
+                        if(flag == 1) cur = "t";
+                        else cur = 'f';
+                    }
+                    else if(ops.top() == '&'){
+                        bool flag = 1;
+                        for(int i = 0; i < cur.size(); i++){
+                            if(cur[i] == 'f'){
+                                flag = 0;
+                                break;
+                            }
+                        }
+                        if(flag == 1) cur = "t";
+                        else cur = 'f';
+                    }
+                    else if(ops.top() == '!'){
+                        if(cur == "t") cur = "f";
+                        else cur = "t";
+                    }
+                    ops.pop();
+                }
+                if(!sign.empty()){
+                    cur = sign.top() + cur;
+                    sign.pop();
+                }
+            }
+            else if(s[i] == 'f' || s[i] == 't')cur += s[i];
+        }
+
+        if(cur == "f") return false;
+        else return true;
+    }
+};
+
 // TC:O(n) SC:O(n) iterative 
 class Solution {
 public:
