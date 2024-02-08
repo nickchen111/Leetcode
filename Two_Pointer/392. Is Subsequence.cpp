@@ -48,3 +48,23 @@ public:
         return dp[n][m] == m ? true:false;
     }
 };
+
+// Binary Search TC:O(m*lgn) SC:O(n)
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int n = t.size();
+        unordered_map<char, vector<int>> pos;
+        for(int i = 0; i < n; i++){
+            pos[t[i]].push_back(i);
+        }
+        int cur_pos = 0;
+        for(int i = 0; i < s.size(); i++){
+            auto iter = lower_bound(pos[s[i]].begin(), pos[s[i]].end(), cur_pos);
+            if(iter == pos[s[i]].end()) return false;
+            cur_pos = *iter + 1;
+        }
+
+        return true;
+    }
+};
