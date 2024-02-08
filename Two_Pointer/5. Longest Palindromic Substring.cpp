@@ -28,6 +28,52 @@ public:
     }
 };
 
+// DP TC:O(n^2) SC:O(n^2)
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = s.size();
+        vector<vector<int>> dp(n, vector<int>(n,0));
+        int res = 1;
+        for(int i = 0; i < n; i++){
+            dp[i][i] = 1;
+        }
+        for(int i = 0 ; i < n-1; i++){
+            if(s[i] == s[i+1]){
+                dp[i][i+1] = 2;
+                res = 2;
+            }
+        }
+
+        
+
+        for(int len = 3; len <= n; len++){
+            for(int i = 0; i + len - 1 < n; i++){
+                int j = i + len - 1;
+                if(s[i] == s[j] && dp[i+1][j-1] != 0){
+                    dp[i][j] = dp[i+1][j-1] + 2;
+                }
+                res = max(res, dp[i][j]);
+            }
+        }
+
+        string ret;
+        bool flag = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if(dp[i][j] == res){
+                    ret = s.substr(i, j-i+1);
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag) break;
+        }
+       
+        return ret;
+    }
+};
+
 
 
 /*
