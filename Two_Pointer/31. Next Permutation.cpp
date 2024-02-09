@@ -28,3 +28,38 @@ public:
     }
 };
 
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int n = nums.size();
+        std::stack<int> stack;
+        int idx = -1;
+        for(int i = n-1; i >= 0; i--){
+            //兩個交換 後面的元素直接sort
+            //維護一個單調遞增序列
+            while(!stack.empty() && nums[stack.top()] > nums[i]){
+                idx = stack.top();
+                stack.pop();
+            }
+            if(idx != -1){
+                swap(nums[i], nums[idx]);
+                // x x x i x x x idx
+                sort(nums.begin()+i+1,nums.end());
+                break;
+            }
+            stack.push(i);
+        }
+        if(idx == -1){
+            sort(nums.begin(), nums.end());
+        }
+    }
+};
+
+/*
+求下一個排列組合的狀況
+2 3 3 ->  
+n = 100
+
+此題要從思維上想通再去寫代碼 看出題目的邏輯 一定是從後面開始往前看 看能否找到一位前面比後面小的 在找出要跟他換的那個稍微大一點的數字
+最後去做排序即可
+*/
