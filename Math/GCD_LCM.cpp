@@ -6,3 +6,8 @@ int gcd(int a, int b){
     }
     return a;
 }
+
+
+int LCM(int a, int b){
+    return a*b/GCD(a,b);
+}
