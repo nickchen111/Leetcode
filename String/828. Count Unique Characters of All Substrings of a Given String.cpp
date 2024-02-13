@@ -2,6 +2,41 @@
 828. Count Unique Characters of All Substrings of a Given String
 */
 
+
+// TC:O(n) SC:O(n)
+class Solution {
+public:
+    int uniqueLetterString(string s) {
+        int n = s.size();
+        vector<int> prevEqual(n);
+        vector<int> nextEqual(n);
+        
+        vector<int> pos(26,n);
+        for(int i = n-1; i >= 0; i--){
+            nextEqual[i] = pos[s[i]-'A'];
+            pos[s[i]-'A'] = i;
+        }
+        for(int i = 0; i < 26; i++){
+            pos[i] = -1;
+        }
+
+
+        for(int i = 0; i < n; i++){
+            prevEqual[i] = pos[s[i]-'A'];
+            pos[s[i]-'A'] = i;
+        }
+
+        int res = 0;
+        for(int i = 0; i < n; i++){
+            int left = i - prevEqual[i];
+            int right = nextEqual[i] - i;
+            res += (left*right);
+        }
+
+        return res;
+    }
+};
+
 // TC:O(n) SC:O(26*k) k 為平均位置的數量
 class Solution {
 public:
