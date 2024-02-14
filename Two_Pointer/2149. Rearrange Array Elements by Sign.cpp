@@ -28,10 +28,7 @@ public:
             }
         }
 
-        while(left < pos.size()){
-            res.push_back(pos[left]);
-            left++;
-        }
+        
         while(right < neg.size()){
             res.push_back(neg[right]);
             right++;
