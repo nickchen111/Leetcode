@@ -3,6 +3,49 @@
 */
 
 
+// 2/21
+class Solution {
+public:
+    int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+        unordered_map<int, vector<int>> graph; // 這些站可以從哪輛公車抵達
+        
+        for(int i = 0; i < routes.size(); i++){
+            for(int j = 0; j < routes[i].size(); j++){
+                graph[routes[i][j]].push_back(i);
+            }
+        }
+
+        queue<int> q;
+        vector<bool> visitedStop(1000005);
+        vector<bool> visitedBus(505);
+        visitedStop[source] = 1;
+        q.push(source); 
+        int step = -1;
+        while(!q.empty()){
+            int sz = q.size();
+            step += 1;
+            while(sz--){
+                int curStop = q.front();
+                q.pop();
+                if(curStop == target) return step;
+                //這一站可以搭哪些公車
+                for(auto bus : graph[curStop]){
+                    if(visitedBus[bus]) continue;
+                    visitedBus[bus] = 1;
+                    for(auto nextStop : routes[bus]){
+                        if(visitedStop[nextStop]) continue;
+                        visitedStop[nextStop] = 1;
+                        q.push(nextStop);
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+};
+
+
 // TC:O(m*n) m為公車數量 n為公車停靠站數目 SC:O(m+n)
 class Solution {
 public:
