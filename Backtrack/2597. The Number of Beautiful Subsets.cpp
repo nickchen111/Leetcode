@@ -2,7 +2,7 @@
 2597. The Number of Beautiful Subsets
 */
 
-// 狀態壓縮 Backtrack
+// 狀態壓縮 Backtrack TC:O(2^n) SC:O(2^n)
 class Solution {
 public:
     int beautifulSubsets(vector<int>& nums, int k) {
@@ -27,7 +27,7 @@ public:
     }
 };
 
-// Backtrack+Hash Map
+// Backtrack+Hash Map TC:O(2^n) SC:O(2^n)
 class Solution {
     int k,n;
     int res = 0;
@@ -98,6 +98,41 @@ public:
         }
 
         return res-1;
+    }
+};
+
+
+// Multiset + Backtrack TC:O(2^n) SC:O(2^n)
+class Solution {
+    int res = 0;
+    bool visited[25];
+public:
+    int beautifulSubsets(vector<int>& nums, int k) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        multiset<int> set;
+        for(int i = 0; i < n; i++){
+            set.insert(nums[i]);
+            visited[i] = 1;
+            backtrack(nums, k, i+1, set);
+            set.erase(set.find(nums[i]));
+            visited[i] = 0;
+        }
+        
+        return res;
+    }
+    void backtrack(vector<int>& nums, int k, int cur, multiset<int>& set){
+        res += 1;
+        if(cur == nums.size()) return;
+        for(int i = cur; i < nums.size(); i++){
+            if(visited[i]) continue;
+            if(set.find(nums[i]-k) != set.end()) continue;
+            set.insert(nums[i]);
+            visited[i] = 1;
+            backtrack(nums, k, i+1, set);
+            set.erase(set.find(nums[i]));
+            visited[i] = 0;
+        }
     }
 };
 /*
