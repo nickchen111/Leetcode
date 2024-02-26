@@ -105,7 +105,6 @@ public:
 // Multiset + Backtrack TC:O(2^n) SC:O(2^n)
 class Solution {
     int res = 0;
-    bool visited[25];
 public:
     int beautifulSubsets(vector<int>& nums, int k) {
         int n = nums.size();
@@ -113,10 +112,8 @@ public:
         multiset<int> set;
         for(int i = 0; i < n; i++){
             set.insert(nums[i]);
-            visited[i] = 1;
             backtrack(nums, k, i+1, set);
             set.erase(set.find(nums[i]));
-            visited[i] = 0;
         }
         
         return res;
@@ -125,16 +122,16 @@ public:
         res += 1;
         if(cur == nums.size()) return;
         for(int i = cur; i < nums.size(); i++){
-            if(visited[i]) continue;
             if(set.find(nums[i]-k) != set.end()) continue;
             set.insert(nums[i]);
-            visited[i] = 1;
             backtrack(nums, k, i+1, set);
             set.erase(set.find(nums[i]));
-            visited[i] = 0;
         }
     }
 };
+
+
+   
 /*
 對k取模
 nums%k  = 0 1 2 3 .... k-1
