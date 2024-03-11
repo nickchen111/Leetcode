@@ -2,6 +2,34 @@
 1675. Minimize Deviation in Array
 */
 
+// 3/11
+class Solution {
+public:
+    int minimumDeviation(vector<int>& nums) {
+        int n = nums.size();
+        set<int> set;
+        for(auto x : nums){
+            if(x % 2 == 0){
+                set.insert(x);
+            }
+            else set.insert(x*2);
+        }
+
+        int res = INT_MAX;
+        while(true){
+            res = min(res, *set.rbegin() - *set.begin());
+            if(*set.rbegin() % 2 == 0){
+                int cur = *set.rbegin();
+                set.erase(cur);
+                set.insert(cur/2);
+            }
+            else break;
+        }
+
+        return res;
+    }
+};
+
 
 // TC:O(32n*lg32n) SC:O(N)
 class Solution {
