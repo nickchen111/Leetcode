@@ -33,7 +33,7 @@ private:
 };
 
 
-// top down Memory exceed
+// top down TLE  exceed
 class Solution {
     using LL = long long;
     LL M = 1e9+7;
@@ -45,32 +45,33 @@ public:
         
         vector<vector<int>> dp(k+1); //走到某個位置可以變成某sum所需數字量為多少 sum-> pos
         
-        
         dp[0].push_back(0); // 0個數字能夠得到sum = 0 需要的數字量
         for(int i = 1; i <= n; i++){
-            auto dp_tmp = dp;
-            for(int sum = 0; sum <= k; sum++){
-                if(sum-nums[i] < 0) continue;
-                for(int k = 0; k < dp_tmp[sum-nums[i]].size(); k++){
-                    dp[sum].push_back(dp_tmp[sum-nums[i]][k]+1);
+            for(int sum = k; sum-nums[i] >= 0; sum--){
+                for(int k = 0; k < dp[sum-nums[i]].size(); k++){
+                    dp[sum].push_back(dp[sum-nums[i]][k]+1);
                 }
             }
         }
         
-        vector<LL> power(n+1,1);
-        for(int i = 1; i <= n; i++){
-            power[i] = (power[i-1]*2) % M;
-        }
-        
-        
-        
+       
         for(int j = 0; j < dp[k].size(); j++){
-            res = (res + power[n - dp[k][j]]) % M;
+            res = (res + quickMul(2, n-dp[k][j])) % M;
         }
 
-        
-        
+    
         return res;
+    }
+    
+    LL quickMul(LL x, LL n) {
+        if (n == 0) {
+            return 1;
+        }
+        LL y = quickMul(x, n / 2) % M;
+        if(n%2){
+          return (y*y%M)*x%M;
+        }
+        else return y*y%M;
     }
 };
 
