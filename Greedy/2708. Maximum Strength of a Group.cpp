@@ -2,6 +2,48 @@
 2708. Maximum Strength of a Group
 */
 
+// 3/24 Greedy 
+class Solution {
+    using LL = long long;
+public:
+    long long maxStrength(vector<int>& nums) {
+        int n = nums.size();
+        LL res = 1;
+        LL maxVal = *max_element(nums.begin(), nums.end());
+        
+        vector<int> neg;
+        bool flag = 0;
+        for(auto x : nums){
+            if(x > 0) {
+                res*=x;
+                flag = 1;
+            }
+            else if(x < 0) neg.push_back(x);
+        }
+        sort(neg.begin(), neg.end());
+
+        int m = neg.size();
+        
+        if(m % 2 == 0){
+            for(auto x : neg){
+                res*=x;
+                flag = 1;
+            }
+        }
+        else {
+            m -= 1;
+            for(int i = 0; i < m; i++){
+                res *= neg[i];
+                flag = 1;
+            }
+        }
+
+        if(flag) return res;
+        else return maxVal;
+       
+    }
+};
+
 // Greedy TC:O(n) SC:O(n)
 class Solution {
 public:
