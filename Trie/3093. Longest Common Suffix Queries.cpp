@@ -72,6 +72,80 @@ public:
     }
 };
 
+// 不sort 也可以
+class Solution {
+    struct TrieNode{
+        TrieNode* children[26];
+        int index;
+        int length;
+         TrieNode()
+        {
+            for (int i=0; i<26; i++)
+                children[i] = NULL;
+            index = -1;
+            length = 0;
+        }        
+        
+        ~TrieNode(){
+            for(auto child : children){
+                if(child) delete child;
+            }
+        }
+    };
+    TrieNode* root = new TrieNode();
+public:
+    vector<int> stringIndices(vector<string>& wordsContainer, vector<string>& wordsQuery) {
+        
+        int idx = 0;
+        int maxLength = INT_MIN;
+        for(int i = 0; i < wordsContainer.size(); i++){
+            string s = wordsContainer[i];
+            if(maxLength > wordsContainer[i].size()){
+                maxLength = wordsContainer[i].size();
+                idx = i;
+            }
+            TrieNode* node = root;
+            for(int j = s.size()-1; j >= 0; j--){
+                if(node->children[s[j]-'a'] == NULL){
+                    node->children[s[j]-'a'] = new TrieNode();
+                    node->children[s[j]-'a']->index = i;
+                    node->children[s[j]-'a']->length = s.size();
+                } 
+                else {
+                    if(node->children[s[j]-'a']->length > s.size()){
+                        node->children[s[j]-'a']->length = s.size();
+                        node->children[s[j]-'a']->index = i;
+                    }
+                }
+                
+                node = node->children[s[j]-'a'];
+            }
+           
+        }
+        
+        vector<int> res(wordsQuery.size(),-1);
+        for(int i = 0; i < wordsQuery.size(); i++){
+            string s = wordsQuery[i];
+            TrieNode* node = root;
+            int idxx = -1;
+            for(int j = s.size()-1; j >= 0; j--){
+                if(node->children[s[j]-'a']){
+                    idxx = node->children[s[j]-'a']->index;
+                    node = node->children[s[j]-'a'];
+                }
+                else break;
+                
+            }
+            
+            res[i] = idxx;
+            
+            if(res[i] == -1) res[i] = idx;
+        }
+        
+        return res;
+    }
+};
+
 /*
 找最長共同後綴
 Constraints:
