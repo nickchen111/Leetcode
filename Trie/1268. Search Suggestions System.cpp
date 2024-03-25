@@ -2,7 +2,7 @@
 1268. Search Suggestions System
 */
 
-// TC: O(n * m + k * 26^k) m為建立trie時的平均字串長度 k為搜尋單詞的長度 SC:O(n * m + k * 26)
+// TC: O(n * m + k * 26*m) m為建立trie時的平均字串長度 k為搜尋單詞的長度 SC:O(n * m + k * 26)
 class Solution {
     class TrieNode{
     public:
