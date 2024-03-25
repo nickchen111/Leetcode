@@ -1,8 +1,33 @@
 /*
 1452. People Whose List of Favorite Companies Is Not a Subset of Another List
 */
+ 
+// BitMask  TC:O(n*m) SC:O(n*m*100)
+class Solution {
+public:
+    vector<int> peopleIndexes(vector<vector<string>>& favoriteCompanies) {
+        int n = favoriteCompanies.size();
+        unordered_map<string, bitset<100>> c2p; // company to person
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < favoriteCompanies[i].size(); j++){
+                c2p[favoriteCompanies[i][j]][i] = 1;
+            }
+        }
 
-// BitMask 
+        vector<int> res;
+        for(int i = 0; i < n; i++){
+            bitset<100> bs;
+            bs.set(); // 先全部置為1 然後去&其他跟我喜歡的東西一樣的公司 如果剩下的人超過2就代表我不是唯一有我這個set的人
+            for(auto str : favoriteCompanies[i]){
+                bs &= c2p[str];
+            }
+
+            if(bs.count() == 1) res.push_back(i);
+        }
+
+        return res;
+    }
+};
 
 // 優化資料結構
 class Solution {
