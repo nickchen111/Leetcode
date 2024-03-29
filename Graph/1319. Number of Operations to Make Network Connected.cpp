@@ -2,6 +2,53 @@
 1319. Number of Operations to Make Network Connected
 */
 
+// 3/29 
+class Solution {
+    vector<int> parent;
+    int find(int x){
+        if(x != parent[x]){
+            parent[x] = find(parent[x]);
+        }
+
+        return parent[x];
+    }
+
+    void union_(int x, int y){
+        x = find(x);
+        y = find(y);
+        if(x < y){
+            parent[y] = x;
+        }
+        else parent[x] = y;
+    }
+    // 不可能的情況是 n組 n-1條線
+public:
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        if(connections.size() <= n-2) return -1;
+        parent.resize(n);
+        for(int i = 0; i < n; i++){
+            parent[i] = i;
+        }
+       
+        for(auto connect : connections){
+            union_(connect[0], connect[1]);
+           
+        }
+
+        
+        unordered_set<int> set;
+        for(int i = 0; i < n; i++){
+            int root = find(i);
+            if(set.find(root) == set.end()){
+                set.insert(root);
+            }
+        }
+
+        return set.size()-1;
+    }
+};
+
+
 // 適用想連接的點也有可能跟其他點連接狀況 TC:O(n) SC:O(n)
 class Solution {
     class UF{
