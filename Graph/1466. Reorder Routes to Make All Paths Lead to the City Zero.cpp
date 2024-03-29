@@ -2,6 +2,42 @@
 1466. Reorder Routes to Make All Paths Lead to the City Zero
 */
 
+// BFS 3/29
+class Solution {
+public:
+    int minReorder(int n, vector<vector<int>>& connections) {
+        
+        vector<bool> visited(n);
+        vector<vector<int>> graph(n);
+        unordered_map<int, unordered_set<int>> map; // 紀錄誰指向自己
+        for(auto connect : connections){
+            map[connect[1]].insert(connect[0]);
+            graph[connect[0]].push_back(connect[1]);
+            graph[connect[1]].push_back(connect[0]);
+        }
+
+        queue<int> q;
+        q.push(0);
+        int res = 0;
+        while(!q.empty()){
+            int sz = q.size();
+            while(sz--){
+                int cur = q.front();
+                q.pop();
+                if(visited[cur]) continue;
+                visited[cur] = 1;
+                for(auto next : graph[cur]){
+                    if(visited[next]) continue;
+                    if(map[cur].find(next) == map[cur].end()) res ++;
+                    q.push(next);
+                }
+            }
+        }
+
+        return res; 
+    }
+};
+
 // DFS TC:O(V+E) SC:O(V)
 class Solution {
     vector<bool> visited;
