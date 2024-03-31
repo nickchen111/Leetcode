@@ -21,6 +21,53 @@ public:
     }
 };
 
+// Slide Window
+class Solution {
+public:
+    int minOperations(int n) {
+        string str;
+        while(n != 0){
+            if(n&1){
+                str.push_back('1');
+            }
+            else str.push_back('0');
+            n /= 2;
+        }
+
+        int res = 0;
+        int j = 0;
+        
+        // 111001
+       
+        for(int i = 0; i < str.size(); i++){
+            j = max(i,j);
+            while(j < str.size() && str[j] == '1'){
+                j++;
+            }
+            // 111001
+            if(j-i >= 2) {
+                if(j < str.size()){
+                    res += 1;
+                    str[j] = '1';
+                }
+                else {
+                    res += 2;
+                    break;
+                }
+                i = j - 1;
+            }
+            else if(j-i == 1){
+                res += 1;
+                i = j-1;
+            } 
+
+        }
+
+        return res;
+    }
+};
+
+
 /*
 39 -> 0 1 0 0 1 1 1 
 40 -> 0 1 0 1 0 0 0 
