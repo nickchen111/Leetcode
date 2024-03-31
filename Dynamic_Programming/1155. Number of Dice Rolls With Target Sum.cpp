@@ -2,6 +2,34 @@
 1155. Number of Dice Rolls With Target Sum
 */
 
+// 3/31
+class Solution {
+    using LL = long long;
+    LL M = 1e9+7;
+public:
+    int numRollsToTarget(int n, int k, int target) {
+        LL dp[n+1][target+1];
+        memset(dp,0,sizeof(dp));
+        dp[0][0] = 1;
+        for(int j = 1; j <= min(target,k); j++){
+            dp[1][j] = 1;
+        }
+
+        for(int i = 2; i <= n; i++){
+            for(int j = target; j >= 0; j--){
+                for(int t = 1; t <= k; t++){
+                    if(j-t >= 0){
+                        dp[i][j] = (dp[i][j] + dp[i-1][j-t]) %M;
+                    }
+                    else break;
+                }
+            }
+        }
+
+        return dp[n][target];
+    }
+};
+
 // top down  TC:O(n*k*target) SC:O(k*target)
 class Solution {
     long M = 1e9+7;
