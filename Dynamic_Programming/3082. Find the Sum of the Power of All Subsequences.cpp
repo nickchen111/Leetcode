@@ -4,33 +4,41 @@
 
 // bottom up 
 class Solution {
+    using LL = long long;
+    LL M = 1e9+7;
 public:
     int sumOfPower(vector<int>& nums, int k) {
-        vector<vector<vector<int>>> dp(nums.size() + 1, vector<vector<int>>(k + 1, vector<int>(nums.size() + 1, -1)));
-        return dfs(0, nums.size(), k, nums, dp);
-    }
+        int n = nums.size();
+        vector<vector<vector<LL>>> dp(n+1, vector<vector<LL>>(k+1, vector<LL>(n+1,-1)));
     
-private:
-    int dfs(int index, int n, int remain, vector<int>& nums, vector<vector<vector<int>>>& dp) {
-        if (dp[index][remain][n] == -1) {
-            if (remain == 0) dp[index][remain][n] = power(2, n);
+        return DFS(0, n, k, nums, dp) % M;
+    }
+    LL DFS(int index, int n, int remain, vector<int>& nums, vector<vector<vector<LL>>>& dp){
+        if(dp[index][remain][n] == -1){
+            if(remain == 0){
+                dp[index][remain][n] = quickMul(2,n);
+            }
             else {
                 dp[index][remain][n] = 0;
-                for (int i = index; i < nums.size(); i++) {
-                    if (nums[i] <= remain) dp[index][remain][n] = (dp[index][remain][n] + dfs(i + 1, n - 1, remain - nums[i], nums, dp)) % 1000000007;
+                for(int i = index; i < nums.size(); i++){
+                    if(nums[i] <= remain) dp[index][remain][n] = (dp[index][remain][n] + DFS(i+1,n-1, remain-nums[i], nums, dp))%M;
                 }
+                
             }
         }
         return dp[index][remain][n];
     }
     
-    int power(long base, int p) {
-        if (p == 0) return 1;
-        base %= 1000000007;
-        if (p % 2 == 0) return power(base * base, p / 2) % 1000000007;
-        else return base * power(base * base, p / 2) % 1000000007;
+    LL quickMul(LL x, LL n) {
+        if (n == 0) {
+            return 1;
+        }
+        LL y = quickMul(x, n / 2) % M;
+        if(n%2){
+          return (y*y%M)*x%M;
+        }
+        else return y*y%M;
     }
-};
 
 
 // top down TLE  exceed
