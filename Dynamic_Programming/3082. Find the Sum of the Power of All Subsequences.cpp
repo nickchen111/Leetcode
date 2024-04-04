@@ -2,6 +2,45 @@
 3082. Find the Sum of the Power of All Subsequences
 */
 
+
+// 4/4 
+class Solution {
+    using LL = long long;
+    LL M = 1e9+7;
+    LL dp[105][105][105];
+public:
+    int sumOfPower(vector<int>& nums, int k) {
+        int n = nums.size();
+        nums.insert(nums.begin(), -1);
+        dp[0][0][0] = 1;
+        for(int i = 1; i <= n; i++){
+            for(int s = 0; s <= k; s++){
+                for(int j = 0; j <= i; j++){
+                    dp[i][s][j] = dp[i-1][s][j];
+                    if(s - nums[i] >= 0 && j >= 1) dp[i][s][j] += dp[i-1][s-nums[i]][j-1];
+                    dp[i][s][j] %= M;
+                }
+            }
+        }
+        
+        LL res = 0;
+        for(int j = 1; j <= n; j++){
+            LL t = dp[n][k][j];
+            res = (res + quickMul(2, n - j)*t) % M;
+        }
+
+        return res;
+    }
+    LL quickMul(LL a, LL b){
+        if(b == 0) return 1;
+        LL y = quickMul(a, b/2);
+        if(b % 2){
+            return (y%M*y%M)*a%M;
+        }
+        else return (y%M*y%M);
+    }
+};
+
 // bottom up 
 class Solution {
     using LL = long long;
