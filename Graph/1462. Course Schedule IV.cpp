@@ -2,6 +2,49 @@
 1462. Course Schedule IV
 */
 
+// 4/5
+class Solution {
+public:
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+        int n = numCourses;
+        vector<unordered_set<int>> next(n);
+        for(auto pre : prerequisites){
+            next[pre[0]].insert(pre[1]);
+        }
+        
+        for(int i = 0; i < n; i++){
+            queue<int> q;
+            q.push(i);
+            vector<bool> visited(n);
+            
+            while(!q.empty()){
+                int sz = q.size();
+                while(sz--){
+                    int cur = q.front();
+                    q.pop();
+                    if(visited[cur]) continue;
+                    visited[cur] = 1;
+                    next[i].insert(cur);
+                    for(auto nxt : next[cur]){
+                        q.push(nxt);
+                    }
+                }
+            }
+        }
+
+        vector<bool> res(queries.size());
+        for(int i = 0; i < queries.size(); i++){
+            int pre = queries[i][0]; int nxt = queries[i][1];
+            if(next[pre].find(nxt) != next[pre].end()){
+                res[i] = 1;
+            }
+        }
+
+        return res;
+    }
+};
+
+
 // 二維 Vector裝 答案 TC:O(n^2) SC:O(n^2)
 class Solution {
 public:
