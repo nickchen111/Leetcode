@@ -2,6 +2,33 @@
 2944. Minimum Number of Coins for Fruits
 */
 
+// 4/6 
+class Solution {
+public:
+    int minimumCoins(vector<int>& prices) {
+        int n = prices.size();
+        prices.insert(prices.begin(),0);
+        vector<vector<int>> dp(n+1, vector<int>(2,INT_MAX));
+        dp[0][0] = 0;
+        dp[1][1] = prices[1];
+        deque<int> dq; // 數值由小到大 裡面放index 並且是有取的狀態的
+        dq.push_back(1);
+        for(int i = 2; i <= n; i++){
+            dp[i][1] = min(dp[i-1][0], dp[i-1][1]) + prices[i];
+            while(!dq.empty() && dp[dq.back()][1] >= dp[i][1]){
+                dq.pop_back();
+            }
+            while(!dq.empty() && dq.front()*2 < i){
+                dq.pop_front();
+            }
+            dq.push_back(i);
+            dp[i][0] = dp[dq.front()][1];
+        }
+
+        return min(dp[n][1], dp[n][0]);
+    }
+};
+
 // 雙狀態 + Deque  TC:O(n) SC:O(n)
 class Solution {
     using LL = long long;
