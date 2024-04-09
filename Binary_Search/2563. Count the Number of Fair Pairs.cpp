@@ -2,7 +2,32 @@
 2563. Count the Number of Fair Pairs
 */
 
-// TC:O(nlgn) SC:O(1)
+
+// Two Pointer TC:O(nlgn) SC:O(1) 
+class Solution {
+    using LL = long long;
+public:
+    long long countFairPairs(vector<int>& nums, int lower, int upper) {
+        sort(nums.begin(), nums.end());
+        
+        return helper(nums, upper) - helper(nums, lower-1);
+    }
+    LL helper(vector<int>& nums, int thr){
+        LL res = 0;
+        int n = nums.size();
+        int j = n-1;
+        for(int i = 0, j = n-1; i < j; i++){
+            while(j > i && nums[j] + nums[i] > thr){
+                j--;
+            }
+            res += (j-i);
+        }
+
+        return res;
+    }
+};
+
+// Binary Search TC:O(nlgn) SC:O(1)
 class Solution {
     using LL = long long;
 public:
