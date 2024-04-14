@@ -1,8 +1,24 @@
 
-
-int c = state & - state;
-int r = state + c;
-state = (((r ^ state) >> 2) / c) | r;
+int m = nums.size();
+for(int k = 1; k <= m; k++){
+    int state = (1<<k) -1;
+    LL sum = 0;
+    while(state < (1<<m)){
+        LL product = 1;
+        for(int i = 0; i < m; i++){
+            if((state >> i)&1) {
+                product = product * coins[i] / gcd(product, coins[i]);
+            }
+        }
+        sum += (mid/product);
+        
+        int c = state&-state;
+        int r = state + c;
+        state = (((r^state)>>2)/c ) | r;
+    }
+    
+    // do something
+}
 
 /*
 int c = state & -state;：這一行程式碼使用了位元運算中的位與（AND）操作符號 &，將 state 和 state 的補數 -state 進行位元與運算。補數的計算是取反加一的操作，即 ~state + 1。位元與操作會將 state 中最右邊的 1 保留下來，其他位元都設為 0。這樣就得到了 c，它是 state 中最右邊的 1 所在的位元位置。
