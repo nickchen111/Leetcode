@@ -2,6 +2,61 @@
 842. Split Array into Fibonacci Sequence
 */
 
+// Fibonacci
+class Solution {
+public:
+    vector<int> splitIntoFibonacci(string num) {
+        int n = num.size();
+        
+        for(int i = 1; i <= n/2; i++){
+            if(i > 10) break;
+            long x = stol(num.substr(0,i));
+            if(x > INT_MAX) break;
+            if(i > 1 && num[0] == '0') break;
+            for(int j = 1; j <= n/2; j++){
+                if(j > 10) break;
+                
+                long y = stol(num.substr(i,j));
+                if(y > INT_MAX) break;
+                if(j > 1 && num[i] == '0') break;
+
+                int nxt = i + j;
+                if(nxt == n) break;
+
+                vector<int> res;
+                res.push_back(x);
+                res.push_back(y);
+                long a = x, b = y;
+                while(nxt != n){
+                    long target = a + b;
+                    if(target > INT_MAX) break;
+                    string s = to_string(target);
+                    int m = s.size();
+                    if(m + nxt > n || stol(num.substr(nxt, m)) != target) break;
+                    nxt += m;
+                    a = b;
+                    b = target;
+                    res.push_back(target);
+                    
+                    if(nxt == n) return res;
+                }
+            }
+        }
+
+        return {};
+    }
+};
+
+/*
+長度最多31
+代表一個數字最多長度不可以超過10
+f1 = f2 = f3
+不能有leading zero 除了0本身
+回傳可以成功被切割成fibonacci的數組
+n = 200
+*/
+
+
 // Fibonacci TC:O(n^2) SC:O(n) n <= 10 
 class Solution {
 public:
