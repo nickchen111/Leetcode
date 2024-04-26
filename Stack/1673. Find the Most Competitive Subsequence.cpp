@@ -2,6 +2,29 @@
 1673. Find the Most Competitive Subsequence
 */
 
+// 4/26 更簡潔寫法 
+class Solution {
+public:
+    vector<int> mostCompetitive(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<int> stack;
+        int count = n-k;
+        for(int i = 0; i < n; i++){
+            // x x x x x 
+            while(!stack.empty() && stack.back() > nums[i] && count > 0){
+                count -= 1;
+                stack.pop_back();
+            }
+            stack.push_back(nums[i]);
+        } 
+
+        while(stack.size() > k) stack.pop_back();
+
+
+        return stack;
+    }
+};
+
 // 限定刪除元素個數思維 TC:O(n) SC:O(n)
 class Solution {
 public:
