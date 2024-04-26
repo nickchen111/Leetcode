@@ -2,6 +2,59 @@
 3007. Maximum Number That Sum of the Prices Is Less Than or Equal to K
 */
 
+// 4/26
+class Solution {
+    using LL = long long;
+public:
+    long long findMaximumNumber(long long k, int x) {
+        LL left = 1, right = 1e15;
+        while(left < right){
+            LL mid = left + (right - left+1)/2;
+            if(check(mid, k,x)){
+                left = mid;
+            }
+            else right = mid-1;
+        }
+
+        return left;
+    }
+    bool check(LL A, LL k, int x){
+        LL a = A;
+        vector<int> arr;
+        // 頭 YYY 0 XXX 尾 低位到高位
+        while(a > 0){
+            arr.push_back(a%2);
+            a/=2;
+        }
+        LL res = 0;
+        for(int i = x-1; (1LL<<i) <= A; i+=x){
+            LL X = 0;
+            if(arr[i] == 0){
+                for(int j = arr.size()-1; j > i; j--){
+                    X = X*2 + arr[j];
+                }
+                res += X*pow(2,i);
+            }
+            else {
+                for(int j = arr.size()-1; j > i; j--){
+                    X = X*2 + arr[j];
+                }
+                res += X*pow(2,i); 
+
+                LL Y = 0;
+                for(int j = i-1; j >= 0; j--){
+                    Y = Y*2 + arr[j];
+                }
+
+                res +=(Y+1);
+            }
+        }
+
+        if(res > k) return false;
+        return true;
+    }
+};
+
 // TC:O(50*50*lgn) SC:O(50)
 class Solution {
     using LL = long long;
