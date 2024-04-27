@@ -8,13 +8,13 @@ class Solution {
 public:
     string getDirections(TreeNode* root, int startValue, int destValue) {
         // LCA寫法 
-        vector<int> nums1, nums2;
+        =
         string dir1,dir2;
-        DFS(root, nums1,dir1, startValue);
-        DFS(root, nums2, dir2, destValue);
+        DFS(root, dir1, startValue);
+        DFS(root, dir2, destValue);
         //找分岔點
         int k = 0;
-        while(k < nums1.size() && k < nums2.size() &&  nums1[k] == nums2[k]) k++;
+        while(k < dir1.size() && k < dir2.size() &&  dir1[k] == dir2[k]) k++;
         
         //將左邊的都改成U
         for(int i = k; i < dir1.size(); i++){
@@ -23,22 +23,18 @@ public:
 
         return dir1.substr(k) + dir2.substr(k);
     }
-    bool DFS(TreeNode* root, vector<int>& nums, string& dir, int target){
+    bool DFS(TreeNode* root, string& dir, int target){
         if(root == NULL) return false;
         if(root->val == target) return true;
         
         if(root->left){
-            nums.push_back(root->left->val);
             dir += 'L';
             if(DFS(root->left, nums, dir, target)) return true;
-            nums.pop_back();
             dir.pop_back();
         }
         if(root->right){
-            nums.push_back(root->right->val);
             dir += 'R';
             if(DFS(root->right, nums, dir, target)) return true;
-            nums.pop_back();
             dir.pop_back();
         }
 
