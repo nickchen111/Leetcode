@@ -59,7 +59,7 @@ public:
 
         if(target.size() > n) return n;
         int res = target.size() - 1 + count[n-target.size()];
-        for(int i = n-1; i >= 0; i--){
+        for(int i = n-target.size(); i >= 0; i--){
             if(check(i,s,target,0)){
                 res = max(res, (int)target.size() + count[i]);
                 break;
