@@ -38,56 +38,70 @@ public:
 // Recursion 從後面取 取到就停 TC:O(n*k) SC:O(n) 
 class Solution {
 public:
-    int longestSubsequence(string s, int k) {
-        int n = s.size();
+    int longestSubsequence(string s, int k) 
+    {
+        string t;
+        while (k>0)
+        {
+            if (k%2==0)
+                t.push_back('0');
+            else
+                t.push_back('1');
+            k/=2;
+        }
+        reverse(t.begin(), t.end());
         
-        vector<int> count(n);
-        int count0 = 0;
-        for(int i = 0; i < n; i++){
-            count[i] = count0;
-            if(s[i] == '0') count0 += 1;
-        }
-        string target;
-        int temp = k;
-        for(int i = 0; i < 32; i++){
-            int cur = temp&1;
-            if(cur) target = "1" + target;
-            else target = "0" + target;
-            temp >>= 1;
-            if(temp == 0) break;
-        }
-
-        if(target.size() > n) return n;
-        int res = target.size() - 1 + count[n-target.size()];
-        for(int i = n-target.size(); i >= 0; i--){
-            if(check(i,s,target,0)){
-                res = max(res, (int)target.size() + count[i]);
+        int m = s.size();
+        int n = t.size();
+        
+        if (m<n) return m;
+        
+        int ret = countZeros(s, m-n+1) + n-1;  
+        
+        for (int i=m-n; i>=0; i--)
+        {
+            if (check(s,i,t, 0))
+            {
+                ret = max(ret, countZeros(s, i) + n);
                 break;
-            }
+            }               
         }
-      
-        return res;
+        
+        return ret ;        
     }
-    bool check(int i, string& s, string& t, int j){
-        if(j == t.size()) return true;
-        if(i == s.size()) return false;
-        
-        
-        if(t[j] == '1'){
-            if(s[i] == '0') return s.size() - i >= t.size() - j;
-            else {
-                return check(i+1, s, t, j+1);
-            }
-        }
-        else {
-            while(s[i] == '1') i++;
-            if(i == s.size()) return false;
-            return check(i+1, s, t, j+1);
-        }
-        
-
+    
+    int countZeros(string&s, int k)
+    {
+        int count = 0;
+        for (int i=0; i<k; i++)
+            count+= s[i]=='0';
+        return count;
     }
+    
+    bool check(string& s, int i, string& t, int j)
+    {
+        if (j==t.size()) return true;
+        if (i==s.size()) return false;
+        
+        if (t[j]=='1')
+        {
+            if (s[i]=='1')
+                return check(s, i+1, t, j+1);
+            else
+                return (int)s.size() - i >= (int)t.size() - j;
+        }
+        else
+        {
+            while (i<s.size() && s[i]=='1')
+                i++;
+            if (i==s.size()) return false;
+            else return check(s, i+1, t, j+1);
+        }
+    }    
 };
+
+ 
+     
 
 
 // 未優化 TC:O(n*k) SC:O(n)
