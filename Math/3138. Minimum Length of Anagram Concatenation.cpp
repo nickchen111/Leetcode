@@ -2,7 +2,7 @@
 3138. Minimum Length of Anagram Concatenation
 */
 
-//最佳解 TC:O(26*n) SC:O(26*n)
+//最佳解 TC:O(26*lgn*lgn + n*26) SC:O(26*n)
 class Solution {
     int count[100005][26];
     int n;
@@ -19,6 +19,7 @@ public:
         }
         
         vector<int>arr;
+        // lgn 類似埃氏篩
         for (int i=1; i*i<=n; i++)
         {
             if (n%i!=0) continue;
