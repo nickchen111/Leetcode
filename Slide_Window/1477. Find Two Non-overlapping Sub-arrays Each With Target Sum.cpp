@@ -53,6 +53,7 @@ public:
         int res = INT_MAX;
         unordered_map<int, int> map; // presum -> pos
         map[0] = -1;
+        int minLen = INT_MAX;
         for(int i = 0; i < n; i++){
             int cur = presum[i];
             if(map.find(cur-target) != map.end()){
@@ -65,12 +66,13 @@ public:
                         iter = prev(iter,1);
                         res = min(res, iter->second + len1);
                     }
-                    
-                    auto iter2 = --pos.end();
-                    pos[i] = min(iter2->second, len1);
+
+                    pos[i] = min(minLen, len1);
+                    minLen = min(minLen, len1);
                 }
                 else if(pos.size() == 0){
                     pos[i] = len1;
+                    minLen = min(minLen, len1);
                 }
             }
 
