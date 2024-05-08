@@ -2,6 +2,36 @@
 2830. Maximize the Profit as the Salesman
 */
 
+// TC:O(mlgm) SC:O(m)
+class Solution {
+public:
+    int maximizeTheProfit(int n, vector<vector<int>>& offers) {
+        auto cmp = [](const vector<int>& a, const vector<int>& b){
+            if(a[1] != b[1]) return a[1] < b[1];
+            else return a[0] < b[0];
+        };
+
+        sort(offers.begin(), offers.end(), cmp);
+        map<int,int> map; // pos -> maximum profit
+        map[-1] = 0;
+        int maxProfit = 0;
+        int res = 0;
+        for(int i = 0; i < offers.size(); i++){
+            int start = offers[i][0], end = offers[i][1], profit = offers[i][2];
+            auto iter = map.lower_bound(start);
+            iter = prev(iter);
+            
+            res = max(res, iter->second + profit);
+            map[end] = max(maxProfit, iter->second + profit);
+            maxProfit = max(maxProfit, map[end]);
+            
+        }
+
+        return res;
+    }
+};
+
+
 // TC:O(n) SC:O(n)
 class Solution {
 public:
