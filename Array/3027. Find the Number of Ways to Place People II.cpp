@@ -2,6 +2,37 @@
 3027. Find the Number of Ways to Place People II
 */
 
+
+// TC:O(nlgn + n^2) SC:O(1) 5/13 more concise
+class Solution {
+public:
+    int numberOfPairs(vector<vector<int>>& points) {
+        // 先從高的排到低的 如果 x 軸 也大於前者 那就確認ok break 
+        auto cmp = [](const vector<int>& a, const vector<int>& b){
+            if(a[1] != b[1]) return a[1] > b[1];
+            else return a[0] < b[0];
+        };
+        sort(points.begin(), points.end(), cmp);
+
+        int res = 0;
+        int m = points.size();
+        for(int i = 0; i < m; i++){
+            int height = INT_MAX;
+            int width = INT_MAX;
+            for(int j = i + 1; j < m; j++){
+                if(width > points[j][0] && height > points[j][1] && points[j][0] >= points[i][0]){
+                    res += 1;
+                    height = min(height, points[j][1]);
+                    width = min(width, points[j][0]);
+                }
+            }
+        }
+
+        return res;
+
+    }
+};
+
 // TC:O(nlgn + n^2) SC:O(1)
 class Solution {
 public:
