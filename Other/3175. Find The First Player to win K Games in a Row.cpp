@@ -51,6 +51,27 @@ public:
     }
 };
 
+// TC:O(n) SC:O(1) 更快的方式
+class Solution {
+public:
+    int findWinningPlayer(vector<int>& skills, int k) {
+        int maxVal = skills[0];
+        int count = 0;
+        int idx = 0;
+        for(int i = 1; i < skills.size(); i++){
+            if(skills[i] > maxVal){
+                count = 1;
+                maxVal = skills[i];
+                idx = i;
+            }
+            else count += 1;
+            if(count == k) return idx;
+        }
+
+        return idx;
+    }
+};
+
 /*
 這題在問說比較前兩個數字 較小的數字放到隊列尾巴較大的繼續比 看哪個index可以連續贏k次 k 可以到1e9 但是對列元素只會有1e6 
 所以如果 k >= n 直接找最大的元素就對了 如果k 小於n 那就直接deque模擬
