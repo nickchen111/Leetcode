@@ -14,7 +14,7 @@ public:
     }
 };
 
-//次佳解 TC:O(n) SC:O(n) 
+//次佳解 TC:O(nlgn) SC:O(n) 
 class Solution {
     vector<int> arr;
     vector<int> presum;
