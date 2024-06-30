@@ -39,7 +39,7 @@ public:
 };
 
 
-// TC:O(n) SC:O(n)
+// TC:O(n) SC:O(1)
 class Solution {
 public:
     int maximumLength(vector<int>& nums) {
