@@ -26,6 +26,29 @@ public:
     }
 };
 
+// TC:O(n*k) SC:O(k^2)
+class Solution {
+public:
+    int maximumLength(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<vector<int>> dp(k+1, vector<int>(k+1,0));
+        
+        int res = 1;
+        for(int i = 0; i < n; i++){
+            int mod = (nums[i] % k);
+            for(int j = 0; j < k; j++){
+                dp[j][mod] = dp[mod][j] + 1;
+                res = max(res, dp[j][mod]);
+            }
+        }
+        
+
+        return res;
+
+    }
+};
+
+
 /*
 x x x x x x 
 [1,2,3,10,2] -> 3
