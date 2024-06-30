@@ -37,3 +37,25 @@ public:
         return res;
     }
 };
+
+
+// TC:O(n) SC:O(n)
+class Solution {
+public:
+    int maximumLength(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(2+1, vector<int>(2+1,0));
+        
+        int res = 1;
+        for(int i = 0; i < n; i++){
+            int mod = (nums[i] % 2);
+            for(int j = 0; j < 2; j++){
+                dp[j][mod] = dp[mod][j] + 1;
+                res = max(res, dp[j][mod]);
+            }
+        }
+        
+
+        return res;
+    }
+};
