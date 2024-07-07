@@ -1,5 +1,7 @@
 /*
 3171. Find Subarray With Bitwise AND Closest to K
+3171. Find Subarray With Bitwise OR Closest to K
+
 */
 
 
@@ -40,6 +42,35 @@ public:
             }
             set = set2;
         }
+        return res;
+    }
+};
+
+// 題目改名並且換成OR TC:O(n*log(U)) SC:O(log(U))
+class Solution {
+public:
+    int minimumDifference(vector<int>& nums, int k) {
+        int n = nums.size();
+        long long res = INT_MAX;
+        set<long long> set, tmp;
+        for(int i = 0; i < n; i++){
+            res = min(res, (long long)abs(k-nums[i]));
+            for(auto &val : set){
+                long long cur = val | nums[i];
+                tmp.insert(cur);
+            }
+            tmp.insert(nums[i]);
+            auto iter = tmp.upper_bound(k);
+            if(iter != tmp.end()){
+                res = min(res, abs(k - *iter));
+            }
+            if(iter != tmp.begin()){
+                res = min(res, abs(k - *prev(iter)));
+            }
+            set = tmp;
+            tmp.clear();
+        }
+
         return res;
     }
 };
