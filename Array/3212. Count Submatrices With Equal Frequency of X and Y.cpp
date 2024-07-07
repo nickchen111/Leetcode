@@ -2,6 +2,32 @@
 3212. Count Submatrices With Equal Frequency of X and Y
 */
 
+// 優化空間做法TC:O(m*n) SC:O(n)
+class Solution {
+public:
+    int numberOfSubmatrices(vector<vector<char>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector<vector<int>> col(n, vector<int>(2));
+        int res = 0;
+        for(int i = 0; i < m; i++){
+            int s1 = 0, s2 = 0;
+            for(int j = 0; j < n; j++){
+                if(grid[i][j] == 'X'){
+                    col[j][0] += 1;
+                }
+                else if(grid[i][j] == 'Y') col[j][1] += 1;
+                s1 += col[j][0];
+                s2 += col[j][1];
+
+                if(s1 > 0 && s1 == s2) res += 1;
+            }
+        }
+
+        return res;
+    }
+};
+
 // TC:O(m*n) SC:O(m*n)
 class Solution {
 public:
