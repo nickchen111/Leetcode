@@ -41,5 +41,32 @@ public:
             track.pop_back();
         }
     }
-    
+};
+
+// Bit TC:O(n*2^n or 2^n) 因為n*1.618^n費氏數列)大致可以當成2^n SC:O(1)
+class Solution {
+    using LL = long long;
+public:
+    vector<string> validStrings(int n) {
+        vector<string> res;
+        LL mask = (1<<n)-1; //用這個將超過n的位數中 數字的前導0去掉
+        for(LL i = 0; i < (1<<n); i++){
+            LL x = mask ^ i; // i 取反, 保留二進制的n位數
+            if(((x>>1)&x) == 0){
+                string cur;
+                int num = i;
+                while(num != 0){
+                    if(num & 1) cur = '1' + cur;
+                    else cur = '0' + cur;
+                    num /= 2;
+                }
+                if(cur.size() < n){
+                    cur = '0' + cur;
+                }
+                res.push_back(cur);
+            }
+        } 
+
+        return res;
+    }
 };
