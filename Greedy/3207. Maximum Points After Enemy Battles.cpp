@@ -36,6 +36,18 @@ public:
     }
 };
 
+// TC:O(n) SC:O(1)
+class Solution {
+    using LL = long long;
+public:
+    long long maximumPoints(vector<int>& enemyEnergies, int currentEnergy) {
+        LL res = 0;
+        int minVal = *min_element(enemyEnergies.begin(), enemyEnergies.end());
+        if(currentEnergy < minVal) return 0;
+        else return (((LL)currentEnergy + accumulate(enemyEnergies.begin(), enemyEnergies.end(), 0LL)- (LL)minVal) / minVal);
+    }
+};
+
 
 /*
 敵人還沒選的話 我可以選他 然後減掉自己能量 + 1 pts 敵人也不用mark
