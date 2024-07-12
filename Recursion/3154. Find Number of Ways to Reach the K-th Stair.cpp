@@ -2,6 +2,40 @@
 3154. Find Number of Ways to Reach the K-th Stair
 */
 
+
+// TC:O(2^n) n = 31 包含memo剪枝 SC:O(m*32*2)  更好的空間複雜度
+class Solution {
+    unordered_map<int, unordered_map<int, unordered_map<bool, int>>> memo; // memo[cur][jump][rev]
+    int res = 0;
+public:
+    int waysToReachStair(int k) {
+        helper(k, 1, 0, false); // 不能用两次 go back
+
+        return res;
+    }
+
+    int helper(int k, int cur, int jump, bool rev){
+        if(cur > k + 1) return 0;
+        if(memo[cur][jump].find(rev) != memo[cur][jump].end()) {
+            return memo[cur][jump][rev];
+        }
+
+        int count = (cur == k);
+        if(cur + (1 << jump) <= k + 1){
+            count += helper(k, cur + (1 << jump), jump + 1, false);
+        }
+        if(!rev && cur != 0){
+            count += helper(k, cur - 1, jump, true);
+        }
+
+        memo[cur][jump][rev] = count;
+
+        res = max(res, count);
+        return count;
+    }
+};
+
+
 // TC:O(2^n) n = 31 包含memo剪枝 SC:O(pos*32*2)
 class Solution {
     unordered_map<int, vector<vector<int>>> memo; // pos -> jump狀況 -> 使用的次數
