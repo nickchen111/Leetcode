@@ -43,3 +43,13 @@ public:
         return res;
     }
 };
+
+// TC:O(1) SC:O(1)
+class Solution {
+public:
+    int minChanges(int n, int k) {
+        if((n & k )!= k) return -1;
+        int m = n^k;
+        return __builtin_popcount(m);
+    }
+};
