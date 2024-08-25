@@ -78,12 +78,6 @@ public:
         
         while(true){
             if(pq.top().first == maxVal){
-                k -= 1;
-                LL cur = pq.top().first;
-                cur *= (LL) multiplier;
-                int idx = pq.top().second;
-                pq.pop();
-                pq.push({cur,idx});
                 break;
             }
             LL cur = pq.top().first;
@@ -102,16 +96,6 @@ public:
                 return res;
             }
         }
-     
-       
-        if(k == 0){
-            while(!pq.empty()){
-                res[pq.top().second] = pq.top().first % M;
-                pq.pop();
-            }
-            return res;
-        }
-        
         
         LL mod = k % n;
         LL times = k / n;
@@ -134,7 +118,6 @@ public:
         
     }
 };
-
 /*
 1e9 要取出某個數組最小數字k次 一個一個換都會超時
 數組1e4 所以遍歷數組過程可以是nlgn
