@@ -3,7 +3,7 @@
 */
 
 
-// C++20 寫法 TC:O(nlgM) M為齊頭式增長時取出的次數，每一個數字最多被取出31次所以是lg31n SC:O(n)
+// C++20 寫法 TC:O(nlgUlgn) U為齊頭式增長時取出的次數，每一個數字最多被取出31次所以是lg31n SC:O(n)
 class Solution {
     using LL = long long;
     LL M = 1e9+7;
@@ -48,7 +48,7 @@ public:
     }
 };
 
-// TC:O(nlgM) M為齊頭式增長時取出的次數，每一個數字最多被取出31次所以是lg31n SC:O(n)
+// TC:O(nlgUlgn) U為齊頭式增長時取出的次數，每一個數字最多被取出31次所以是lg31n SC:O(n)
 class Solution {
     using LL = long long;
     LL M = 1e9+7;
