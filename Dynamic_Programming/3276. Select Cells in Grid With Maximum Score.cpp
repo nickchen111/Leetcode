@@ -2,6 +2,49 @@
 3276. Select Cells in Grid With Maximum Score
 */
 
+// TC:O(mn*2^m) mn = 出現的數字種類數量 SC:O(2^m)
+class Solution {
+    vector<vector<int>> grid;
+    int m, n;
+    vector<vector<int>> memo;
+    unordered_map<int, vector<int>> pos;
+    vector<int> all_nums;
+    int maxVal = 0;
+public:
+    int maxScore(vector<vector<int>>& grid) {
+        m = grid.size();
+
+        this -> grid = grid;
+        for(int i = 0; i < m; i++){
+            for(int x : grid[i]){
+                pos[x].push_back(i);
+                maxVal = max(maxVal, x);
+            }
+        }
+    
+        memo.resize(maxVal+1, vector<int>(1<<m, -1)); // 選到某個數字之後 目前選了哪幾個row
+
+        return DFS(maxVal, 0);
+        
+    }
+    int DFS(int i, int j){
+        if(i == 0) return 0;
+
+        if(memo[i][j] != -1) return memo[i][j];
+        int res = DFS(i-1, j);
+        
+        for(auto & k : pos[i]){
+            if(((j>>k) & 1) == 0){
+                res = max(res, DFS(i-1, j | 1 << k) + i);
+            }
+        } 
+
+        return memo[i][j] = res;
+        
+    }
+};
+
+
 // my solution 
 class Solution {
     vector<vector<int>> grid;
