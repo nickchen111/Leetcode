@@ -2,7 +2,7 @@
 3281. Maximize Score of Numbers in Ranges
 */
 
-// TC:O(32*n) SC:O(1)
+// TC:O(nlgA + nlgn) A為二分次數 SC:O(1)
 class Solution {
     vector<int> start;
     int d;
