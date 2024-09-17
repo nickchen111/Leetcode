@@ -10,7 +10,7 @@ public:
         int n = grid[0].size();
 
         deque<array<int,3>> dq;
-        vector<bool> visited(m*n+1);
+        vector<int> maxVal(m*n+1);
         dq.push_front({health + (grid[0][0] == 1 ? -1 : 0), 0, 0});
         vector<int> dirs = {0,1,0,-1,0};
         while(!dq.empty()){
@@ -19,24 +19,26 @@ public:
             int y = dq.front()[2];
             dq.pop_front();
             if(x == m-1 && y == n-1 && curHealth > 0) return true;
-            if(visited[x*n+y]) continue;
-            visited[x*n+y] = 1;
+            if(maxVal[x*n+y] >= curHealth) continue;
+            maxVal[x*n+y] = curHealth;
             for(int i = 1; i < dirs.size(); i++){
                 int nx = x + dirs[i-1];
                 int ny = y + dirs[i];
-                if(nx < 0 || ny < 0 || nx >= m || ny >= n || visited[nx*n+ny]) continue;
+                if(nx < 0 || ny < 0 || nx >= m || ny >= n) continue;
                 if(grid[nx][ny] == 1){
+                    if(maxVal[nx*n+ny] >= curHealth - 1) continue;
                     if(curHealth - 1 > 0) dq.push_back({curHealth - 1, nx, ny}); 
                 }
-                else 
+                else {
+                    if(maxVal[nx*n+ny] >= curHealth) continue;
                     dq.push_front({curHealth, nx, ny});
+                }
             }
         }
 
         return false;
     }
 };
-
 // BFS + Dijkstra: TC:O(m * n * H * log(m*n)) SC:O(m*n)
 class Solution {
 public:
