@@ -2,7 +2,7 @@
 1186. Maximum Subarray Sum with One Deletion
 */
 
-// TC:O(n) SC:O(2*n)
+// DP 雙狀態 TC:O(n) SC:O(2*n)
 class Solution {
 public:
     int maximumSum(vector<int>& arr) {
@@ -21,7 +21,7 @@ public:
     }
 };
 
-//優化空間時間
+// Kadane 類似貪心 優化空間時間 
 class Solution {
 public:
     int maximumSum(vector<int>& arr) {
@@ -38,6 +38,36 @@ public:
         return res;
     }
 };
+
+
+// 前後綴分解 DP TC:O(n) SC:O(n)
+class Solution {
+public:
+    int maximumSum(vector<int>& arr) {
+        int n = arr.size();
+        if(n == 1) return arr[0];
+
+        vector<int> suffix(n);
+        int sum = arr[n-1];
+        for(int i = n-2; i >= 0; i--){
+            suffix[i] = sum;
+            sum = max(sum + arr[i], arr[i]);
+        }
+
+        int res = max(suffix[0], suffix[0] + arr[0]);
+        int prefix = arr[0];
+        for(int i = 1; i < n-1; i++){
+            res = max(res, max(prefix, max(prefix + suffix[i], suffix[i])));
+            prefix = max(prefix + arr[i], arr[i]);
+        }
+        
+        // 到了最後一位，如果前面都是負數 他就不能不取前面
+        res = max(res, prefix);
+
+        return res;
+    }
+};
+
 
 
 /*
