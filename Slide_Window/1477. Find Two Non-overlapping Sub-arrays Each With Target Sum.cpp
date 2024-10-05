@@ -2,6 +2,49 @@
 1477. Find Two Non-overlapping Sub-arrays Each With Target Sum
 */
 
+// 最佳解 前後綴分解 Slide Window TC:O(n) SC:O(nclass Solution {
+public:
+    int minSumOfLengths(vector<int>& arr, int target) {
+        int n = arr.size();
+        vector<int> suffix(n, INT_MAX/2);
+        int sum = 0;
+        int min_len = INT_MAX/2;
+        int i = n-1;
+        for(int j = n-1; j >= 0; j--){
+            sum += arr[j];
+            while(i > j && sum > target) {
+                sum -= arr[i];
+                i--;
+            }
+            if(sum == target){
+                min_len = min(min_len, i-j+1);
+            }
+            
+            suffix[j] = min_len;
+        }
+        
+        min_len = INT_MAX/2;
+        int res = INT_MAX/2;
+        i = 0;
+        sum = 0;
+        for(int j = 0; j < n; j++){
+            sum += arr[j];
+            while(i < j && sum > target) {
+                sum -= arr[i];
+                i++;
+            }
+
+            if(sum == target){
+                min_len = min(min_len, j-i+1);
+                if(j+1 < n)
+                    res = min(res, min_len + suffix[j+1]);
+            }
+        }
+
+        return res == INT_MAX/2 ? -1 : res;
+    }
+};
+
 
 
 // Presum + Hash Map + 似Rolling array TC:O(n) SC:O(n)
@@ -85,6 +128,16 @@ public:
 
 
 /*
+最優解思路
+要問你兩個不重疊的subarray 他們的和都是target
+問說這兩個subarrray 的長度加總最短是多少
+
+從簡單到困難:
+先問說如果單純要subarray等於target 你會算嗎?
+滑窗然後紀錄長度 現在問說要兩個不重疊的 不就是要問你某個位置他的前後最短的符合條件的subarray 加總哪個最短
+滑窗的時候紀錄 最終位置跟他的長度
+
+次優解思路
 找兩個不重疊區域的subarray 他們的和都是target   
 讓這兩個區域的長度加總最短可以是多少
 x x x x pos x x i
