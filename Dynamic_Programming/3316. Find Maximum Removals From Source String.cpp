@@ -40,3 +40,54 @@ public:
         return res;
     }
 };
+
+
+// Iterative TC:O(m*n) SC:O(m*n)
+class Solution {
+public:
+    int maxRemovals(string source, string pattern, vector<int>& targetIndices) {
+        unordered_set<int> set(targetIndices.begin(), targetIndices.end());
+        int m = source.size();
+        int n = pattern.size();
+        vector<vector<int>> dp(m+1, vector<int>(n+1, INT_MIN/2));
+
+        dp[0][0] = 0;
+        for(int i = 0; i < m; i++) {
+            dp[i+1][0] = dp[i][0] + set.count(i);
+            for(int j = 0; j < n; j++) {
+                dp[i+1][j+1] = dp[i][j+1] + set.count(i);
+                if(source[i] == pattern[j]) {
+                    dp[i+1][j+1] = max(dp[i+1][j+1], dp[i][j]);
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+};
+
+
+// Iterative + 空間優化 + Two pointer TC:O(m*n) SC:O(n)
+class Solution {
+public:
+    int maxRemovals(string source, string pattern, vector<int>& targetIndices) {
+        int m = pattern.length();
+        vector<int> f(m + 1, INT_MIN);
+        f[0] = 0;
+        int k = 0;
+        for (int i = 0; i < source.length(); i++) {
+            if (k < targetIndices.size() && targetIndices[k] < i) {
+                k++;
+            }
+            int is_del = k < targetIndices.size() && targetIndices[k] == i;
+            for (int j = min(i, m - 1); j >= 0; j--) {
+                f[j + 1] += is_del;
+                if (source[i] == pattern[j]) {
+                    f[j + 1] = max(f[j + 1], f[j]);
+                }
+            }
+            f[0] += is_del;
+        }
+        return f[m];
+    }
+};
