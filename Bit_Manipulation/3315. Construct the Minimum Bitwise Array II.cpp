@@ -2,6 +2,30 @@
 3315. Construct the Minimum Bitwise Array II
 */
 
+// lowbit TC:O(n) SC:O(1)
+class Solution {
+public:
+    vector<int> minBitwiseArray(vector<int>& nums) {
+        int n = nums.size();
+        
+        // s &(~s+1) = low bit 就是最低位的1在哪
+        for(int i = 0; i < n; i++) {
+            if(nums[i] % 2 == 0) {
+                nums[i] = -1;
+            }
+            
+            else {
+                int x = nums[i];
+                int t = ~x;
+                nums[i] ^= (t & -t) >> 1;
+            }
+            
+        }
+        
+        return nums;
+    }
+};
+
 // TC:O(10*n) SC:O(1)
 class Solution {
 public:
