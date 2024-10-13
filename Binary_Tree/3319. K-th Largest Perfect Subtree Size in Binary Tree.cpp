@@ -2,7 +2,6 @@
 3319. K-th Largest Perfect Subtree Size in Binary Tree
 */
 
-// TC:O(n + mlgm) m為是完全二叉樹的節點數量 SC:O(n + m)
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -14,6 +13,34 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+
+
+
+// TC:O(n + mlgm) m為是完全二叉樹的節點數量 SC:O(n + m)
+class Solution {
+    vector<int> arr;
+public:
+    int kthLargestPerfectSubtree(TreeNode* root, int k) {
+        DFS(root);
+        sort(arr.rbegin(), arr.rend());
+        
+        if(k-1 < arr.size()) return ((1 << arr[k-1])) - 1;
+        else return -1;
+        
+    }
+    int DFS(TreeNode* root) {
+        if(root == NULL) return 0;
+        int left = DFS(root -> left); // subtree, nodeNumber
+        int right = DFS(root -> right);
+        if(left == -1 || right == -1) return -1;
+        if(left != right) return -1;
+
+        arr.push_back(left+1);
+        return left+1;
+    }
+};
+
+// TC:O(n + mlgm) m為是完全二叉樹的節點數量 SC:O(n + m)
 class Solution {
     vector<int> arr;
 public:
