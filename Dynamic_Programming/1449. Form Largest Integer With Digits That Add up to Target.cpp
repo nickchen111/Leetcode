@@ -2,7 +2,37 @@
 1449. Form Largest Integer With Digits That Add up to Target
 */
 
-//完全背包問題 TC:O(target*9) SC:O(target)
+// 最佳解 TC:O(target*9) SC:O(target) 背包DP + 貪心
+class Solution {
+public:
+    string largestNumber(vector<int>& cost, int target) {
+        cost.insert(cost.begin(), 0);
+        vector<int> dp(target+1, INT_MIN/2); // 能夠拼成target的最大長度是多少
+        dp[0] = 0;
+        for(int i = 1; i <= 9; i++) {
+            int num = cost[i];
+            for(int j = num; j <= target; j++) {
+                dp[j] = max(dp[j], dp[j-num] + 1);
+            }
+        }
+        if(dp[target] < 0) return "0";
+        
+        string res;
+        int j = target;
+        // dp[target] 代表他的長度 
+        for(int i = 9; i >= 1; i--) {
+            int num = cost[i];
+            while(j-num >= 0 && dp[j] == dp[j-num] + 1) {
+                res += (i+'0');
+                j = j-num;
+            }
+        }
+
+        return res;
+    }
+};
+
+//完全背包問題 次佳解:TC:O(target*9*m) m為字符串比較的平均長度 SC:O(target)
 class Solution {
     string dp[5001];
 public:
