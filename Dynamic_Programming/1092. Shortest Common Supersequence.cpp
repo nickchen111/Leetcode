@@ -3,7 +3,48 @@
 */
 
 
-//用SCS建構DP數組
+// Recursion TC:O(m*n) SC:O(m*n)
+class Solution {
+public:
+    string shortestCommonSupersequence(string str1, string str2) {
+        // Recursion
+        int m = str1.size();
+        int n = str2.size();
+        vector<vector<int>> memo(m, vector<int>(n, -1));
+
+        function<int(int, int)> DFS = [&](int i, int j) -> int {
+            if(i < 0) return j + 1;
+            if(j < 0) return i + 1;
+
+            if(memo[i][j] != -1) return memo[i][j];
+
+            if(str1[i] == str2[j]) {
+                return memo[i][j] = DFS(i-1, j-1) + 1;
+            }
+            
+            return memo[i][j] = min(DFS(i-1, j), DFS(i, j-1)) + 1;
+        };
+
+        function<string(int, int)> make_ans = [&](int i, int j) -> string{
+            if(i < 0) return str2.substr(0, j+1);
+            if(j < 0) return str1.substr(0, i+1);
+
+            if(str1[i] == str2[j]) {
+                return make_ans(i-1, j-1) + str1[i];
+            }
+
+            if(DFS(i,j) == DFS(i-1,j) + 1) return make_ans(i-1, j) + str1[i];
+            
+            return make_ans(i, j-1) + str2[j];
+        };
+
+        return make_ans(m-1,n-1);
+    }
+};
+
+
+
+// SCS Iterative TC:O(m*n) SC:O(m*n)
 class Solution {
     //SCS
 public:
