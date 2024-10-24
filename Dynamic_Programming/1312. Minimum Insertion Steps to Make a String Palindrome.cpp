@@ -2,6 +2,32 @@
 1312. Minimum Insertion Steps to Make a String Palindrome
 */
 
+// 最佳化 不要用長度寫法去寫 TC:O(n^2) SC:O(n^2)
+class Solution {
+public:
+    int minInsertions(string s) {
+        int n = s.size();
+        vector<vector<int>> dp(n, vector<int>(n,INT_MAX/2));
+        for(int i = n - 1; i >= 0; i--) {
+            dp[i][i] = 0;
+            if(i-1 >= 0) {
+                if(s[i] == s[i-1]) {
+                    dp[i-1][i] = 0;
+                }
+                else dp[i-1][i] = 1;
+            }
+            for(int j = i + 2; j < n; j++) {
+                if(s[i] == s[j]) {
+                    dp[i][j] = dp[i+1][j-1];
+                }
+                else dp[i][j] = min(dp[i][j-1], dp[i+1][j]) + 1;
+            }
+        }
+
+        return dp[0][n-1];
+    }
+};
+
 
 //用SCS概念做 
 class Solution {
