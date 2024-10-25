@@ -2,7 +2,7 @@
 1233. Remove Sub-Folders from the Filesystem
 */
 
-// TC:O(10^2*n) SC:O(k*m*n) m 為平均切了幾段 k 為每段的平均長度 受限於100
+// TC:O(10^2*n + nlgn) SC:O(k*m*n) m 為平均切了幾段 k 為每段的平均長度 受限於100
 class Solution {
     struct TrieNode {
         unordered_map<string, TrieNode*> children;
@@ -51,7 +51,7 @@ public:
     }
 };
 
-// TC:O(10^4*n) SC:O(100*n) 
+// TC:O(10^4*n + nlgn) SC:O(100*n) 
 class Solution {
 public:
     vector<string> removeSubfolders(vector<string>& folder) {
