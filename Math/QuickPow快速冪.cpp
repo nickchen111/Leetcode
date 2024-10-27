@@ -5,6 +5,8 @@ long long quickMul(long long a, long long b) {
         a = (a*a) % MOD;
         b >>= 1;
     }
+
+    retrun ans;
 }
 
 
