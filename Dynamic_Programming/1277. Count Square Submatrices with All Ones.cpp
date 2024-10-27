@@ -32,6 +32,36 @@ public:
     }
 };
 
+
+// Presum 做法 TC:O(min(m,n)*m*n) SC:O(m*n)
+class Solution {
+public:
+    int countSquares(vector<vector<int>>& matrix) {
+        int m = matrix.size(); 
+        int n = matrix[0].size();
+        vector<vector<int>> presum(m+1, vector<int>(n+1));
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                presum[i+1][j+1] = presum[i][j+1] + presum[i+1][j] - presum[i][j] + matrix[i][j];
+            }
+        }
+
+        int res = 0;
+        for(int len = 1; len <= min(m,n); len++) {
+            for(int i = 0; i < m; i++) {
+                for(int j = 0; j < n; j++) {
+                    if(i+1-len >= 0 && j+1-len >= 0) {
+                        if(presum[i+1][j+1] - presum[i+1][j+1-len] - presum[i+1-len][j+1] + presum[i+1-len][j+1-len] == len*len) res += 1;
+                    }
+                }
+            }
+        }
+        
+
+        return res;
+    }
+};
+
 /*
 此題問一個matrix中 包含了多少個正方形
 0 1 0
