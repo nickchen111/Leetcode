@@ -40,6 +40,57 @@ public:
     }
 };
 
+// DP 區間寫法優化 TC:O(n^3) SC:O(n^2)
+class Solution {
+public:
+    int mctFromLeafValues(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int>(n,INT_MAX/2));
+        vector<vector<int>> mx(n, vector<int>(n));
+
+        for(int i = 0; i < n; i++) {
+            mx[i][i] = arr[i];
+            if(i+1 < n) mx[i][i+1] = max(arr[i], arr[i+1]);
+            for(int j = i + 2; j < n; j++) {
+                mx[i][j] = max(arr[j], mx[i][j-1]);
+            }
+        }
+
+        for(int i = 0; i < n; i++) {
+            dp[i][i] = 0;
+            if(i+1 < n) dp[i][i+1] = arr[i] * arr[i+1];
+        }
+
+        // for(int len = 3; len <= n; len++) {
+        //     for(int i = 0; i + len - 1 < n; i++) {
+        //         int j = i + len - 1;
+        //         for(int k = i; k < j; k++) {
+        //             dp[i][j] = min({dp[i][j], dp[i][k] + dp[k+1][j] + mx[i][k] * mx[k+1][j]});
+        //         }
+        //     }
+        // }
+
+
+        for(int j = 0; j < n; j++) {
+            // x x x 
+            for(int i = j-2; i >= 0; i--) {
+                for(int k = i; k < j; k++) {
+                    dp[i][j] = min({dp[i][j], dp[i][k] + dp[k+1][j] + mx[i][k] * mx[k+1][j]});
+                }
+            }
+        }
+
+        return dp[0][n-1];
+    }
+};
+
+/*
+x x x x x 
+DFS(0,2) = min(DFS(0, DFS(1,2)), DFS(DFS(0,1),2))
+dp[i][j] 此段區間的最小值為?
+mx[i][j] 他的最大數字代表是?
+*/
+
 // DP TC:O(n^3) SC:O(n^2)
 class Solution {
 public:
@@ -76,5 +127,6 @@ dp很好想 但要轉化成貪心 就會結合stack
 
 6 5 4 4 4 5 -> 5 5 5 5 5 
 6 5 4 -> 4 4 4 5
+*/
 
  
