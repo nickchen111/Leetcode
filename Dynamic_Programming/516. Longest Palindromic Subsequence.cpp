@@ -2,6 +2,45 @@
 516. Longest Palindromic Subsequence
 */
 
+// 遞推 + 遞歸 TC:O(n^2) SC:O(n^2)
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {
+        int n = s.size();
+        // vector<vector<int>> memo(n, vector<int>(n, -1));
+        // function<int(int l, int r)> dfs = [&](int l, int r) -> int {
+        //     if(l > r) return 0;
+        //     if(l == r) return 1;
+        //     if(memo[l][r] != -1) return memo[l][r];
+
+        //     int res = 1;
+        //     if(s[l] == s[r]) {
+        //         res = dfs(l+1, r-1) + 2;
+        //     }
+        //     else res = max(dfs(l+1, r), dfs(l, r-1));
+
+        //     memo[l][r] = res;
+        //     return res;
+        // };
+        vector<vector<int>> dp(n, vector<int>(n));
+        for(int i = n-1; i >= 0; i--) {
+            dp[i][i] = 1;
+            // if(i-1 >= 0 && s[i-1] == s[i]) {
+            //     dp[i-1][i] = 2;
+            // }
+            // else if(i-1 >= 0) dp[i-1][i] = 1;
+            for(int j = i+1; j < n; j++) {
+                if(s[i] == s[j]) dp[i][j] = dp[i+1][j-1] + 2;
+                else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);
+            }
+        }
+
+        return dp[0][n-1];
+
+        // return dfs(0, n-1);
+    }
+};
+
 //區間型dp TC:O(n^2) SC:O(n^2)
 class Solution {
 public:
