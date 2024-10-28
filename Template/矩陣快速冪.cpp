@@ -1,4 +1,8 @@
 using LL = long long;
+vector<vector<LL>> start = {{1, 1, 1, 1, 1}};
+vector<vector<LL>> base = {{1, 1}, {1, 0}};
+vector<vector<LL>> a = multiply(arr, pow(m, n-1))[0][0];
+
 vector<vector<LL>> multiply(const vector<vector<LL>>& a, const vector<vector<LL>>& b) {
     int n = a.size();
     int m = b[0].size();
