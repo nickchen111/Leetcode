@@ -16,7 +16,7 @@ public:
 };
 
 
-// Rabin-Karp TC:O(n) SC:O(n)
+// Rabin-Karp TC:O(n*m) SC:O(n)
 class Solution {
 public:
     int strStr(string haystack, string needle) {
