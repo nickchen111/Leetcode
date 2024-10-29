@@ -2,6 +2,42 @@
 2684. Maximum Number of Moves in a Grid
 */
 
+// 遞推 TC:O(m*n + m) SC:O(max(m,n))
+class Solution {
+public:
+    int maxMoves(vector<vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector<vector<int>> memo(m, vector<int>(n,-1));
+        function<int(int x, int y, int prev)> dfs = [&](int x, int y, int prev) -> int {
+            if(x >= m || y >= n || x < 0 || y < 0 || grid[x][y] <= prev) return 0;
+            if(memo[x][y] != -1) return memo[x][y];
+            int res = 1;
+            res = res + max({dfs(x+1, y+1, grid[x][y]), dfs(x,y+1, grid[x][y]), dfs(x-1,y+1, grid[x][y])});
+
+            return memo[x][y] = res;
+        };
+
+        int ret = 0;
+        for(int i = 0; i < m; i++) {
+            if(i+1 < m && memo[i+1][1] != -1) {
+                ret = max(ret, memo[i+1][1]);
+            }
+
+            else if(i+1 < m) ret = max(ret, dfs(i+1, 1, grid[i][0]));
+
+            if(memo[i][1] != -1) ret = max(ret, memo[i][1]);
+            else ret = max(ret, dfs(i, 1, grid[i][0]));
+
+            if(i-1 >= 0 && memo[i-1][1] != -1) ret = max(ret, memo[i-1][1]);
+            else if(i-1 >= 0) ret = max(ret, dfs(i-1, 1, grid[i][0]));
+        }
+
+        return ret;
+    }
+};
+
+
 // DFS + Memo TC:O(m*n*3) SC:O(m*n)
 class Solution {
     int m,n;
