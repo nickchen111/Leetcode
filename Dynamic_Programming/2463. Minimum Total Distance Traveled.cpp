@@ -2,6 +2,70 @@
 2463. Minimum Total Distance Traveled
 */
 
+
+// 遞推 + 遞歸 
+class Solution {
+    using LL = long long;
+public:
+    long long minimumTotalDistance(vector<int>& robot, vector<vector<int>>& factory) {
+        int m = robot.size();
+        int n = factory.size();
+
+        sort(factory.begin(), factory.end(), [](const vector<int>& a, const vector<int>& b) {
+            return a[0] < b[0];
+        });
+        sort(robot.begin(), robot.end());
+        // vector<LL> dp(m+1,LLONG_MAX/2);
+        // dp[0] = 0;
+        // for(int i = 0; i < n; i++) {
+        //     for(int j = m; j >= 0; j--) {
+        //         LL cost = 0;
+        //         for(int k = 1; k <= factory[i][1] && j - k >= 0; k++) {
+        //             cost += abs((LL)robot[j-k] - factory[i][0]);
+        //             dp[j] = min(dp[j], dp[j-k] + cost);
+        //         }
+        //     }
+        // }
+
+        // return dp[m];
+
+
+        vector<LL> presum(n+1);
+        for(int i = 0; i < n; i++) {
+            presum[i+1] = presum[i] + factory[i][1];
+        }
+        
+        vector<vector<LL>> memo(m, vector<LL>(n, LLONG_MAX/2));
+        function<LL(int i, int j)> dfs = [&](int i, int j) -> LL {
+            if(i < 0) return 0;
+            if(j < 0) return LLONG_MAX/2;
+
+            if(memo[i][j] != LLONG_MAX/2) return memo[i][j];
+            if(presum[j+1] < i+1) {
+                return LLONG_MAX/2;
+            }
+
+            LL res = dfs(i, j-1);
+            LL cost = 0;
+            for(int k = 1; k <= factory[j][1]; k++) {
+                if(i - k + 1 < 0) break;
+                cost += abs(robot[i-k+1] - factory[j][0]);
+
+                res = min(res, dfs(i-k, j-1) + cost);
+            }
+
+            return memo[i][j] = res;
+        };
+
+        return dfs(m-1, n-1);
+    }
+};
+
+/*
+原問題是 n個工廠 修理m個機器人 子問題會是 f(n-1, m-1), f(n-2, m-1) ... f(n-factory[m], m-1)
+然後加上各自cost 取最小
+*/
+
 // 遞歸 TC:O(nm^2) SC:O(m*n)
 class Solution {
     using LL = long long;
