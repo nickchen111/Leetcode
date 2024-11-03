@@ -21,12 +21,9 @@ public:
         vector<vector<int>> dp(m+1, vector<int>(n+1, 0));
         int res = 0;
         for(int i = 0; i < k; i++) {
-            for(int j = m; j >= 0; j--) {
-                for(int t = n; t >= 0; t--) {
-                    if(arr[i][0] <= j && arr[i][1] <= t) {
-                        dp[j][t] = max(dp[j][t], dp[j-arr[i][0]][t-arr[i][1]] + 1);
-                    }
-                    else break;
+            for(int j = m; j >= arr[i][0]; j--) {
+                for(int t = n; t >= arr[i][1]; t--) {
+                    dp[j][t] = max(dp[j][t], dp[j-arr[i][0]][t-arr[i][1]] + 1);
                     res = max(res, dp[j][t]);
                 }
             }
