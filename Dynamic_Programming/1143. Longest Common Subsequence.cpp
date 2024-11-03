@@ -2,29 +2,50 @@
 1143. Longest Common Subsequence
 */
 
-// 遞歸  2024/11/03
+// 遞歸 + 遞歸 空間優化 2024/11/03
 class Solution {
 public:
     int longestCommonSubsequence(string text1, string text2) {
+        if(text1.size() < text2.size()) {
+            string tmp = text1;
+            text1 = text2;
+            text2 = tmp;
+        }
         int m = text1.size();
         int n = text2.size();
-        vector<vector<int>> memo(m+1, vector<int>(n+1,-1));
-        function<int(int,int)> dfs = [&](int len1, int len2) -> int {
-            if(len1 == 0 || len2 == 0) return 0;
-            if(memo[len1][len2] != -1) return memo[len1][len2];
+        // vector<vector<int>> dp(m+1, vector<int>(n+1,0));
+        vector<int> dp(n+1);
+        for(int i = 1; i <= m; i++) {
+            int prev = dp[0];
+            for(int j = 1; j <= n; j++) {
+                int tmp = dp[j];
+                if(text1[i-1] == text2[j-1]) {
+                    dp[j] = prev + 1;
+                }
+                else {
+                    dp[j] = max(dp[j], dp[j-1]);
+                }
+                prev = tmp;
+            }
+        }
 
-            if(text1[len1-1] == text2[len2-1]) {
-                return memo[len1][len2] = dfs(len1-1,len2-1) + 1;
-            }
-            else {
-                return memo[len1][len2] = max(dfs(len1-1,len2), dfs(len1, len2-1));
-            }
-        };
-        return dfs(m,n);
+        return dp[n];
+        // vector<vector<int>> memo(m+1, vector<int>(n+1,-1));
+        // function<int(int,int)> dfs = [&](int len1, int len2) -> int {
+        //     if(len1 == 0 || len2 == 0) return 0;
+        //     if(memo[len1][len2] != -1) return memo[len1][len2];
+
+        //     if(text1[len1-1] == text2[len2-1]) {
+        //         return memo[len1][len2] = dfs(len1-1,len2-1) + 1;
+        //     }
+        //     else {
+        //         return memo[len1][len2] = max(dfs(len1-1,len2), dfs(len1, len2-1));
+        //     }
+        // };
+        // return dfs(m,n);
 
     }
 };
-
 // iterative
 class Solution {
 public:
