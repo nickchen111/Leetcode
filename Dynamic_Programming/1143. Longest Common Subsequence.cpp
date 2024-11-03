@@ -2,6 +2,29 @@
 1143. Longest Common Subsequence
 */
 
+// 遞歸  2024/11/03
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int m = text1.size();
+        int n = text2.size();
+        vector<vector<int>> memo(m+1, vector<int>(n+1,-1));
+        function<int(int,int)> dfs = [&](int len1, int len2) -> int {
+            if(len1 == 0 || len2 == 0) return 0;
+            if(memo[len1][len2] != -1) return memo[len1][len2];
+
+            if(text1[len1-1] == text2[len2-1]) {
+                return memo[len1][len2] = dfs(len1-1,len2-1) + 1;
+            }
+            else {
+                return memo[len1][len2] = max(dfs(len1-1,len2), dfs(len1, len2-1));
+            }
+        };
+        return dfs(m,n);
+
+    }
+};
+
 // iterative
 class Solution {
 public:
