@@ -2,6 +2,41 @@
 72. Edit Distance
 */
 
+// 遞推 空間優化 TC:O(m*n) SC:(n)
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        int m = word1.size();
+        int n = word2.size();
+        // vector<vector<int>> dp(m+1, vector<int>(n+1, INT_MAX/2));
+        vector<int> dp(n+1);
+        // for(int i = 0; i <= m; i++) {
+        //     dp[i][0] = i;
+        // }
+        for(int j = 0; j <= n; j++) {
+            dp[j] = j;
+        }
+
+        for(int i = 0; i < m; i++) {
+            int leftUp = dp[0];
+            dp[0] = i+1;
+            
+            for(int j = 0; j < n; j++) {
+                int backup = dp[j+1];
+                if(word1[i] == word2[j]) {
+                    dp[j+1] = leftUp;
+                }
+                else {
+                    dp[j+1] = min({dp[j] + 1, dp[j+1] + 1, leftUp + 1}); // 跟 左邊 上面 左上有關 那就一樣用變量紀錄
+                }
+                leftUp = backup;
+            }
+        }
+
+        return dp[n];
+    }
+};
+
 //迭代解法
 class Solution {
     //自底向上
