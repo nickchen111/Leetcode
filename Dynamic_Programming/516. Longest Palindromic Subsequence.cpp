@@ -41,7 +41,7 @@ public:
     }
 };
 
-// 空間優化 遞歸 TC:O(n^2) SC:O(n)
+// 空間優化 遞推 TC:O(n^2) SC:O(n)
 class Solution {
 public:
     int longestPalindromeSubseq(string s) {
