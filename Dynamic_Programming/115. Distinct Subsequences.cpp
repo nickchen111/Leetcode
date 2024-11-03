@@ -36,6 +36,35 @@ public:
     }
 };
 
+// 空間優化 TC: o(m*n) SC:o(n)
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int numDistinct(string s, string t) {
+        int n = s.size();
+        int m = t.size();
+        if(n < m) return 0;
+        if(n == m) return s == t;
+
+        vector<int> dp(m+1); // s走i後有多少個subsequence 與t走到j相同
+        dp[0]= 1;
+
+        for(int i = 0; i < n; i++) {
+            dp[0] = 1;
+            for(int j = 0, leftUp = 1, backup; j < m; j++) {
+                backup = dp[j+1];
+                if(s[i] == t[j]) {
+                    dp[j+1] = (leftUp + dp[j+1]) % MOD;
+                }
+                leftUp = backup;
+            }
+        }
+
+        return dp[m];
+    }
+};
+
 //recurison+memo TC: o(m*n) SC:o(m*n)
 class Solution {
     int m,n;
