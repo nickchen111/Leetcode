@@ -41,6 +41,34 @@ public:
     }
 };
 
+// 空間優化 遞歸 TC:O(n^2) SC:O(n)
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {
+        int n = s.size();
+        
+        vector<int> dp(n);
+        for(int i = n-1, leftDown = 0, backup; i >= 0; i--) {
+            dp[i] = 1;
+            if(i+1 < n){
+                leftDown = dp[i+1];
+                dp[i+1] = s[i] == s[i+1] ? 2 : 1;
+            }
+            
+            for(int j = i+2; j < n; j++) {
+                backup = dp[j];
+                if(s[i] == s[j]) dp[j] = leftDown + 2;
+                else dp[j] = max(dp[j], dp[j-1]);
+                leftDown = backup;
+            }
+        }
+
+        return dp[n-1];
+
+       
+    }
+};
+
 //區間型dp TC:O(n^2) SC:O(n^2)
 class Solution {
 public:
