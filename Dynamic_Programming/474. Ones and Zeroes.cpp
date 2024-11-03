@@ -26,6 +26,7 @@ public:
                     if(arr[i][0] <= j && arr[i][1] <= t) {
                         dp[j][t] = max(dp[j][t], dp[j-arr[i][0]][t-arr[i][1]] + 1);
                     }
+                    else break;
                     res = max(res, dp[j][t]);
                 }
             }
