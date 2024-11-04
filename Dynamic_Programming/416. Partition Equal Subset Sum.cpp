@@ -2,6 +2,51 @@
 416. Partition Equal Subset Sum
 */
 
+// 遞推 + 遞歸
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int n = nums.size();
+        int total = reduce(nums.begin(), nums.end(), 0);
+        if(total % 2) return false;
+        vector<bool> dp(total/2+1, 0);
+        dp[0] = 1;
+        for(int i = 0; i < n; i++) {
+            for(int j = total/2; j >= nums[i]; j--) {
+                dp[j] = dp[j] || dp[j-nums[i]];
+            }
+        }
+        
+        return dp[total/2];
+        /*
+        遞推
+        vector<vector<bool>> dp(n+1, vector<bool>(total/2+1));
+        dp[0][0] = true;
+        for(int i = 0; i < n; i++) {
+            for(int j = total/2; j >= 0; j--) {
+                dp[i+1][j] = dp[i][j] || (j - nums[i] >= 0 ? dp[i][j-nums[i]] : false);
+            }
+        }
+        
+        return dp[n][total/2];
+        */
+        /*
+        遞歸 TC:O(n*m) SC:O(n*m)
+        用1-n個數字是否可以組成 sum
+        vector<vector<int>> memo(n+1, vector<int>(total/2+1, -1)); 
+        function<bool(int,int)> dfs = [&](int i, int sum)-> bool {
+            if(sum > total/2) return false;
+            if(i == n) return sum == total/2;
+            if(memo[i][sum] != -1) return memo[i][sum] == 0 ? false : true;
+
+            return memo[i][sum] = (dfs(i+1, sum) || dfs(i+1, sum + nums[i]));
+        };
+
+        return dfs(0, 0);
+        */
+    }
+};
+
 //一個想法是外層遍歷物品 內層遍歷sum的選項 dp[i] 如果前面可以找到dp2[i-x] 為可以裝得下 那麼 dp[i]肯定可以符合
 // TC:O(N*sum) SC:O(sum) N為物品數量
 class Solution {
