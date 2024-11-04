@@ -2,6 +2,59 @@
 494. Target Sum
 */
 
+// 遞推 + 遞歸
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int n = nums.size();
+        
+        int total = reduce(nums.begin(), nums.end(), 0);
+        if(abs(target) > total) return 0;
+        int offset = total;
+        vector<int> dp(total*2+1);
+        dp[offset] = 1;
+        for(int i = 0; i < n; i++) {
+            vector<int> dp_res(total*2+1);
+            for(int j = 0; j <= total*2; j++) {
+                if(j + nums[i] <= total*2 && dp[j]) {
+                    dp_res[j + nums[i]] += dp[j];
+                }
+                if(j - nums[i] >= 0 && dp[j]) {
+                    dp_res[j - nums[i]] += dp[j];
+                }
+            }
+            dp = dp_res;
+        }
+
+        return dp[target + offset];
+        /*
+        遞推 TC:O(n*total) SC:O(n*total)
+        vector<vector<int>> dp(n+1, vector<int>(total*2+1, 0));
+        dp[0][offset] = 1;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j <= total*2; j++) {
+                if(j + nums[i] <= total*2 && dp[i][j]) dp[i+1][j + nums[i]] += dp[i][j];
+                if(j - nums[i] >= 0 && dp[i][j]) dp[i+1][j - nums[i]] += dp[i][j];
+            }
+        }
+        return dp[n][target+offset];
+        */
+        /*
+        遞歸 TC:O(n*total) SC:O(n*total)
+        vector<vector<int>> memo(n, vector<int>(total*2+1, -1));
+        function<int(int i, int sum)> dfs = [&](int i, int sum) -> int {
+            if(i < 0) return sum == target;
+            if(sum + offset < 0) return 0;
+            if(memo[i][sum+offset] != -1) return memo[i][sum+offset];
+
+            return memo[i][sum+offset] = dfs(i-1, sum + nums[i]) + dfs(i-1, sum - nums[i]);
+        };
+
+        return dfs(n-1, 0);
+        */
+    }
+};
+
 // 背包問題解法 類似01背包問題 但是這裡是不論 0 or 1 的解答都要加入res裡
 // TC:O(n*sum) SC:O(n*sum)
 class Solution {
