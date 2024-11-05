@@ -2,6 +2,73 @@
 2787. Ways to Express an Integer as Sum of Powers
 */
 
+//遞推 + 遞歸 
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int numberOfWays(int n, int x) {
+        auto quickMul = [&](LL a, LL b) -> LL {
+            LL ans = 1;
+            while(b) {
+                if(b & 1) ans = (ans * a) % MOD;
+                a = (a*a) % MOD;
+                b >>= 1;
+            }
+
+            return ans;
+        };
+
+        // TC:O(n * lgx)
+        vector<LL> pow(n+1);
+        for(int i = 1; i <= n; i++) {
+            pow[i] = quickMul(i,x);
+        }
+
+        // TC:O(n^2*lgx) SC:O(n) -> TC:O(n^2) SC:O(n)
+
+        vector<LL> dp(n+1);
+        dp[0] = 1;
+        for(int i = 1; i <= n; i++) {
+            // int pow = quickMul(i,x);
+            for(int j = n; j >= pow[i]; j--) {
+                dp[j] = (dp[j] + dp[j - pow[i]]) % MOD;
+            }
+        }
+
+        return dp[n];
+        /*
+        遞推 TC:O(n^2 * lgx) SC:O(n^2)
+        vector<vector<LL>> dp(n+1, vector<LL>(n+1,0)); // 用到第i個數字時 可以拼湊出 j的數量有多少
+        dp[0][0] = 1;
+        for(int i = 1; i <= n; i++) {
+            for(int j = n; j >= 0; j--) {
+                dp[i][j] = dp[i-1][j];
+                if(j - quickMul(i,x) >= 0) {
+                    dp[i][j] = (dp[i][j] + dp[i-1][j - quickMul(i,x)]) % MOD;
+                }
+            }
+        }
+
+        return dp[n][n];
+        */
+        /*
+        遞歸 TC:O(n^2 * lgx) SC:O(n^2)
+        vector<vector<LL>> memo(n+1, vector<LL>(n, -1));
+        function<LL(int i, int sum)> dfs = [&](int i, int sum) -> LL {
+            if(sum == n) return 1;
+            if(sum > n) return 0;
+            if(i > n) return 0;
+            if(memo[i][sum] != -1) return memo[i][sum];
+            return memo[i][sum] = (dfs(i+1, sum) + dfs(i+1, sum + quickMul(i,x))) % MOD;
+        };
+
+        return dfs(1, 0);
+
+        */
+    }
+};
+
 
 //  TC:O(target*n) SC:O(target)
 class Solution {
