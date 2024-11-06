@@ -2,6 +2,32 @@
 3011. Find if Array Can Be Sorted
 */
 
+// Slide Window TC:O(nlgU) U為數字大小 SC:O(n)
+class Solution {
+public:
+    bool canSortArray(vector<int>& nums) {
+        int n = nums.size();
+        auto arr = nums;
+        int prev = INT_MIN;
+        for(int i = 0; i < n; i++) {
+            int j = i+1;
+            int curMin = nums[i];
+            int curMax = nums[i];
+            while(j < n && __builtin_popcount(nums[i]) == __builtin_popcount(nums[j])) {
+                curMin = min(curMin, nums[j]);
+                curMax = max(curMax, nums[j]);
+                j++;
+            }
+
+            if(prev > curMin) return false;
+            prev = curMax;
+            i = j-1;
+        }
+
+        return true;
+    }
+};
+
 // TC:O(8*n) SC:O(n)
 class Solution {
 public:
