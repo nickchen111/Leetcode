@@ -2,6 +2,30 @@
 2275. Largest Combination With Bitwise AND Greater Than Zero
 */
 
+//1107 
+class Solution {
+public:
+    int largestCombination(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> arr(32);
+        int res = 0;
+        for(int i = 0; i < n; i++) {
+            int j = 0;
+            while(nums[i]) {
+                if(nums[i] & 1) {
+                    arr[j] += 1;
+                    res = max(res, arr[j]);
+                }
+                nums[i] >>= 1;
+                j++;
+            }
+        }
+
+        return res;
+       
+    }
+};
+
 // TC:O(32*n) SC:O(32)
 class Solution {
 public:
