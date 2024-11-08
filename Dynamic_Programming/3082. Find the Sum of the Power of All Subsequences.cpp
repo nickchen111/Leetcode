@@ -2,6 +2,77 @@
 3082. Find the Sum of the Power of All Subsequences
 */
 
+// 遞推 + 遞歸
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int sumOfPower(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<LL> power(n+1);
+        power[0] = 1;
+        for(int i = 1; i <= n; i++) {
+            power[i] = (power[i-1] * 2 ) % MOD;
+        }
+
+        // TC:O(n*n*k) SC:O(n*k)
+        vector<vector<LL>> dp(n+1, vector<LL>(k+1,0));
+        dp[0][0] = 1;
+        for(int i = 0; i < n; i++) {
+            for(int j = i+1; j >= 1; j--) {
+                for(int t = k; t >= nums[i]; t--) {
+                    if(dp[j-1][t-nums[i]]) {
+                        dp[j][t] = (dp[j][t] + dp[j-1][t-nums[i]]) % MOD;
+                    }
+                }
+            }
+        }
+        /*
+        遞推 TC:O(n*n*k) SC:O(n*n*k)
+        vector<vector<vector<LL>>> dp(n+1, vector<vector<LL>>(n+1, vector<LL>(k+1, 0)));
+        dp[0][0][0] = 1; // 0-1的index 在 0個選擇 可以加總出0的子序列方案數量
+        // 每個i只會和前一個i-1中的 cnt or cnt-1有關係 sum 的話就是從大到小
+        for(int i = 0; i < n; i++) {
+            for(int j = i+1; j >= 0; j--) {
+                for(int t = k; t >= 0; t--) {
+                    dp[i+1][j][t] = dp[i][j][t];
+                    if(t - nums[i] >= 0 && j-1 >= 0 && dp[i][j-1][t-nums[i]]) {
+                        dp[i+1][j][t] = (dp[i+1][j][t] + dp[i][j-1][t-nums[i]]) % MOD;
+                    }
+                }
+            }
+        }
+        */
+
+        LL res = 0;
+        for(int j = 0; j <= n; j++) {
+            // res = (res + dp[n][j][k] * power[n-j]) % MOD;
+            res = (res + dp[j][k] * power[n-j]) % MOD;
+        }
+
+        return res;
+        // 如果發現有x個數字可以形成 target 那麼 他們以外的 都跟他們當成是子序列的數量就是 (1 << n - x)
+        /*
+        遞歸 TC:O(n*n*k) SC:O(n*n*k)
+        vector<vector<vector<LL>>> memo(n, vector<vector<LL>>(n+1, vector<LL>(k+1,-1)));
+        function<LL(int i, LL sum, LL cnt)> dfs = [&](int i, LL sum, LL cnt) -> int {
+            if(sum > k) return 0;
+            if(i < 0) {
+                if(sum == k) {
+                    return power[n-cnt];
+                }
+                else return 0;
+            }
+            if(memo[i][cnt][sum] != -1) return memo[i][cnt][sum];
+
+            return memo[i][cnt][sum] = (dfs(i-1, sum, cnt) + dfs(i-1, sum + nums[i], cnt+1)) % MOD;
+        };
+
+        return dfs(n-1, 0, 0);
+        */
+    }
+};
+
 
 // 4/4  TC:O(n^3) SC:O(n^3)
 class Solution {
