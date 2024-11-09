@@ -2,6 +2,33 @@
 3133. Minimum Array End
 */
 
+// 2024.11.09
+class Solution {
+    using LL = long long;
+public:
+    long long minEnd(int n, int x) {
+        int count = n - 1;
+        // 轉成bit
+        vector<LL> bit;
+        while(count){
+            bit.push_back(count&1);
+            count >>= 1;
+        }
+
+        int cnt = 0;
+        LL res = x;
+        for(int i = 0; i < bit.size(); i++) {
+            while((res >> cnt) & 1) cnt ++;
+            res |= (bit[i] << cnt);
+            cnt ++;
+        }
+
+
+        return res;
+    }
+};
+
+
 // TC:O(n) SC:O(n) n = 32
 class Solution {
     using LL = long long;
