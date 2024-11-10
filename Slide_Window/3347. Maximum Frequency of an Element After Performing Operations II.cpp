@@ -27,8 +27,7 @@ public:
             cnt = 0;
         }
 
-        if(res >= numOperations) return res;
-
+        
         int i = 0;
         for(int j = 0; j < n; j++) {
             int x = nums[j];
@@ -36,10 +35,10 @@ public:
                 i++;
             }
 
-            res = max(res, j-i+1);
+            res = max(res, min(numOperations, j-i+1));
         }
 
-        return min(res, numOperations);
+        return res;
     }
 };
 
