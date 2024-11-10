@@ -2,6 +2,62 @@
 322. Coin Change
 */
 
+// 遞推 + 遞歸
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size();
+        vector<int> dp(amount+1, INT_MAX/2);
+        dp[0] = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j <= amount; j++) {
+                if(j - coins[i] >= 0) {
+                    dp[j] = min(dp[j], dp[j - coins[i]] + 1);
+                }
+            }
+        }
+
+        return dp[amount] == INT_MAX/2 ? -1 : dp[amount];
+
+        /*
+        遞推 C:O(n*amount) SC:O(n*amount)
+        vector<vector<int>> dp(n+1, vector<int>(amount+1, INT_MAX/2));
+        dp[0][0] = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j <= amount; j++) {
+                dp[i+1][j] = dp[i][j];
+                if(j - coins[i] >= 0) {
+                    dp[i+1][j] = min(dp[i+1][j], dp[i+1][j - coins[i]] + 1);
+                }
+            }
+        }
+
+        return dp[n][amount] == INT_MAX/2 ? -1 : dp[n][amount];
+        */
+
+        /*
+        遞歸 TC:O(n*amount) SC:O(amount)
+        vector<int> memo(amount+1, -666);
+
+        function<int(int sum)> dfs = [&](int sum) -> int {
+            if(sum == 0) return 0;
+            if(sum < 0) return -1;
+            if(memo[sum] != -666) return memo[sum];
+            int res = INT_MAX/2;
+            for(auto coin : coins) {
+                int cand = dfs(sum - coin);
+                if(cand >= 0) res = min(res, cand + 1);
+            }
+
+            return memo[sum] = res;
+        };
+
+        int ret = dfs(amount);
+        return ret == INT_MAX/2 ? -1 : ret;
+        */
+    }
+};
+
 class Solution {
 // 自頂向下
 public:
