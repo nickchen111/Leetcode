@@ -2,31 +2,47 @@
 1155. Number of Dice Rolls With Target Sum
 */
 
-// 3/31
+// 遞推 + 遞歸 
 class Solution {
     using LL = long long;
-    LL M = 1e9+7;
+    LL MOD = 1e9 + 7;
 public:
     int numRollsToTarget(int n, int k, int target) {
-        LL dp[n+1][target+1];
-        memset(dp,0,sizeof(dp));
-        dp[0][0] = 1;
-        for(int j = 1; j <= min(target,k); j++){
-            dp[1][j] = 1;
-        }
-
-        for(int i = 2; i <= n; i++){
-            for(int j = target; j >= 0; j--){
-                for(int t = 1; t <= k; t++){
-                    if(j-t >= 0){
-                        dp[i][j] = (dp[i][j] + dp[i-1][j-t]) %M;
+        
+        // 遞推 TC:O(n*target*k) SC:O(target)
+        vector<LL> dp(target+1);
+        dp[0] = 1;
+        for(int i = 0; i < n; i++) {
+            for(int j = target; j >= 0; j--) {
+                dp[j] = 0;
+                for(int t = 1; t <= k; t++) {
+                    if(j - t >= 0) {
+                        dp[j] = (dp[j] + dp[j-t]) % MOD;
                     }
                     else break;
                 }
             }
         }
+        return dp[target];
+        
+        /*
+        遞歸 TC:O(n*target*k) SC:O(n*target)
+        vector<vector<LL>> memo(n, vector<LL>(target+1, -1));
+        function<LL(int i, int sum)> dfs = [&](int i, int sum) -> LL {
+            if(i < 0 && sum == 0) return 1;
+            if(sum < 0) return 0;
+            if(i < 0) return 0;
+            if(memo[i][sum] != -1) return memo[i][sum];
+            LL res = 0;
+            for(int j = 1; j <= k; j++) {
+                res = (res + dfs(i-1, sum - j)) % MOD;
+            }
 
-        return dp[n][target];
+            return memo[i][sum] = res;
+        };
+
+        return dfs(n-1, target);
+        */
     }
 };
 
