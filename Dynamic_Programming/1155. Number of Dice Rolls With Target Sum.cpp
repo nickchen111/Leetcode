@@ -24,6 +24,27 @@ public:
             }
         }
         return dp[target];
+
+        /*
+        遞推
+        dp[0][0] = 1;
+        for(int j = 1; j <= min(target,k); j++){
+            dp[1][j] = 1;
+        }
+
+        for(int i = 2; i <= n; i++){
+            for(int j = target; j >= 0; j--){
+                for(int t = 1; t <= k; t++){
+                    if(j-t >= 0){
+                        dp[i][j] = (dp[i][j] + dp[i-1][j-t]) %M;
+                    }
+                    else break;
+                }
+            }
+        }
+
+        return dp[n][target];
+        */
         
         /*
         遞歸 TC:O(n*target*k) SC:O(n*target)
