@@ -2,6 +2,71 @@
 1449. Form Largest Integer With Digits That Add up to Target
 */
 
+// 遞推 + 遞歸
+class Solution {
+public:
+    string largestNumber(vector<int>& cost, int target) {
+        int n = cost.size();
+        // TC:O(n*target) SC:(target)
+        vector<int> dp(target+1, INT_MIN/2); 
+        dp[0] = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = cost[i]; j <= target; j++) {
+                dp[j] = max(dp[j], dp[j - cost[i]] + 1);
+            }
+        }
+
+        if(dp[target] < 0) return "0";
+        
+        int sum = target;
+        string res;
+        for(int i = n-1; i >=0; i--) {
+            while(sum - cost[i] >= 0 && dp[sum] == dp[sum - cost[i]] + 1) {
+                res += i+1 + '0';
+                sum -= cost[i];
+            }
+            if(sum == 0) break;
+        }
+
+        return res;
+        
+        /*
+        遞歸 TC:O(n*target) SC:(target)
+        vector<int> memo(target+1, -1); 
+        function<int(int sum)> dfs0 = [&](int sum) -> int {
+            if(sum == 0) return 0;
+            if(sum < 0) return INT_MIN/2;
+            if(memo[sum] != -1) return memo[sum];
+            int res = INT_MIN/2;
+            for(auto c : cost) {
+                res = max(res, dfs0(sum - c) + 1);
+            }
+
+            return memo[sum] = res;
+        };
+        dfs0(target);
+        if(memo[target] < 0) return "0";
+
+        string res;
+        function<void(int sum)> dfs = [&] (int sum) -> void {
+            for(int i = n-1; i >= 0; i--) {
+                if(dfs0(sum - cost[i]) + 1 == memo[sum]) {
+                    dfs(sum - cost[i]);
+                    res += i+1 + '0';
+                    return;
+                }
+            }
+
+            return;
+        };
+        dfs(target);
+        reverse(res.begin(), res.end());
+        
+        return res == "" ? "0" : res;
+        */
+    }
+};
+
 // 最佳解 TC:O(target*9) SC:O(target) 背包DP + 貪心
 class Solution {
 public:
