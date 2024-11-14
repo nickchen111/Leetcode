@@ -2,7 +2,6 @@
 2719. Count of Integers
 */
 
-// 更好的模板 只需要寫一次
 
 // 優化寫法 其實isLimit 為true時不會有重複運算的狀況 所以不用記憶化 TC: O(len(s) * sum * 9)  n 為最大值max_sum SC:O(len(s) * sum)
 class Solution {
