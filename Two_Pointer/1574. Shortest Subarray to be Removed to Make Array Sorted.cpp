@@ -32,6 +32,69 @@ public:
 };
 
 
+// BS 2024.11.15 好理解
+class Solution {
+public:
+    int findLengthOfShortestSubarray(vector<int>& arr) {
+        int n = arr.size();
+
+        // 預處理
+        vector<int> suffix(n, 1);
+        vector<int> prefix(n, 1);
+
+        for(int i = n - 2; i >= 0; --i) {
+            if (arr[i] <= arr[i + 1]) {
+                suffix[i] = suffix[i + 1] + 1;
+            }
+        }
+
+        for(int i = 1; i < n; ++i) {
+            if (arr[i] >= arr[i - 1]) {
+                prefix[i] = prefix[i - 1] + 1;
+            }
+        }
+
+        auto check = [&](int mid) -> bool {
+            int l = 0, r = mid - 1;
+            while (r < n) {
+                if (l > 0 && r + 1 < n) {
+                    if (prefix[l - 1] + suffix[r + 1] == n - mid && arr[l - 1] <= arr[r + 1]) {
+                        return true;
+                    }
+                }
+                else if (r + 1 < n) {
+                    if (suffix[r + 1] == n - mid) {
+                        return true;
+                    }
+                }
+                else if (l > 0) {
+                    if (prefix[l - 1] == n - mid) {
+                        return true;
+                    }
+                }
+                ++r;
+                ++l;
+            }
+            return false;
+        };
+
+        int left = 0, right = n;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (check(mid)) {
+                right = mid;
+            }
+            else {
+                left = mid + 1;
+            }
+        }
+
+        return left;
+    }
+};
+
+
+
 // Binary Search  TC:O(n*lgn) SC:O(1)
 class Solution {
 public:
