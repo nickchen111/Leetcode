@@ -28,7 +28,7 @@ public:
 };
 
 // 次佳解  父節點要子節點訊息
-lass Solution {
+class Solution {
     using LL = long long;
 public:
     int pathSum(TreeNode* root, int targetSum) {
