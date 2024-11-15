@@ -30,6 +30,32 @@ public:
     }
 };
 
+// DP TC:O(10*n) SC:O(10*n)
+class Solution {
+public:
+    int countDigitOne(int n) {
+        string s = to_string(n);
+        int m = s.size();
+        vector<vector<int>> memo(m, vector<int>(10,-1));
+        function<int(int i, bool isLimit, bool isNum, int count)> dfs = [&](int i, bool isLimit, bool isNum, int count) -> int {
+            if(i == m) return count;
+            if(memo[i][count] != -1 && !isLimit && isNum) return memo[i][count];
+            int res = 0;
+            if(!isNum) res = dfs(i+1, false, false, 0);
+            int up = isLimit ? s[i]-'0' : 9;
+            for(int j = 1 -(isNum); j <= up; j++) {
+                res = res + dfs(i+1, isLimit && (j == up), true, count + (j == 1));
+            }
+
+            if(!isLimit && isNum) memo[i][count] = res;
+
+            return res;
+        };
+
+        return dfs(0, true, false, 0);
+    }
+};
+
 /*
 給你一個數字 算出在這個數字以內的數字有多少個1
 要將目前的數字設為1:
