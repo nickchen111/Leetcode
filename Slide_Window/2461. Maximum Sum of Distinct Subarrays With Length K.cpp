@@ -2,6 +2,34 @@
 2461. Maximum Sum of Distinct Subarrays With Length K
 */
 
+// 1119 TC:O(n) SC:O(n)
+class Solution {
+    using LL = long long;
+public:
+    long long maximumSubarraySum(vector<int>& nums, int k) {
+        int n = nums.size();
+        int i = 0;
+        LL sum = 0;
+        LL res = 0;
+        unordered_map<int,int> map;
+        for(int j = 0; j < n; j++) {
+            sum += nums[j];
+            map[nums[j]] += 1;
+            if(j - i + 1 == k) {
+                if(map.size() == k) {
+                    res = max(res, sum);
+                }
+                map[nums[i]] -= 1;
+                sum -= nums[i];
+                if(map[nums[i]] == 0) map.erase(nums[i]);
+                i++;
+            }
+        }
+
+        return res;
+    }
+};
+
 // TC:O(n) SC:O(n)
 class Solution {
 public:
