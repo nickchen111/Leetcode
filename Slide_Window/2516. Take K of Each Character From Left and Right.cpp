@@ -28,7 +28,7 @@ public:
             //     suf[s[j]-'a'] -= 1;
             //     j++;
             // }
-            while(j < n && suf[s[i]-'a'] + pre[s[i]-'a'] >= k) {
+            while(j < n) {
                 if(suf[s[j]-'a'] + pre[s[j]-'a'] > k) {
                     suf[s[j]-'a'] -= 1;
                     j++;
@@ -41,6 +41,7 @@ public:
         return res;
     }
 };
+
 
 
 /*
