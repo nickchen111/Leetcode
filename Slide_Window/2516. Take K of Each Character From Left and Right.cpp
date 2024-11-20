@@ -2,6 +2,51 @@
 2516. Take K of Each Character From Left and Right
 */
 
+// 1120 TC:O(n) SC:O(1)
+class Solution {
+public:
+    int takeCharacters(string s, int k) {
+        int n = s.size();
+        if(n < 3*k) return -1;
+        if(k == 0) return 0;
+        int j = n-1;
+        vector<int> suf(3,0);
+        int sum = 0;
+        while(j >= 0) {
+            suf[s[j]-'a'] += 1;
+            if(suf[s[j]-'a'] == k) sum += 1;
+            if(sum == 3) break;
+            j--;
+        }
+        if(j < 0) return -1;
+        // x x x x x x x 
+        int res = n - j;
+        vector<int> pre(3,0);
+        for(int i = 0; i < n; i++) {
+            pre[s[i]-'a'] += 1;
+            while(j < n && i >= j) {
+                suf[s[j]-'a'] -= 1;
+                j++;
+            }
+            while(j < n && suf[s[i]-'a'] + pre[s[i]-'a'] >= k) {
+                if(suf[s[j]-'a'] + pre[s[j]-'a'] > k) {
+                    suf[s[j]-'a'] -= 1;
+                    j++;
+                }
+                else break;
+            }
+            res = min(res, i+1 + (n-j));
+        }
+
+        return res;
+    }
+};
+
+
+/*
+每次可以從前or後拿元素 問說最少拿多少次可以a, b, c 都拿到至少k個
+*/
+
 // TC:O(n) SC:O(1)
 class Solution {
 public:
