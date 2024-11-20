@@ -117,6 +117,77 @@ public:
     }
 };
 
+// 正著來
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int findGoodStrings(int n, string s1, string s2, string evil) {
+        int k = evil.size();
+        function<vector<int>(string&)> preprocessor = [&](string& evil) -> vector<int> {
+            int m = evil.size();
+            vector<int> dp(m);
+            for(int i = 1; i < m; i++) {
+                int j = dp[i-1];
+                while(j > 0 && evil[j] != evil[i]) {
+                    j = dp[j-1];
+                }
+                dp[i] = j + (evil[j] == evil[i]);
+            }
+            return dp;
+        };
+    
+        vector<int> lsp = preprocessor(evil);
+        auto kmp = [&](string& s) -> LL {
+            int m = s.size();
+            vector<int> dp(m);
+            dp[0] = (s[0] == evil[0] ? 1 : 0);
+            for(int i = 1; i < m; i++) {
+                int j = dp[i-1];
+                while(j > 0 && evil[j] != s[i]) {
+                    j = lsp[j-1];
+                }
+                dp[i] = j + (evil[j] == s[i]);
+                if(dp[i] == k) return 0LL;
+            }
+
+            return 1LL;
+        };
+        function<LL(string&)> countLimitString = [&](string& s) -> LL{
+            int m = s.size();
+            vector<vector<LL>> memo(m, vector<LL>(k+1,-1));
+            function<LL(int, bool, bool, int)> dfs = [&](int i, bool isLimit, bool isString, int idx) -> LL {
+                if(i == m) return isString;
+                if(!isLimit && isString && memo[i][idx] != -1) return memo[i][idx];
+                LL res = 0;
+                if(!isString) res = dfs(i+1, false, false, idx);
+                char up = isLimit ? s[i] : 'z';
+                for(char ch = 'a'; ch <= up; ch++) {
+                    int nextidx = idx;
+                    while(nextidx > 0 && evil[nextidx] != ch) {
+                        nextidx = lsp[nextidx-1];
+                    }
+                    nextidx = nextidx + (evil[nextidx] == ch);
+                    if(nextidx == k) {
+                        continue;
+                    }
+                    res = (res + dfs(i+1, isLimit && ch == up, true, nextidx)) % MOD;
+                }
+
+                if(!isLimit && isString) memo[i][idx] = res;
+                return res;
+            };
+
+            return dfs(0, true, false, 0);
+        };
+
+        LL num1 = countLimitString(s1);
+        LL num2 = countLimitString(s2);
+        return (((num2 - num1) % MOD + MOD) % MOD + + kmp(s1)) % MOD;
+
+    }
+};
+
 /*
 就是介於兩個字串中並且沒有evil作為substring在裡頭
 可以用正難則反嗎 一定要包含此substring的有多少種
