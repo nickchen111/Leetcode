@@ -39,3 +39,28 @@ public:
         return maxFreq;
     }
 };
+
+
+// 暴力 + Hash Map 
+class Solution {
+public:
+ int sum(int n)
+ {
+    int s=0;
+    while(n>0)
+    {
+        s+=n%10;
+        n=n/10;
+    }
+    return s;
+ }
+    int countBalls(int lowLimit, int highLimit) {
+        int arr[46]={};
+        for(auto i=lowLimit;i<=highLimit;i++)
+        {
+            int ind=sum(i);
+            arr[ind]++;
+        }
+        return *max_element(begin(arr),end(arr));
+    }
+};
