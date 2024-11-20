@@ -24,10 +24,10 @@ public:
         vector<int> pre(3,0);
         for(int i = 0; i < n; i++) {
             pre[s[i]-'a'] += 1;
-            while(j < n && i >= j) {
-                suf[s[j]-'a'] -= 1;
-                j++;
-            }
+            // while(j < n && i >= j) {
+            //     suf[s[j]-'a'] -= 1;
+            //     j++;
+            // }
             while(j < n && suf[s[i]-'a'] + pre[s[i]-'a'] >= k) {
                 if(suf[s[j]-'a'] + pre[s[j]-'a'] > k) {
                     suf[s[j]-'a'] -= 1;
