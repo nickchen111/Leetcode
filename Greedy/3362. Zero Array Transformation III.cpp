@@ -2,7 +2,7 @@
 3362. Zero Array Transformation III
 */
 
-// TC:O(nlgm + m) SC:O(m)
+// TC:O(n+ mlgm) SC:O(m + n)
 class Solution {
 public:
     int maxRemoval(vector<int>& nums, vector<vector<int>>& queries) {
