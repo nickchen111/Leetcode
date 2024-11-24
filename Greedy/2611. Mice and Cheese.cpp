@@ -2,6 +2,19 @@
 2611. Mice and Cheese
 */
 
+// TC:O(n) SC:O(1) Quick Select
+class Solution {
+public:
+    int miceAndCheese(vector<int>& r1, vector<int>& r2, int k) {
+        for (int i = 0; i < r1.size(); i++) {
+            r1[i] -= r2[i];
+        }
+        ranges::nth_element(r1, r1.end() - k);
+        return reduce(r2.begin(), r2.end()) + // 先全部给第二只老鼠
+               reduce(r1.end() - k, r1.end()); // 再加上增量
+    }
+};
+
 // TC:O(nlgn) SC:O(n)
 class Solution {
 public:
