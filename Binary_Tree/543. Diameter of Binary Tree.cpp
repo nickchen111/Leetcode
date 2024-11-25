@@ -2,6 +2,25 @@
 543. Diameter of Binary Tree
 */
 
+// TC:O(n) SC:O(1)
+class Solution {
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        int res = 0;
+        auto dfs = [&](auto &&dfs, TreeNode* node) -> int {
+            if(node == NULL) return 0;
+            int left = dfs(dfs, node->left);
+            int right = dfs(dfs, node->right);
+            int ret = 1;
+            res = max(res, left + right + 1);
+            return ret + max(left, right);
+        };
+
+        dfs(dfs, root);
+        return res -1;
+    }
+};
+
 
 class Solution {
     int maxdiameter = 0;
