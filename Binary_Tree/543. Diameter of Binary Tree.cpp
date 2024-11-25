@@ -2,7 +2,7 @@
 543. Diameter of Binary Tree
 */
 
-// TC:O(n) SC:O(1)
+// TC:O(n) SC:O(n)
 class Solution {
 public:
     int diameterOfBinaryTree(TreeNode* root) {
