@@ -2,7 +2,25 @@
 124. Binary Tree Maximum Path Sum
 */
 
-//TC:O(n) SC:O(lgn)
+// 1125 TC:O(n) SC:O(n)
+class Solution {
+public:
+    int maxPathSum(TreeNode* root) {
+        int res = INT_MIN;
+        auto dfs = [&](auto &&dfs, TreeNode* node) -> int {
+            if(node == NULL) return 0;
+            int left = dfs(dfs, node->left);
+            int right = dfs(dfs, node->right);
+            res = max({res, node->val + left + right, node->val + left, node->val + right, node->val});
+            return max(node->val, node->val + max(left, right));
+        };
+        dfs(dfs,root);
+
+        return res;
+    }
+};
+
+//TC:O(n) SC:O(n)
 class Solution {
     int res = INT_MIN;
 public:
