@@ -2,6 +2,36 @@
 2385. Amount of Time for Binary Tree to Be Infected
 */
 
+// 1127
+class Solution {
+public:
+    int amountOfTime(TreeNode* root, int start) {
+        // 需要構造一個parent數組
+        unordered_map<TreeNode*, TreeNode*> parent;
+        TreeNode* sta = nullptr;              
+        bool visited[100005] = {false};       
+        auto dfs0 = [&](auto &&dfs0, TreeNode* node, TreeNode* prev) {
+            if(node == NULL) return;
+            if(node -> val == start) sta = node;
+            parent[node] = prev;
+            dfs0(dfs0, node->left, node);
+            dfs0(dfs0, node->right, node);
+        }; 
+        dfs0(dfs0, root, NULL);
+        int res = 0;
+        auto dfs = [&](auto &&dfs, TreeNode* node) {
+            if(node == NULL || visited[node->val]) return 0;
+            visited[node->val] = 1;
+            int left = dfs(dfs, node->left);
+            int right = right = dfs(dfs, node->right);
+            int up = dfs(dfs, parent[node]);
+            
+            return max({left, right, up})+1;
+        };
+        return dfs(dfs, sta)-1;
+    }
+};
+
 // BFS TC:O(n) SC:O(n)
 class Solution {
 public:
