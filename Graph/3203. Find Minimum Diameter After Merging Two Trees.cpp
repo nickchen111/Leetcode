@@ -2,6 +2,51 @@
 3203. Find Minimum Diameter After Merging Two Trees
 */
 
+// 1128
+class Solution {
+public:
+    int minimumDiameterAfterMerge(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+        int m = edges1.size()+1;
+        int n = edges2.size()+1;
+        
+        vector<vector<int>> graph1(m);
+        vector<vector<int>> graph2(n);
+
+        for(auto edge : edges1){
+            graph1[edge[0]].push_back(edge[1]);
+            graph1[edge[1]].push_back(edge[0]);
+        }
+        for(auto edge : edges2){
+            graph2[edge[0]].push_back(edge[1]);
+            graph2[edge[1]].push_back(edge[0]);
+        }
+        
+        auto dfs = [&](auto && dfs, vector<vector<int>>& next, int i, int prev, int& cand) -> int {
+            int maxVal = 0;
+            int secondMaxVal = 0;
+            for(auto &nxt : next[i]) {
+                if(nxt == prev) continue;
+                int cur = dfs(dfs, next, nxt, i, cand) + 1;
+                if(cur >= maxVal) {
+                    secondMaxVal = maxVal;
+                    maxVal = cur;
+                }
+                else if(cur > secondMaxVal) {
+                    secondMaxVal = cur;
+                }
+            }
+            cand = max(cand, maxVal + secondMaxVal); 
+
+            return maxVal;
+        };
+        int cand1 = 0, cand2 = 0;
+        dfs(dfs, graph1, 0, -1, cand1);
+        dfs(dfs, graph2, 0, -1, cand2);
+        
+        return max({cand1, cand2, (cand1+1)/2 + (cand2+1)/2 + 1});
+    }
+};
+
 // TC:O(m+n) SC:O(m+n)
 class Solution {
     int cand2 = 0;
