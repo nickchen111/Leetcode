@@ -2,6 +2,25 @@
 337. House Robber III
 */
 
+// 1130 
+class Solution {
+public:
+    int rob(TreeNode* root) {
+        int res = 0;
+        auto dfs = [&](auto &&dfs, TreeNode* node) -> pair<int,int> {
+            if(node == NULL) return {0,0};
+            auto [sub_rob1, sub_norob1] = dfs(dfs, node-> left);
+            auto [sub_rob2, sub_norob2] = dfs(dfs, node-> right);
+            int rob = node->val + sub_norob1 + sub_norob2;
+            int norob = max(sub_rob1, sub_norob1) + max(sub_rob2, sub_norob2);
+            res = max({res, rob, norob});
+            return {rob, norob};
+        };
+        dfs(dfs, root);
+        return res;
+    }
+};
+
 //recursion 可用memo優化 或者直接數組優化 ->TLE
 //TC:O(n) SC:O(n)
 class Solution {
