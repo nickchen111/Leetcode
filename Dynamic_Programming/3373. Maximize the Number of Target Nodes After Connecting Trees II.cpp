@@ -2,7 +2,7 @@
 3373. Maximize the Number of Target Nodes After Connecting Trees II
 */
 
-// TC:O(n) SC:O(n)
+// 移根DP TC:O(n) SC:O(n)
 class Solution {
 public:
     vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
@@ -75,6 +75,55 @@ public:
         vector<int> res(n);
         for(int i = 0; i < n; i++) {
             res[i] = tree1[i].first + maxVal;
+        }
+        
+        return res;
+    }
+};
+
+// 染色法 TC:O(n) SC:O(n)
+class Solution {
+public:
+    vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+        int n = edges1.size()+1;
+        int m = edges2.size()+1;
+        vector<vector<int>> next1(n);
+        vector<vector<int>> next2(m);
+        for(auto &e : edges1) {
+            next1[e[0]].push_back(e[1]);
+            next1[e[1]].push_back(e[0]);
+        }
+        for(auto &e : edges2) {
+            next2[e[0]].push_back(e[1]);
+            next2[e[1]].push_back(e[0]);
+        }
+        
+        vector<int> tree1(n);
+        vector<int> tree2(m);
+        
+        auto dfs = [&](auto &&dfs, int cur, int prev, vector<vector<int>>& next, vector<int>& tree, bool tag) -> void {
+            tree[cur] = tag;
+            for(auto &nxt : next[cur]) {
+                if(nxt == prev) continue;
+                dfs(dfs, nxt, cur, next, tree, tag ^ 1);
+            }
+        };
+        dfs(dfs, 0, -1, next1, tree1, 0);
+        dfs(dfs, 0, -1, next2, tree2, 0);
+        int even = 0, odd = 0;
+        int even_2 = 0, odd_2 = 0;
+        for(auto &i : tree1) {
+            if(!i) even += 1;
+            else odd += 1;
+        }
+        for(auto & i : tree2) {
+            if(!i) even_2 += 1;
+            else odd_2 += 1;
+        }
+        
+        vector<int> res(n);
+        for(int i = 0; i < n; i++) {
+            res[i] = (tree1[i] == 0 ? even : odd) + max(even_2, odd_2);
         }
         
         return res;
