@@ -66,23 +66,26 @@ public:
         dfs1(dfs1, 0, -1, next2, subtree2, tree2);
         
         // 找到第二棵樹中最大的偶數距離節點數
-        int maxEven = 0;
+        int maxVal = 0;
         for(int i = 0; i < m; i++) {
-            maxEven = max(maxEven, tree2[i].second);
+            maxVal = max({maxVal, tree2[i].second, tree2[i].first});
         }
         
         // 計算答案
         vector<int> res(n);
         for(int i = 0; i < n; i++) {
-            res[i] = tree1[i].first + maxEven;
+            res[i] = tree1[i].first + maxVal;
         }
         
         return res;
     }
 };
 /*
-這題換成需要連接的edge長度是偶數
+這題需要連接的edge長度是偶數
 並且數據需要O(n)處理
-自處理的部分 可以reroot ? or 
-上一個節點 odd, even 數量是？
+處理的部分 可以reroot
+上一個節點要加到當下節點的even,odd時要用上個節點的odd, even 數量 這些都要在traverse到當下節點時考慮
+
+但有個作法更簡單，利用染色的概念隨便挑一點開始走，假設他現在這個點是0，下一個點就是1,然後紀錄0和1的點數量就好
+
 */
