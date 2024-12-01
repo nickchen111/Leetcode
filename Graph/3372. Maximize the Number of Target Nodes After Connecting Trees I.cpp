@@ -11,10 +11,9 @@ public:
         int m = edges2.size()+1;
         vector<int> pre1(n);
         vector<int> pre2(m);
-        vector<vector<int>> next1(n);
-        vector<vector<int>> next2(m);
-        auto build = [](vector<vector<int>>& edges, vector<vector<int>>& next, vector<int>& pre, int k) -> void {
+        auto build = [](vector<vector<int>>& edges,  vector<int>& pre, int k) -> void {
             int n = edges.size()+1;
+            vector<vector<int>> next(n);
             for(auto &e : edges) {
                 next[e[0]].push_back(e[1]);
                 next[e[1]].push_back(e[0]);
@@ -32,8 +31,8 @@ public:
                 dfs(dfs, i, -1, 0, i);
             }
         };
-        build(edges1, next1, pre1, k);
-        build(edges2, next2, pre2, k-1);
+        build(edges1, pre1, k);
+        build(edges2, pre2, k-1);
         
         int maxVal = 0;
         for(int i = 0; i < m; i++) {
