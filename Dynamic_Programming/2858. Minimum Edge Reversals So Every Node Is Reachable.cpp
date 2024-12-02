@@ -48,7 +48,7 @@ public:
 // 用unordered_map<int, unordered_set<int>> 包起來
 class Solution {
 public:
-    vector<int> minEdgeReversals(ixnt n, vector<vector<int>>& edges) {
+    vector<int> minEdgeReversals(int n, vector<vector<int>>& edges) {
         vector<vector<int>> next(n);
         unordered_map<int, unordered_set<int>> map;
         vector<int> res(n);
