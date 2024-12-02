@@ -2,6 +2,47 @@
 2858. Minimum Edge Reversals So Every Node Is Reachable
 */
 
+// 1202
+class Solution {
+public:
+    vector<int> minEdgeReversals(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> next(n);
+        unordered_map<int, unordered_set<int>> map;
+        vector<int> res(n);
+        for(auto &e : edges) {
+            next[e[0]].push_back(e[1]);
+            next[e[1]].push_back(e[0]);
+            map[e[0]].insert(e[1]);
+        }
+        int root0 = 0;
+        auto dfs0 = [&](auto &&dfs0, int cur, int prev) -> void {
+            for(auto &nxt : next[cur]) {
+                if(nxt != prev) {
+                    if(map[cur].find(nxt) == map[cur].end()) {
+                        root0 += 1;
+                    }
+                    dfs0(dfs0, nxt, cur);
+                }
+            }
+        };
+        dfs0(dfs0, 0, -1);
+        res[0] = root0;
+        auto dfs = [&](auto &&dfs, int cur, int prev) -> void {
+            for(auto &nxt : next[cur]) {
+                if(nxt != prev) {
+                    if(map[nxt].find(cur) != map[nxt].end()) {
+                        res[nxt] = res[cur] - 1;
+                    }
+                    else res[nxt] = res[cur] + 1;
+                    dfs(dfs, nxt, cur);
+                }
+            }
+        };
+        dfs(dfs, 0, -1);
+        return res;
+    }
+};
+
 // TC:O(n) SC:O(n+m)
 class Solution {
     using LL = long long;
