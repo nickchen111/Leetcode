@@ -3,6 +3,40 @@
 */
 
 // 1202
+// 數值模擬邊的權重
+class Solution {
+public:
+    vector<int> minEdgeReversals(int n, vector<vector<int>>& edges) {
+        vector<vector<pair<int,int>>> next(n);
+        vector<int> res(n);
+        for(auto &e : edges) {
+            next[e[0]].push_back({e[1], 0});
+            next[e[1]].push_back({e[0],1});
+        }
+        int root0 = 0;
+        auto dfs0 = [&](auto &&dfs0, int cur, int prev) -> void {
+            for(auto &[nxt, w] : next[cur]) {
+                if(nxt != prev) {
+                    root0 += w;
+                    dfs0(dfs0, nxt, cur);
+                }
+            }
+        };
+        dfs0(dfs0, 0, -1);
+        res[0] = root0;
+        auto dfs = [&](auto &&dfs, int cur, int prev) -> void {
+            for(auto &[nxt, w] : next[cur]) {
+                if(nxt != prev) {
+                    res[nxt] = res[cur] + (w == 0 ? 1 : -1);
+                    dfs(dfs, nxt, cur);
+                }
+            }
+        };
+        dfs(dfs, 0, -1);
+        return res;
+    }
+};
+
 // 寫成Bit
 class Solution {
     using LL = long long;
