@@ -2,6 +2,46 @@
 834. Sum of Distances in Tree
 */
 
+// 1202
+class Solution {
+public:
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+        vector<int> res(n);
+        vector<int> subtree(n);
+        vector<vector<int>> next(n);
+        for(auto &e : edges) {
+            next[e[0]].push_back(e[1]);
+            next[e[1]].push_back(e[0]);
+        } 
+        int root0 = 0;
+        auto dfs0 = [&](auto &&dfs0, int cur, int prev) -> int {
+            int ret = 0;
+            for(auto &nxt : next[cur]) {
+                if(nxt != prev){
+                    ret += dfs0(dfs0, nxt, cur);
+                }
+            }
+            subtree[cur] = ret + 1;
+            root0 += ret;
+            return ret + 1;
+        };
+        dfs0(dfs0, 0, -1);
+        res[0] = root0;
+        auto dfs = [&](auto &&dfs, int cur, int prev) -> void {
+            
+            for(auto &nxt : next[cur]) {
+                if(nxt != prev){
+                    res[nxt] = res[cur] - subtree[nxt] + n - subtree[nxt];
+                    dfs(dfs, nxt, cur);
+                }
+            }
+        };
+        dfs(dfs, 0, -1);
+
+        return res;
+    }
+};
+
 //TC:O(n)->均攤可以變O(1) SC:O(n)
 class Solution {
     vector<int> res;
