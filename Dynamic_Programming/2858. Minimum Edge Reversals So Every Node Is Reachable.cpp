@@ -3,9 +3,52 @@
 */
 
 // 1202
+// 寫成Bit
 class Solution {
+    using LL = long long;
 public:
     vector<int> minEdgeReversals(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> next(n);
+        unordered_set<LL> set;
+        vector<int> res(n);
+        for(auto &e : edges) {
+            next[e[0]].push_back(e[1]);
+            next[e[1]].push_back(e[0]);
+            set.insert(((LL)e[0] << 32) | e[1]);
+        }
+        int root0 = 0;
+        auto dfs0 = [&](auto &&dfs0, int cur, int prev) -> void {
+            for(auto &nxt : next[cur]) {
+                if(nxt != prev) {
+                    if(set.find(((LL)cur<<32) | nxt) == set.end()) {
+                        root0 += 1;
+                    }
+                    dfs0(dfs0, nxt, cur);
+                }
+            }
+        };
+        dfs0(dfs0, 0, -1);
+        res[0] = root0;
+        auto dfs = [&](auto &&dfs, int cur, int prev) -> void {
+            for(auto &nxt : next[cur]) {
+                if(nxt != prev) {
+                    if(set.find(((LL)nxt<<32) | cur) != set.end()) {
+                        res[nxt] = res[cur] - 1;
+                    }
+                    else res[nxt] = res[cur] + 1;
+                    dfs(dfs, nxt, cur);
+                }
+            }
+        };
+        dfs(dfs, 0, -1);
+        return res;
+    }
+};
+
+// 用unordered_map<int, unordered_set<int>> 包起來
+class Solution {
+public:
+    vector<int> minEdgeReversals(ixnt n, vector<vector<int>>& edges) {
         vector<vector<int>> next(n);
         unordered_map<int, unordered_set<int>> map;
         vector<int> res(n);
