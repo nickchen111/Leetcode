@@ -2,6 +2,55 @@
 2925. Maximum Score After Applying Operations on a Tree
 */
 
+// 1204 TC:O(V+E) SC:O(V)
+class Solution {
+    using LL = long long;
+public:
+    long long maximumScoreAfterOperations(vector<vector<int>>& edges, vector<int>& values) {
+        int n = values.size();
+        vector<vector<int>> next(n);
+        vector<LL> subtree(n);
+        for(auto &e : edges) {
+            next[e[0]].push_back(e[1]);
+            next[e[1]].push_back(e[0]);
+        }
+        auto dfs0 = [&](auto &&dfs0, int cur, int prev) -> LL {
+            LL sum = values[cur];
+            for(auto &nxt : next[cur]) {
+                if(nxt == prev) continue;
+                sum += dfs0(dfs0, nxt, cur);
+            }
+            subtree[cur] = sum;
+            return sum;
+        };
+        dfs0(dfs0, 0, -1);
+
+        auto dfs = [&](auto &&dfs, int cur, int prev) -> LL {
+            if(next[cur].size() == 1 && cur != 0) return 0; // 這個不選
+            LL choose = values[cur];
+            LL not_choose = 0;
+            for(auto &nxt : next[cur]) {
+                if(nxt == prev) continue;
+                choose += dfs(dfs, nxt, cur); // 後面都有個不選的
+            }
+            not_choose = max((LL)subtree[cur] - values[cur], choose);
+            return not_choose;
+        };
+        return dfs(dfs, 0, -1);
+    }
+};
+
+/*
+選or不選
+選了 我前面就必須有人不選
+不選 我前面都可以選
+
+每個點討論是否選
+選他拿他的值 = 後面的要有不選的最大值 + 拿到的值
+不選不拿他的值 = 後面都選拿到的值
+max(我不選 + 後面都選, 我選 + 後面有個不選)
+*/
+
 //
 class Solution {
     vector<vector<int>> next;
