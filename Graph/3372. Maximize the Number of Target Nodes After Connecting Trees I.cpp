@@ -100,3 +100,76 @@ public:
         return res;
     }
 };
+
+// 移根寫法 TC:O((n + m)*k) SC:O((n + m)*k)
+class Solution {
+public:
+    vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2, int k) {
+        int n = edges1.size()+1;
+        int m = edges2.size()+1;
+        vector<vector<int>> dp1(n, vector<int>(k > 0 ? k + 1 : 1, 0)); // 定義為i走j步可以走到的點有多少個
+        vector<vector<int>> dp2(m, vector<int>(k > 1 ? k : 1, 0));
+        auto build = [](vector<vector<int>>& edges,  vector<vector<int>>& dp, int k) -> void {
+            int n = edges.size()+1;
+            vector<vector<int>> next(n);
+            for(auto &e : edges) {
+                next[e[0]].push_back(e[1]);
+                next[e[1]].push_back(e[0]);
+            }
+            vector<vector<int>> subtree(n, vector<int>(k+1));
+            for(int i = 0; i < n; i++) {
+                subtree[i][0] = 1;
+            }
+            auto dfs0 = [&](auto &&dfs0, int cur, int prev) -> void {
+                for(auto &nxt : next[cur]) {
+                    if(nxt != prev) {
+                        dfs0(dfs0, nxt, cur);
+                        for(int j = 1; j <= k; j++) {
+                            subtree[cur][j] += subtree[nxt][j-1];
+                        }
+                    }
+                }
+            };
+            dfs0(dfs0, 0, -1);
+            
+            for(int i = 0; i <= k; i++) {
+                dp[0][i] = subtree[0][i];
+            }
+            auto dfs = [&](auto &&dfs, int cur, int prev) -> void {
+                for(auto &nxt : next[cur]) {
+                    if(nxt != prev) {
+                        dp[nxt][0] = subtree[nxt][0];
+                        if(k >= 1) dp[nxt][1] = subtree[nxt][1] + dp[cur][0];
+                        for(int j = 2; j <= k; j++) {
+                            dp[nxt][j] = subtree[nxt][j] + dp[cur][j-1] - subtree[nxt][j-2];
+                        }
+                        dfs(dfs, nxt, cur);
+                    }
+                }
+            };
+            dfs(dfs, 0, -1);
+        };
+        build(edges1, dp1, k);
+        if(k > 0) build(edges2, dp2, k-1);
+        
+        int maxVal = 0;
+        for(int i = 0; i < m; i++) {
+            int sum = 0;
+            for(int j = 0; j <= k-1; j++){
+                sum += dp2[i][j];
+            }
+            maxVal = max(maxVal, sum);
+        }
+        
+        vector<int> res(n);
+        for(int i = 0; i < n; i++) {
+            int sum = 0;
+            for(int j = 0; j <= k; j++) {
+                sum += dp1[i][j];
+            }
+            res[i] = sum + maxVal;
+        }
+        
+        return res;
+    }
+};
