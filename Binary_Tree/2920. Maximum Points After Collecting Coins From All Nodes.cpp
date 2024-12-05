@@ -2,6 +2,48 @@
 2920. Maximum Points After Collecting Coins From All Nodes
 */
 
+// 1205
+class Solution {
+public:
+    int maximumPoints(vector<vector<int>>& edges, vector<int>& coins, int k) {
+        int n = coins.size();
+        vector<vector<int>> next(n);
+        for(auto &e : edges) {
+            next[e[0]].push_back(e[1]);
+            next[e[1]].push_back(e[0]);
+        }
+        auto Reduced = [&](int num, int time) -> int {
+            if(time >= 14) return 0;
+            while(time--) {
+                num /= 2;
+            }
+            return num;
+        };
+        vector<vector<int>> memo(n, vector<int>(15,-1));
+        auto dfs = [&](auto && dfs, int cur, int prev, int time) -> int {
+            if(time >= 14) time = 14;
+            if(memo[cur][time] != -1) return memo[cur][time];
+            int mustdo = Reduced(coins[cur], time);
+            int cand1 = mustdo - k;
+            int cand2 = mustdo/2;
+            for(auto &nxt : next[cur]) {
+                if(nxt != prev) {
+                    cand1 += dfs(dfs, nxt, cur, time);
+                    cand2 += dfs(dfs, nxt, cur, time + 1);
+                }
+            }
+
+            return memo[cur][time] = max(cand2,cand1);
+        };
+        return dfs(dfs, 0, -1, 0);
+    }
+};
+
+/*
+堅持用n/2 去得分 那後面的就也都要/2
+會除很多次 10^4 大概是14次最多
+*/
+
 // TC:O(15*n) SC:O(15*n)
 class Solution {
     vector<int> next[100005];
