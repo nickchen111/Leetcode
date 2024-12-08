@@ -26,7 +26,7 @@ public:
 };
 
 
-// Backtrack TC:O(n * n!) SC:O(n!) 但有剪枝 所以Beat 100 %
+// Backtrack TC:O(n!) SC:O(n!) 但有剪枝 所以Beat 100 %
 class Solution {
 public:
     int findMinimumTime(vector<int>& strength, int K) {
@@ -50,7 +50,7 @@ public:
     }
 };
 
-// 次佳解 TC:O(n *n! + nlgn) SC:O(n!)
+// 次佳解 TC:O(n! + nlgn) SC:O(n!)
 class Solution {
 public:
     int findMinimumTime(vector<int>& strength, int K) {
