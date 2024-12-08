@@ -2,7 +2,7 @@
 3381. Maximum Subarray Sum With Length Divisible by K
 */
 
-// TC:O(n) SC:O(n)
+// TC:O(n) SC:O(1)
 class Solution {
     using LL = long long;
 public:
@@ -14,11 +14,10 @@ public:
         }
         LL res = LLONG_MIN;
         for(int i = 0; i < k; i++) {
-            multiset<LL> set;
-            set.insert(prefix[i]);
+            LL minVal = prefix[i];
             for(int j = i + k; j < prefix.size(); j += k) {
-                res = max(res, prefix[j] - *set.begin());
-                set.insert(prefix[j]);
+                res = max(res, prefix[j] - minVal);
+                minVal = min(minVal, prefix[j]);
             }
         }
         
