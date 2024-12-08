@@ -2,6 +2,54 @@
 3376. Minimum Time to Break Locks I
 */
 
+// 狀壓 DP TC:O(n*2^n) SC:O(2^n)
+class Solution {
+public:
+    int findMinimumTime(vector<int>& strength, int K) {
+        int n = strength.size();
+        vector<int> memo((1<<n), -1);
+        auto dfs = [&](auto && dfs, int status) -> int {
+            if(status == 0) return 0;
+            if(memo[status] != -1) return memo[status];
+            int x = 1 + (n - __builtin_popcount(status)) * K;
+            int res = INT_MAX;
+            for(int i = 0; i < n; i++) {
+                if(((status >> i) & 1)) {
+                    res = min(res, dfs(dfs,(status ^ (1<<i))) + (strength[i] + x - 1) / x);
+                }
+            }
+            return memo[status] = res;
+        };
+        
+        return dfs(dfs, (1<<n)-1);
+    }
+};
+
+
+// Backtrack TC:O(n * n!) SC:O(n!) 但有剪枝 所以Beat 100 %
+class Solution {
+public:
+    int findMinimumTime(vector<int>& strength, int K) {
+        int n = strength.size();
+        int res = INT_MAX;
+        auto backtrack = [&](auto && backtrack, int cnt, int time, int status) -> void {
+            if(time >= res) return;
+            if(cnt == n) {
+                res = min(res, time);
+                return;
+            }
+            int x = 1 + cnt*K;
+            for(int i = 0; i < n; i++) {
+                if(((status >> i) & 1) == 0) {
+                    backtrack(backtrack, cnt+1, time + (strength[i] + x -1) / x, status | (1<<i));
+                }
+            }
+        };
+        backtrack(backtrack, 0, 0, 0);
+        return res;
+    }
+};
+
 // 次佳解 TC:O(n *n! + nlgn) SC:O(n!)
 class Solution {
 public:
