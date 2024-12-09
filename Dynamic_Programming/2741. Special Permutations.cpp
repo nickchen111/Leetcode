@@ -2,7 +2,58 @@
 2741. Special Permutations
 */
 
-// TC:O(n*2^n) SC:O(14*2^14)
+// 1209 遞推 + 遞歸
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int specialPerm(vector<int>& nums) {
+        int n = nums.size();
+        // 前後總要有一個可以 % = 0
+        vector<vector<LL>> dp((1<<n), vector<LL>(n, 0));
+        for(int j = 0; j < n; j++) {
+            dp[1<<j][j] = 1;
+        }
+        for(int state = 1; state < (1<<n); state++){
+            for(int i = 0; i < n; i++) {
+                if(!((state >> i) & 1)) continue;
+                for(int j = 0; j < n; j++) {
+                    if(((state >> j) & 1) == 0) {
+                        if(nums[i] % nums[j] == 0 || nums[j] % nums[i] == 0)
+                            dp[state | (1 << j)][j] = (dp[state | (1 << j)][j] + dp[state][i]) % MOD;
+                    }
+                }
+            }
+        }
+        LL res = 0;
+        for(int i = 0; i < n; i++) {
+            res = (res + dp[(1<<n) - 1][i]) % MOD;
+        }
+
+        return res;
+        // vector<vector<LL>> memo((1<<n), vector<LL>(n,-1));
+        // auto dfs = [&](auto && dfs, LL status, LL prev) -> LL {
+        //     if(status == (1 << n) - 1) return 1;
+        //     if(memo[status][prev] != -1) return memo[status][prev];
+        //     LL ret = 0;
+        //     for(int i = 0; i < n; i++) {
+        //         if(((status >> i) & 1) == 0) {
+        //             if(nums[i] % nums[prev] == 0 || nums[prev] % nums[i] == 0)
+        //                 ret = (ret + dfs(dfs, status | (1<<i), i)) % MOD;
+        //         }
+        //     }
+        //     return memo[status][prev] = ret;
+        // };
+        // LL res = 0;
+        // for(int i = 0; i < n; i++) {
+        //     res = (res + dfs(dfs, 1 << i, i)) % MOD;
+        // }
+
+        // return res;
+    }
+};
+
+// TC:O(n^2*2^n) SC:O(n*2^n)
 class Solution {
     using LL = long long;
     LL M = 1e9+7;
