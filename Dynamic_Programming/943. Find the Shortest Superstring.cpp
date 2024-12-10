@@ -2,6 +2,132 @@
 943. Find the Shortest Superstring
 */
 
+// 1210 遞歸 + 遞推
+class Solution {
+public:
+    string shortestSuperstring(vector<string>& words) {
+        int n = words.size();
+        auto preprocessor = [&](string& s) -> vector<int> {
+            int n = s.size();
+            vector<int> lsp(n);
+            for(int i = 1; i < n; i++) {
+                int j = lsp[i-1];
+                while(j > 0 && s[i] != s[j]) j = lsp[j-1];
+                lsp[i] = j + (s[i] == s[j]);
+            }
+            return lsp;
+        };
+        auto kmp = [&](string& s, string &t, vector<int>& lsp) -> int {
+            int n = s.size();
+            vector<int> dp(n);
+            dp[0] = (s[0] == t[0]);
+            for(int i = 1; i < n; i++) {
+                int j = dp[i-1];
+                while(j > 0 && s[i] != t[j]) j = lsp[j-1];
+                dp[i] = j + (s[i] == t[j]);
+            }
+            return dp[n-1];
+        };
+        vector<vector<int>> dist(n, vector<int>(n));
+        for(int i = 0; i < n; i++) {
+            vector<int> lsp = preprocessor(words[i]);
+            for(int j = 0; j < n; j++) {
+                if(i == j) continue;
+                int len = kmp(words[j], words[i], lsp);
+                dist[j][i] = (int)words[i].size() - len;
+            }
+        }
+        vector<vector<int>> memo((1<<n), vector<int>(n, -1));
+        auto dfs = [&](auto &&dfs, int status, int prev) -> int {
+            if(status == (1<<n) - 1) return 0;
+            if(memo[status][prev] != -1) return memo[status][prev];
+            int ret = INT_MAX;
+            for(int i = 0; i < n; i++) {
+                if((status >> i) & 1) continue;
+                ret = min(ret, dfs(dfs, status | (1<<i), i) + dist[prev][i]);
+            }
+            return memo[status][prev] = ret;
+        };
+
+        int min_cost = INT_MAX, start = -1;
+        for (int i = 0; i < n; i++) {
+            int cost = (int)words[i].size() + dfs(dfs, 1 << i, i);
+            if (cost < min_cost) {
+                min_cost = cost;
+                start = i;
+            }
+        }
+        
+        string res = words[start];
+        auto record = [&](auto &&record, int status, int prev) -> void {
+            int ret = dfs(dfs, status, prev);
+            for(int i = 0; i < n; i++) {
+                if(((status >> i) & 1) == 0) {
+                    if(ret == dfs(dfs, status | (1<<i), i) + dist[prev][i]) {
+                        // x x x x x
+                        int len = words[i].size();
+                        res += words[i].substr(len - dist[prev][i]);
+                        record(record, status | (1<<i), i);
+                        break;
+                    }
+                }
+            }
+        };
+        record(record, (1<<start), start);
+        return res;
+        /*
+        遞推
+            vector<vector<int>> dp((1<<n), vector<int>(n, INT_MAX));
+            for(int i = 0; i < n; i++) {
+                dp[1<<i][i] = (int)words[i].size();
+            }
+            vector<vector<int>> record((1<<n), vector<int>(n, -1));
+            int minVal = INT_MAX;
+            int last = -1;
+            for(int status = 1; status < (1<<n); status++) {
+                for(int i = 0; i < n; i++) {
+                    if((status >> i) & 1) {
+                        int status_prev = status ^ (1 << i);
+                        for(int j = 0; j < n; j++) {
+                            if((status_prev >> j) & 1) {
+                                if(dp[status_prev][j] + dist[j][i] < dp[status][i]) {
+                                    dp[status][i] = dp[status_prev][j] + dist[j][i];
+                                    record[status][i] = j; // 尾巴指向前一點
+                                }
+                            }
+                        }
+                    }
+                    if(status == (1<<n)-1) {
+                        if(minVal > dp[status][i]) {
+                            minVal = dp[status][i];
+                            last = i;
+                        }
+                    }
+                }
+            }
+            int curState = (1<<n) - 1;
+            string res;
+            while(record[curState][last] != -1) {
+                int newState = curState ^ (1 << last);
+                int newLast = record[curState][last];
+                
+                int prevLen = dp[newState][newLast];
+                int curLen = dp[curState][last];
+                // cout << curLen << ' ' << prevLen << endl;
+                // x x x x x  lenDiff = 3
+                res = words[last].substr(words[last].size() - (curLen-prevLen)) + res;
+                
+                last = newLast;
+                curState = newState;
+            }
+            res = words[last] + res;
+
+            return res;
+        */
+        
+    }
+};
+
 // TC:O(2^n * n * n + (n*n*(m+m))) m 為字串平均長度 SC:O(m*n + n*n + (1<<n)*n)
 class Solution {
 public:
