@@ -2,6 +2,52 @@
 1723. Find Minimum Time to Finish All Jobs
 */
 
+// 狀壓DP 2024.12.19 
+class Solution {
+public:
+    int minimumTimeRequired(vector<int>& jobs, int k) {
+        int n = jobs.size();
+        // 分給k個勞工 每個人獲得的量的最大最小值是多少 你就會好奇說 集合與分配數值 想到狀壓 工作狀態如果是i 給了j個勞工的最大最小值是?
+        vector<int> sum(1<<n);
+        for(int i = 0; i < (1<<n); i++) {
+            for(int j = 0; j < n; j++) {
+                if((i>>j) & 1) sum[i] += jobs[j]; 
+            }
+        }
+        vector<vector<int>> dp(k, vector<int>(1<<n,0));
+        dp[0] = sum;
+        for(int i = 1; i < k; i++) {
+            for(int j = 1; j < (1<<n); j++) {
+                dp[i][j] = 1e9;
+                for(int s = j; s; s = (s-1) & j) {
+                    dp[i][j] = min(dp[i][j], max(dp[i-1][j^s],sum[s]));
+                }
+            }
+        }
+
+        return dp[k-1][(1<<n)-1];
+        /*
+        遞歸 TC:O(k * 3^n) SC:O(k * 2^n)
+        vector<vector<int>> memo((1<<n), vector<int>(k+1,-1));
+        auto dfs = [&](auto &&dfs, int mask, int cnt) -> int {
+            if(cnt == 1) return sum[mask];
+            if(mask == 0) return 0;
+            if(memo[mask][cnt] != -1) return memo[mask][cnt];
+            int submask = mask;
+            int ret = INT_MAX;
+            while(submask) {
+                int remain_mask = submask ^ mask;
+                ret = min(ret, max(sum[submask], dfs(dfs, remain_mask, cnt-1)));
+                submask = (submask-1) & mask;
+            }
+            return memo[mask][cnt] = ret;
+        };
+
+        return dfs(dfs, (1<<n)-1, k);
+        */
+    }
+};
+
 // Backtrack + Binary Search TC:O(k*2^n) SC:(2^n)
 class Solution {
     int k;
