@@ -2,6 +2,32 @@
 2875. Minimum Size Subarray in Infinite Array
 */
 
+// Slide Window TC:O(n) SC:O(1)
+class Solution {
+    using LL = long long;
+public:
+    int minSizeSubarray(vector<int>& nums, int target) {
+        int n = nums.size();
+        LL total = reduce(nums.begin(), nums.end(), 0LL);
+        int i = 0;
+        LL sum = 0;
+        int len = INT_MAX/2;
+        for(int j = 0; j < 2*n; j++) {
+            sum += (LL)nums[j%n];
+            while(sum > target % total) {
+                sum -= (LL)nums[i%n];
+                i++;
+            }
+            if(sum == target % total) {
+                len = min(len, j - i + 1);
+            }
+        }
+
+        if(len == INT_MAX/2) return -1;
+        return len + target / total * n;
+    }
+};
+
 // TC:O(n) SC:O(n)
 class Solution {
     using LL = long long;
