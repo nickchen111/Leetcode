@@ -6,7 +6,7 @@ long long quickMul(long long a, long long b) {
         b >>= 1;
     }
 
-    retrun ans;
+    return ans;
 }
 
 
