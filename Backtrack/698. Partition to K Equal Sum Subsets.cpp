@@ -2,7 +2,57 @@
 698. Partition to K Equal Sum Subsets
 */
 
-//backtrack TC:O(2^n) SC:O(n)
+// 2024.12.27 狀壓 TC:O(3^n) SC:O(2^n)
+class Solution {
+public:
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        int n = nums.size();
+        int total = reduce(nums.begin(), nums.end(), 0);
+        if(total % k) return false;
+        int target = total / k;
+        vector<int> arr(1 << n);
+        for(int i = 0; i < (1 << n); i++) {
+            for(int j = 0; j < n; j++) {
+                if((i >> j) & 1) arr[i] += nums[j];
+            }
+        }
+        vector<bool> dp((1 << n));
+        dp[0] = true;
+        for(int i = 1; i < (1<<n); i++) {
+            if(arr[i] % target || arr[i] < target) {
+                continue;
+            }
+            for(int j = i; j; j = (j-1) & i) {
+                if(arr[j] == target && dp[j ^ i]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return dp[(1<<n) - 1];
+        /*
+        遞歸 TC:O(3^n) SC:O(2^n)
+        vector<int> memo((1 << n), -1);
+        auto dfs = [&](auto &&dfs, int mask) -> bool {
+            if(arr[mask] == target) return memo[mask] = true;
+            if(arr[mask] < target || arr[mask] % target) return memo[mask] = false;
+            if(memo[mask] != -1) return memo[mask];
+            int submask = mask;
+            while(submask) {
+                int remaining_mask = submask ^ mask;
+                if(arr[submask] == target && dfs(dfs, remaining_mask)) return memo[mask] = true;
+                submask = (submask - 1) & mask;
+            }
+
+            return memo[mask] = false;
+        };
+        return dfs(dfs, (1<<n) - 1);
+        */
+    }
+};
+
+//backtrack TC:O(k * 2^n) SC:O(n)
 class Solution {
     bool used[16];
     int k;
