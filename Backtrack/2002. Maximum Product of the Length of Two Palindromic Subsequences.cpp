@@ -2,6 +2,52 @@
 2002. Maximum Product of the Length of Two Palindromic Subsequences
 */
 
+// 2024.12.28 狀壓 + 區間DP TC:O(2^n*n^2) SC:O(n^2 + 2^n) n = 12
+class Solution {
+public:
+    int maxProduct(string s) {
+        int n = s.size();
+        int mask = (1 << n) - 1;
+        int ret = 0;
+        auto lcp = [&](int submask) -> int {
+            string t;
+            for(int j = 0; j < n; j++) {
+                if((submask >> j) & 1) {
+                    t += s[j];
+                }
+            }
+            int m = t.size();
+            if(m == 0) return 0;
+            vector<vector<int>> dp(m, vector<int>(m));
+            for(int i = 0; i < m; i++) dp[i][i] = 1;
+            for(int i = 0; i < m; i++) {
+                for(int j = i-1; j >= 0; j--) {
+                    if(t[i] == t[j]) {
+                        dp[j][i] = dp[j+1][i-1] + 2;
+                    }
+                    else dp[j][i] = max(dp[j+1][i], dp[j][i-1]);
+                }
+            }
+
+            return dp[0][m-1];
+        };
+        int submask = mask;
+        vector<int> memo((1<<n), -1);
+        while(submask) {
+            int remaining_mask = submask ^ mask;
+            int cand1 = 0, cand2 = 0;
+            if(memo[remaining_mask] != -1) cand1 = memo[remaining_mask];
+            else memo[remaining_mask] = cand1 = lcp(remaining_mask);
+            if(memo[submask] != -1) cand2 = memo[submask];
+            else memo[submask] = cand2 = lcp(submask);
+            ret = max(ret, cand1 * cand2);
+            submask = (submask-1) & mask;
+        }
+
+        return ret;
+    }
+};
+
 // Concise TC:O(2^n*n^2) SC:O(n^2) n = 12
 class Solution {
     
