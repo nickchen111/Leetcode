@@ -31,12 +31,14 @@ public:
         int len = n - numFriends + 1;
         int pos = -1;
         int cur_len = 0;
+        char ch = 'a';
+        for(auto &c : word) ch = max(ch, c);
         for (int i = 0; i < n; i++) {
-            if(pos == -1) {
-                pos = 0;
+            if(pos == -1 && word[i] == ch) {
+                pos = i;
                 cur_len = len;
             }
-            else {
+            else if(word[i] == ch){
                 // x x x x x x 
                 int left = 0, right = min(len, n - i);
                 while(left < right) {
