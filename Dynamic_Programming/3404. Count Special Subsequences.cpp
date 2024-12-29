@@ -67,7 +67,7 @@ public:
     }
 };
 
-// 前後綴分解 除法版本 時間消耗因為map 增減 所以比較高
+// 前後綴分解 除法版本 時間消耗因為兩個map所以比較高
 class Solution {
     using LL = long long;
 public:
@@ -96,9 +96,6 @@ public:
             for (int i = mid + 2; i < n; i++) {
                 double score = (double)nums[i] / (double)nums[mid];
                 suf_counter[score]--;
-                if (suf_counter[score] == 0) {
-                    suf_counter.erase(score);
-                }
             }
 
             
