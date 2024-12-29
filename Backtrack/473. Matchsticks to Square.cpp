@@ -2,6 +2,65 @@
 473. Matchsticks to Square
 */
 
+// 2024.12.29 狀壓DP TC:O(3 ^ n) SC:O(2 ^ n)
+class Solution {
+    using LL = long long;
+public:
+    bool makesquare(vector<int>& matchsticks) {
+        int n = matchsticks.size();
+        LL total = reduce(matchsticks.begin(), matchsticks.end(), 0LL);
+        if(total % 4) return false;
+        vector<LL> nums(1 << n);
+        for(int i = 0; i < (1<<n); i++) {
+            for(int j = 0; j < n; j++) {
+                if((i >> j) & 1) {
+                    nums[i] += (LL)matchsticks[j];
+                }
+            }
+        }
+
+        vector<bool> dp((1<<n), 0);
+        dp[0] = true;
+        for(int i = 1; i < (1 << n); i++) {
+            int submask = i;
+            if(nums[submask] < total / 4) continue;
+            if(nums[submask] % (total / 4)) continue;
+            while(submask) {
+                if(nums[submask] == total / 4 && dp[submask ^ i]) {
+                    dp[i] = true;
+                    break;
+                }
+                submask = (submask - 1) & i;
+            }
+        }
+
+        return dp[(1<<n) - 1];
+
+        /*
+        遞迴 TC:O(3^n) SC:O(2^n)
+        vector<int> memo((1<<n), -1);
+        auto dfs = [&](auto &&dfs, int mask) -> bool {
+            if(mask == 0) return true;
+            if(nums[mask] == total / 4) return memo[mask] = true; 
+            if(memo[mask] != -1) return memo[mask];
+            if(nums[mask] % (total / 4) || nums[mask] < total / 4) return memo[mask] = false;
+            int submask = mask;
+            while(submask) {
+                int remaining_mask = submask ^ mask;
+                if(nums[submask] == total / 4 && dfs(dfs, remaining_mask)) return memo[mask] = true;
+                submask = (submask - 1) & mask;
+            }
+
+            return memo[mask] = false;
+        };
+
+        return dfs(dfs, (1<<n) - 1);
+        */
+        
+    }
+};
+
+
 // TC:O(2^n) SC:O(n)
 class Solution {
     int target;
