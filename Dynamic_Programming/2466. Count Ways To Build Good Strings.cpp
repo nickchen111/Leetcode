@@ -2,6 +2,38 @@
 2466. Count Ways To Build Good Strings
 */
 
+// GCD TC:O(high / g) SC:O(high / g)
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int countGoodStrings(int low, int high, int zero, int one) {
+        int g = gcd(zero, one);
+        low = (low-1) / g + 1;
+        high /= g;
+        zero /= g;
+        one /= g;
+        int minLen = min(zero, one);
+        vector<LL> dp(high+1);
+        dp[0] = 1;
+        LL res = 0;
+        for(int i = minLen; i <= high; i++) {
+            if(i - zero >= 0) {
+                dp[i] = (dp[i] + dp[i-zero]) % MOD;
+            }
+            if(i - one >= 0) {
+                dp[i] = (dp[i] + dp[i-one]) % MOD;
+            }
+            if(i >= low) res = (res + dp[i]) % MOD;
+        }
+
+        // LL res = 0;
+        // for(int i = low; i <= high; i++) res = (res + dp[i]) % MOD;
+        return res;
+        // return reduce(dp.begin() + low, dp.begin() + high + 1, 0LL) % MOD;
+    }
+};
+
 // TC: O(n) SC:O(n)
 class Solution {
     using LL = long long;
