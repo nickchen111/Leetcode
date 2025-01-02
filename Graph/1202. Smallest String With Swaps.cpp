@@ -2,59 +2,57 @@
 1202. Smallest String With Swaps
 */
 
-//Union find TC:O(n + mlogn + n + nlogn)  SC:O(n) 
+//update 2025.01.02 Union find TC:O(n + (m + n)* α(n) + nlogn)  SC:O(n)
 class Solution {
-    vector<int> parent;
 public:
     string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
         int n = s.size();
-        parent.resize(n);
-        for(int i = 0; i < n; i++){
-            parent[i] = i;
-        }
+        vector<int> parent(n);
+        for(int i = 0; i < n; i++) parent[i] = i;
+        auto find = [&](auto &&find, int x) -> int {
+            if(x != parent[x]) {
+                parent[x] = find(find, parent[x]); 
+            }
+            return parent[x];
+        };
+        auto union_ = [&](int x, int y) -> void{
+            x = find(find, x);
+            y = find(find, y);
+            if(x < y) {
+                parent[y] = x;
+            } else {
+                parent[x] = y;
+            }
+        };
 
-        for(auto pair : pairs){
+        for(auto &pair : pairs) {
             int a = pair[0], b = pair[1];
-            if(findFather(a) != findFather(b)){
-                union_(a,b);
+            if(find(find, a) != find(find, b)) union_(a,b);
+        }
+
+        // root -> string
+        unordered_map<int, vector<int>> index;
+        for(int i = 0; i < n; i++) {
+            int pa = find(find, i);
+            index[pa].push_back(i);
+        }
+        string res = s;
+        for(auto p : index) {
+            int pa = p.first;
+            string tmp;
+            for(auto &idx : p.second) {
+                tmp += s[idx];
+            }
+            sort(tmp.begin(), tmp.end());
+            int idxx = 0;
+            for(auto &idx : p.second) {
+                res[idx] = tmp[idxx];
+                idxx ++;
             }
         }
 
-        unordered_map<int, vector<int>> map; // root idx -> all union idx
-        for(int i = 0; i < n; i++){
-            map[findFather(i)].push_back(i);
-        }
-
-        for(auto p : map){
-            string temp;
-            for(auto x : p.second){
-                temp.push_back(s[x]);
-            }
-            sort(temp.begin(), temp.end());
-            int k = 0;
-            for(auto idx : p.second){
-                s[idx] = temp[k];
-                k++;
-            }
-        }
-
-        return s;
-    }
-    int findFather(int x){
-        if(x != parent[x]){
-            parent[x] = findFather(parent[x]);
-        }
-
-        return parent[x];
-    }
-
-    void union_(int x, int y){
-        int rootx = parent[x];
-        int rooty = parent[y];
-        if(rootx > rooty){
-            parent[rootx] = rooty;
-        }
-        else parent[rooty] = rootx;
+        return res;
+        
     }
 };
 
