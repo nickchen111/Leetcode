@@ -3,7 +3,7 @@
 */
 
 
-// 2025.01.05
+// 2025.01.05 TC:O(nlgn) SC:O(n)
 class Solution {
     using LL = long long;
 public:
@@ -30,7 +30,7 @@ public:
     }
 };
 
-// TC:O(nlgn) SC:O(n)
+// TC:O(nlgU) 這裡的Ｕ會是該start ~ end 的最大值SC:O(n)
 class Solution {
     using LL = long long;
 public:
