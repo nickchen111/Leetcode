@@ -35,7 +35,7 @@ public:
 
         return ans;
         /*
-        Sliding Window TC:O(n) SC:O(n)
+        Sliding Window TC:O(n + nlgn) SC:O(n)
         int ans = 0, left = 0, cover = 0;
         for(auto &tile : tiles) {
             int l = tile[0], r = tile[1];
