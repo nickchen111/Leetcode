@@ -32,33 +32,29 @@ public:
 
 // TC:O(nlgn) SC:O(n)
 class Solution {
+    using LL = long long;
 public:
     int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
-        int n = endTime.size();
-        vector<vector<int>> job;
-        for(int i = 0; i < n; i++){
-            job.push_back({startTime[i],endTime[i],profit[i]});
+        map<LL, LL> dp;
+        dp[0] = 0;
+        int n = startTime.size();
+        vector<vector<int>> arr;
+        for(int i = 0; i < n; i++) {
+            arr.push_back({startTime[i], endTime[i], profit[i]});
         }
-        auto cmp = [](const vector<int>& a, const vector<int>& b){
-            return a[1] < b[1];
+        auto cmp = [](const vector<int>& a, const vector<int>& b) {
+            if(a[1] != b[1]) return a[1] < b[1];
+            return a[0] < b[0];
         };
-
-        sort(job.begin(), job.end(), cmp);
-        
-        vector<pair<int,int>> dp; // endTIme->val
-        int res = 0;
-        for(int i = 0; i < n; i++){
-            int cur = res;
-            auto iter = upper_bound(dp.begin(), dp.end(), make_pair(job[i][0], INT_MAX));
-            if(iter != dp.begin())
-                cur = max(cur, prev(iter)->second + job[i][2]);
-            else cur = max(cur, job[i][2]);
-            dp.push_back({job[i][1], cur});
-            res = max(res, cur);
+        sort(arr.begin(), arr.end(), cmp);
+        for(int i = 0; i < n; i++) {
+            LL start = arr[i][0], end = arr[i][1], benefit = arr[i][2];
+            auto iter = dp.upper_bound(start);
+            iter = prev(iter);
+            dp[end] = max(res, iter->second + benefit);
         }
 
-        
-        return res;
+        return dp.rbegin()->second;
     }
 };
 
