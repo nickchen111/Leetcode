@@ -2,6 +2,34 @@
 1235. Maximum Profit in Job Scheduling
 */
 
+
+// 2025.01.05
+class Solution {
+    using LL = long long;
+public:
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
+        
+        int n = startTime.size();
+        vector<LL> dp(n+1);
+        vector<array<LL, 3>> arr;
+        for(int i = 0; i < n; i++) {
+            arr.push_back({endTime[i], startTime[i], profit[i]});
+        }
+        auto cmp = [](const array<LL, 3>& a, const array<LL, 3>& b) {
+            if(a[0] != b[0]) return a[0] < b[0];
+            return a[1] < b[1];
+        };
+        sort(arr.begin(), arr.end(), cmp);
+        for(int i = 0; i < n; i++) {
+            LL start = arr[i][1], end = arr[i][0], benefit = arr[i][2];
+            int j = upper_bound(arr.begin(), arr.begin() + i, array<LL, 3>{start, LLONG_MAX}) - arr.begin();
+            dp[i+1] = max(dp[i], dp[j] + benefit);
+        }
+
+        return dp[n];
+    }
+};
+
 // TC:O(nlgn) SC:O(n)
 class Solution {
 public:
