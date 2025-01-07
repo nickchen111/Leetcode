@@ -1,3 +1,62 @@
+// Reverse Traverse + tip 讓底跟頂指向一個虛擬節點 TC:O(4 *mn *  ⍺(mn)) SC:O(mn)
+class Solution {
+public:
+    int latestDayToCross(int row, int col, vector<vector<int>>& cells) {
+        vector<int> pa(row*col+3);
+        vector<int> rank(row*col + 3, 1);
+        iota(pa.begin(), pa.end(), 0);
+        int n = row * col;
+        const int virtual_bottom = n;
+        const int virtual_top = n + 1;
+        auto find = [&](int x) -> int {
+            int rt = x;
+            while(rt != pa[rt]) rt = pa[rt];
+            if(x != rt) pa[x] = rt;
+            return rt;
+        };
+        auto union_ = [&](int x, int y) -> void {
+            int xroot = find(x);
+            int yroot = find(y);
+
+            if (xroot == yroot) {
+                return;
+            }
+
+            if (rank[xroot] < rank[yroot]) {
+                pa[xroot] = yroot;
+            } else {
+                pa[yroot] = xroot;
+                if (rank[xroot] == rank[yroot]) {
+                    rank[xroot]++;
+                }
+            }
+        };
+       
+        vector<int> dirs = {0,1,0,-1,0};
+        vector<bool> grid(n, false);
+        for(int i = cells.size()-1; i >= 0; i--) {
+            int r = cells[i][0] - 1;
+			int c = cells[i][1] - 1;
+			int pos = r * col + c;
+            grid[pos] = true;
+            for(int j = 1; j < dirs.size(); j++) {
+                int nx = r + dirs[j-1];
+                int ny = c + dirs[j];
+                int npos = nx * col + ny;
+                if(nx >= 0 && ny >= 0 && nx < row && ny < col && grid[nx*col + ny]) union_(pos, npos);
+            }
+            if(r == 0) union_(pos, virtual_top);
+            if(r == row - 1) union_(pos, virtual_bottom);
+            if(find(virtual_bottom) == find(virtual_top)) return i;
+        }
+
+        return 0;
+        
+    }
+};
+
+// 所以重點就是0row 是否跟n-1row 還是同一個聯通區塊
+
 // Binary Search + UF TC:O(4 * mn * lgmn * ⍺(mn)) SC:O(mn)
 class Solution {
 public:
