@@ -1,4 +1,4 @@
-// Reverse Traverse + tip 讓底跟頂指向一個虛擬節點 TC:O(4 *mn *  ⍺(mn)) SC:O(mn)
+// Reverse Traverse + tip 讓底跟頂的所有節點各自指向一個虛擬節點
 class Solution {
 public:
     int latestDayToCross(int row, int col, vector<vector<int>>& cells) {
