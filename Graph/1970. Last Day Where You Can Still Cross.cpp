@@ -61,7 +61,7 @@ public:
     }
 };
 
-// 單純逆向traverse + UF TC:O(4 * mn * ⍺(mn)) SC:O(mn)
+// 單純逆向traverse + UF TC:O(4 * mn * * ⍺(mn) + mn * n * ⍺(mn)) SC:O(mn)
 class Solution {
 public:
     int latestDayToCross(int row, int col, vector<vector<int>>& cells) {
