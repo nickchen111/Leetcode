@@ -2,7 +2,83 @@
 3045. Count Prefix and Suffix Pairs II
 */
 
-// Trie + KMP n = 字串數量 m = 每個字串平均長度TC:O(n*(m + m + m))  SC:O(m)
+// 單純用Trie TC:O(n * m) n*m 為字串總長度 SC:O(n*m)
+class Solution {
+    using LL = long long;
+    struct TrieNode{
+        unordered_map<int, TrieNode*> next;
+        int cnt;
+        TrieNode():cnt(0){}
+    };
+    TrieNode* root = new TrieNode();
+public:
+    long long countPrefixSuffixPairs(vector<string>& words) {
+        int n = words.size();
+        LL res = 0;
+        for(int i = 0; i < n; i++) {
+            int m = words[i].size();
+            TrieNode* node = root;
+            for(int j = 0; j < m; j++) {
+                int cur = (words[i][j] - 'a') << 5 | (words[i][m-1-j] - 'a');
+                if(node->next.find(cur) == node->next.end()) node->next[cur] = new TrieNode();
+                node = node->next[cur];
+                res += node->cnt;
+            }
+            node->cnt += 1;
+        }
+
+        return res;
+    }
+};
+
+// Z function + Trie TC:O(n * m) n*m 為字串總長度 SC:O(26*m)
+class Solution {
+    using LL = long long;
+    struct TrieNode{
+        TrieNode* next[26];
+        int cnt;
+        TrieNode(){
+            for(int i = 0; i < 26; i++) next[i] = NULL;
+            cnt = 0;
+        }
+    };
+    TrieNode* root = new TrieNode();
+public:
+    long long countPrefixSuffixPairs(vector<string>& words) {
+        LL ans = 0;
+        for(int i = 0; i < words.size(); i++) {
+            int n = words[i].size();
+            vector<int> z(n);
+            z[0] = n;
+            for(int j = 1, r = 1, c = 1, len; j < n; j++) {
+                len = r > j ? min(r-j, z[j-c]) : 0;
+                while(j + len < n && words[i][len] == words[i][j+len]) {
+                    len ++;
+                }
+                if(j + len > r) {
+                    c = j;
+                    r = j + len;
+                }
+                z[j] = len;
+            }
+            
+            TrieNode* node = root;
+            for(int j = 0; j < n; j++) {
+                if(node -> next[words[i][j]-'a'] == NULL) node -> next[words[i][j]-'a'] = new TrieNode();
+                node = node -> next[words[i][j]-'a'];
+                // x x x x x 
+                if(z[n-1-j] == j+1) {
+                    ans += node->cnt;
+                }
+            }
+            node->cnt += 1;
+        }
+        return ans;
+    }
+};
+
+
+// Trie + KMP n = 字串數量 m = 每個字串平均長度TC:O(n*(m + m + m))  SC:O(26*m)
 class Solution {
     using LL = long long;
     struct TrieNode{
