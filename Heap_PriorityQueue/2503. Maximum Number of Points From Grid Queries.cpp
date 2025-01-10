@@ -48,3 +48,57 @@ public:
 };
 
 // Union Find 
+class Solution {
+public:
+    vector<int> maxPoints(vector<vector<int>>& grid, vector<int>& queries) {
+        int m = grid.size(), n = grid[0].size();
+        int k = queries.size(), mn = m*n;
+        
+        vector<int> size(mn,1);
+        vector<int> pa(mn);
+        iota(pa.begin(), pa.end(), 0);
+        auto find = [&](int x) -> int {
+            int rt = x;
+            while(rt != pa[rt]) rt = pa[rt];
+            if(x != rt) pa[x] = rt;
+            return rt;
+        };
+        auto merge = [&](int fr, int to) -> void {
+            fr = find(fr), to = find(to);
+            if(fr < to) {
+                pa[to] = fr;
+                size[fr] += size[to];
+            }
+            else if((fr > to)){
+                pa[fr] = to;
+                size[to] += size[fr];
+            }
+        };
+
+        vector<pair<int,int>> query(k);
+        for(int i = 0; i < k; i++) {
+            query[i] = {queries[i], i};
+        }
+        sort(query.begin(), query.end());
+        vector<tuple<int,int,int>> edges;
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(i) edges.push_back({max(grid[i][j], grid[i-1][j]), i*n + j, (i-1)*n + j});
+                if(j) edges.push_back({max(grid[i][j], grid[i][j-1]), i*n + j, i*n + j - 1});
+            }
+        }
+        sort(edges.begin(), edges.end());
+        vector<int> ans(k);
+        int j = 0;
+        for(int i = 0; i < k; i++) {
+            int limit = query[i].first, idx = query[i].second;
+            while(j < edges.size() && get<0>(edges[j]) < limit) {
+                merge(get<1>(edges[j]), get<2>(edges[j]));
+                j++;
+            }
+            if(grid[0][0] < limit) ans[idx] = size[0];
+        }
+
+        return ans;
+    }
+};
