@@ -1,0 +1,50 @@
+// Heap TC:O((mnlgmn + k)+ klgk) SC:O(mn)
+class Solution {
+public:
+    vector<int> maxPoints(vector<vector<int>>& grid, vector<int>& queries) {
+        int m = grid.size(), n = grid[0].size();
+        int k = queries.size();
+        
+        vector<int> ans(k);
+        vector<pair<int, int>> query_with_index;
+        
+        for (int i = 0; i < k; i++) {
+            query_with_index.push_back({queries[i], i});
+        }
+        
+        sort(query_with_index.begin(), query_with_index.end());
+        
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        vector<int> dirs = {0, 1, 0, -1, 0};
+        
+        // 優先隊列處理 BFS，按數值排序
+        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
+        pq.push({grid[0][0], 0, 0});
+        visited[0][0] = true;
+        
+        int count = 0;
+        int prev_query = 0;
+        
+        for (auto [limit, index] : query_with_index) {
+            while (!pq.empty() && get<0>(pq.top()) < limit) {
+                auto [val, x, y] = pq.top();
+                pq.pop();
+                count++;
+                
+                for (int i = 0; i < 4; i++) {
+                    int nx = x + dirs[i];
+                    int ny = y + dirs[i + 1];
+                    if (nx >= 0 && ny >= 0 && nx < m && ny < n && !visited[nx][ny]) {
+                        visited[nx][ny] = true;
+                        pq.push({grid[nx][ny], nx, ny});
+                    }
+                }
+            }
+            ans[index] = count;
+        }
+        
+        return ans;
+    }
+};
+
+// Union Find 
