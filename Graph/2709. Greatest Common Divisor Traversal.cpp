@@ -2,7 +2,7 @@
 2709. Greatest Common Divisor Traversal
 */
 
-// TC:O(n*m*sqrt(n)) SC:O(n+n)
+// TC:O(n*m* lglgn)) SC:O(n+n)
 class Solution {
     int parent[2*100005];
     int find(int x){
