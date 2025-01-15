@@ -2,6 +2,44 @@
 1851. Minimum Interval to Include Each Query
 */
 
+// 2025.01.15 Union Find TC:O(nlgn + n * ⍺(n)) SC:O(n)
+class Solution {
+public:
+    vector<int> minInterval(vector<vector<int>>& intervals, vector<int>& queries) {
+        vector<pair<int,int>> query;
+        for(int i = 0; i < queries.size(); i++) {
+            query.push_back({queries[i], i});
+        }
+        sort(query.begin(), query.end());
+        sort(intervals.begin(), intervals.end(), [](const auto& a, const auto& b) {
+            return a[1] - a[0] < b[1] - b[0];
+        });
+        int m = queries.size();
+        vector<int> pa(m+1);
+        iota(pa.begin(), pa.end(), 0);
+        vector<int> ans(m, -1);
+        auto find = [&](int x) -> int {
+            int rt = x;
+            while(rt != pa[rt]) rt = pa[rt];
+            if(x != rt) pa[x] = rt;
+            return rt;
+        };
+        for (auto& p : intervals) {
+           int l = p[0];
+           int r = p[1];
+           int length = r - l + 1;
+           int i = lower_bound(query.begin(), query.end(), l, [](const auto& a, int b) {
+               return a.first < b;
+           }) - query.begin();
+           for (i = find(i); i < m && query[i].first <= r; i = find(i + 1)) {
+               ans[query[i].second] = length;
+               pa[i] = i + 1;
+           }
+       }
+        return ans;
+    }
+};
+
 // sort+PQ + offline query TC:O(nlgn) SC:O(n)
 class Solution {
 public:
