@@ -2,6 +2,38 @@
 2134. Minimum Swaps to Group All 1's Together II
 */
 
+// 2025.01.16
+class Solution {
+public:
+    int minSwaps(vector<int>& nums) {
+        int cnt1 = 0;
+        for(auto &num : nums)  cnt1 += num;
+        if(cnt1 == 0) return 0;
+        int n = nums.size();
+        for(int i = 0; i < n; i++) {
+            if(i < cnt1-1) {
+                nums.push_back(nums[i]);
+            }
+        }
+        n = nums.size();
+        int i = 0;
+        int res = INT_MAX;
+        int sum = 0;
+        for(int j = 0; j < n; j++) {
+            //入
+            sum += (nums[j] == 1);
+            // 出
+            if(j - i + 1 == cnt1) {
+                res = min(res, cnt1 - sum);
+                sum -= (nums[i] == 1);
+                i++;
+            }
+        }
+
+        return res;
+    }
+};
+
 // TC:O(n) SC:O(1)
 class Solution {
 public:
