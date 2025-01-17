@@ -56,3 +56,39 @@ public:
 };
 
 // 不用字符串哈希作法 TC:O(n * k) k 為source字串長度 SC:O(n)
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        int n = s.size();
+        int word_len = words[0].size();
+        int total_len = word_len * words.size();
+        unordered_map<string, int> need;
+        for (auto &word : words) need[word]++;
+        
+        vector<int> res;
+
+        for (int i = 0; i < word_len; i++) {
+            unordered_map<string, int> mp;
+            int left = i, cnt = 0;
+            for (int j = i; j + word_len <= n; j += word_len) {
+                string tmp = s.substr(j, word_len);
+
+                if (need.count(tmp)) {
+                    mp[tmp]++;
+                    if (mp[tmp] == need[tmp]) cnt++;
+                }
+                if (j - left + word_len == total_len) {
+                    if (cnt == need.size()) res.push_back(left);
+                    string left_word = s.substr(left, word_len);
+                    if (need.count(left_word)) {
+                        if (mp[left_word] == need[left_word]) cnt--;
+                        mp[left_word]--;
+                    }
+                    left += word_len;
+                }
+            }
+        }
+
+        return res;
+    }
+};
