@@ -2,6 +2,37 @@
 2953. Count Complete Substrings
 */
 
+// 2025.01.17 TC:O(26 * n) SC:O(1)
+class Solution {
+public:
+    int countCompleteSubstrings(string word, int k) {
+        int n = word.size();
+        int res = 0;
+        for(int t = 1; t <= 26; t++) {
+            int window_len = t * k; // 窗口大小
+            if(window_len > n) continue;
+            vector<int> mp(26); // 要去紀錄出現多少種元素 只要種類數目符合 長度符合 頻率也需要剛好是k
+            int cnt = 0; // 計算達到 k數量的字母
+            int invalid = 0;
+            int i = 0;
+            for(int j = 0; j < n; j ++) {
+                if(j && abs(word[j] - word[j-1]) > 2) invalid += 1;
+                mp[word[j] - 'a'] += 1;
+                if(mp[word[j] - 'a'] == k) cnt += 1;
+                if(j - i + 1 == window_len) {
+                    if(cnt == t && invalid == 0) res += 1;
+                    if(mp[word[i] - 'a'] == k) cnt -= 1;
+                    mp[word[i] - 'a'] -= 1;
+                    if(abs(word[i] - word[i+1]) > 2) invalid -= 1;
+                    i++;
+                }
+            }
+        }
+        return res;
+    }
+};
+
+
 // TC:O(k*26*n) k 為字符種類數 SC:O(26*n)
 class Solution {
 public:
