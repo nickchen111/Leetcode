@@ -2,6 +2,27 @@
 1658. Minimum Operations to Reduce X to Zero
 */
 
+// 2025.01.18 TC:O(n) SC:O(1)
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int x) {
+        int n = nums.size(), total = reduce(nums.begin(), nums.end(), 0);
+        if(total < x) return -1;
+        if(total == x) return n;
+        int sum = 0, i = 0, target = total - x, ans = INT_MIN;
+        for(int j = 0; j < n; j++) {
+            sum += nums[j];
+            while(sum > target) {
+                sum -= nums[i];
+                i += 1;
+            }
+            if(sum == target) ans = max(ans, j - i + 1);
+        }
+        return ans == INT_MIN ? -1 : n - ans;
+    }
+};
+
+
 
 // Slide Window TC:O(n) SC:O(1)
 class Solution {
