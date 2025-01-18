@@ -2,6 +2,31 @@
 2516. Take K of Each Character From Left and Right
 */
 
+// 2025.01.18 TC:O(n) SC:O(1)
+class Solution {
+public:
+    int takeCharacters(string s, int k) {
+        int n = s.size();
+        if(n < 3 * k) return -1;
+        int cnt[3];
+        for(auto &ch : s) {
+           cnt[ch-'a'] += 1;
+        }
+        if(cnt[0] < k || cnt[1] < k || cnt[2] < k) return -1;
+        // 這題跟 1658 很像 要用最少時間取頭取尾 那就是中間盡量長
+        int i = 0, ans = 0;
+        for(int j = 0; j < n; j++) {
+            cnt[s[j] - 'a'] -= 1;
+            while(cnt[s[j] - 'a'] < k) {
+                cnt[s[i] - 'a'] += 1;
+                i += 1;
+            }
+            ans = max(ans, j - i + 1);
+        }
+        return n - ans;
+    }
+};
+
 // 1120 TC:O(n) SC:O(1)
 class Solution {
 public:
