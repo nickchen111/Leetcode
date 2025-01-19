@@ -25,3 +25,5 @@ long long quickMul(long long a, long long b) {
 
     return ans;
 }
+
+// 切記 comb cn取m 會是 n! / (m! * (n-m)!)
