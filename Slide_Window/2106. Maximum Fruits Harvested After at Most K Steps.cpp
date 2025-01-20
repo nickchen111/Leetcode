@@ -2,6 +2,30 @@
 2106. Maximum Fruits Harvested After at Most K Steps
 */
 
+// 2025.01.20
+class Solution {
+public:
+    int maxTotalFruits(vector<vector<int>>& fruits, int startPos, int k) {
+        int left = lower_bound(fruits.begin(), fruits.end(), startPos - k, [](const auto&a, int b) {
+            return a[0] < b;   
+        }) - fruits.begin();
+        int right = left, s = 0, n = fruits.size();
+        for (; right < n && fruits[right][0] <= startPos; ++right)
+            s += fruits[right][1];
+        int ans = s;
+        for (; right < n && fruits[right][0] <= startPos + k; ++right) {
+            s += fruits[right][1];
+            while (fruits[right][0] * 2 - fruits[left][0] - startPos > k &&
+                   fruits[right][0] - fruits[left][0] * 2 + startPos > k)
+                s -= fruits[left++][1];
+            ans = max(ans, s);
+        }
+        return ans;
+
+    }
+};
+
+
 // TC:O(n) SC:O(n)
 class Solution {
 public:
