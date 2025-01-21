@@ -2,7 +2,33 @@
 2968. Apply Operations to Maximize Frequency Score
 */
 
-// Slide window + Presum + Binary Search TC:O(n + nlgn) SC:O(n)
+// 2025.01.21 TC:O(n + nlgn) SC:O(n)
+class Solution {
+    using LL = long long;
+public:
+    int maxFrequencyScore(vector<int>& nums, long long k) {
+        int n = nums.size(), ans = 1;
+        sort(nums.begin(), nums.end());
+        vector<LL> presum(n+1);
+        for(int i = 0; i < n; i++) presum[i+1] = presum[i] + (LL)nums[i];
+        LL cost = 0;
+        auto distance_sum = [&](int l, int mid, int r) -> long long {
+            long long left = (long long) nums[mid] * (mid - l) - (presum[mid] - presum[l]);
+            long long right = presum[r + 1] - presum[mid + 1] - (long long) nums[mid] * (r - mid);
+            return left + right;
+        };
+        int i = 0;
+        for(int j = 0; j < n; j++) {
+            while(distance_sum(i, (i+j)/2, j) > k) {
+                i += 1;
+            }
+            ans = max(ans, j - i + 1);
+        }
+        return ans;
+    }
+};
+
+// Slide window + Presum TC:O(n + nlgn) SC:O(n)
 class Solution {
     using LL = long long;
 public:
