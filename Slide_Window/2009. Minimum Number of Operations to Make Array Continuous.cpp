@@ -2,6 +2,26 @@
 2009. Minimum Number of Operations to Make Array Continuous
 */
 
+// 2025.01.21
+class Solution {
+public:
+    int minOperations(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        int m = unique(nums.begin(), nums.end()) - nums.begin();
+        int i = 0, ans = n;
+        for(int j = 0; j < m; j++) {
+            while(nums[j] - nums[i] > n - 1) {
+                i += 1;
+            }
+            ans = min(ans, n - (j - i + 1));
+        }
+        
+        return ans;
+    }
+};
+
+
 // TC:O(nlgn+n) SC:O(n)
 class Solution {
 public:
