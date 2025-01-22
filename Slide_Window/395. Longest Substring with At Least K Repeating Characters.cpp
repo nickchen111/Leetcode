@@ -2,6 +2,33 @@
 395. Longest Substring with At Least K Repeating Characters
 */
 
+// 2025.01.22
+class Solution {
+public:
+    int longestSubstring(string s, int k) {
+        int n = s.size();
+        int ans = 0;
+        for(int len = 26; len >= 1; len--) {
+            vector<int> cnt(26);
+            int valid = 0, i = 0, ch = 0;
+            for(int j = 0; j < n; j++) {
+                cnt[s[j] - 'a'] += 1;
+                if(cnt[s[j] - 'a'] == k) valid += 1;
+                if(cnt[s[j] - 'a'] == 1) ch += 1;
+                while(ch > len) {
+                    if(cnt[s[i] - 'a'] == k) valid -= 1;
+                    if(cnt[s[i] - 'a'] == 1) ch -= 1;
+                    cnt[s[i] - 'a'] -= 1;
+                    i += 1;
+                }
+                if(valid == ch) ans = max(ans, j - i + 1);
+            }
+        }
+
+        return ans;
+    }
+};
+
 // TC:O(26*n) SC:O(26)
 class Solution {
 public:
