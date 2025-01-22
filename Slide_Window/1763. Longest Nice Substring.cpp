@@ -2,6 +2,30 @@
 1763. Longest Nice Substring
 */
 
+// TC:O(n^2) SC:O(1)
+class Solution {
+public:
+    string longestNiceSubstring(string s) {
+        int n = s.size();
+        int maxLen = 0;
+        string ans;
+        for(int t = 0; t < n; t += 1) {
+            int lower = 0, upper = 0;
+            string tmp;
+            for(int j = t; j < n; j++) {
+                tmp += s[j];
+                if(s[j] >= 'a') lower |= (1 << (s[j] - 'a'));
+                else upper |= (1 << (s[j] - 'A'));
+                if(lower == upper && j - t + 1 > maxLen) {
+                    maxLen = j - t + 1;
+                    ans = tmp;
+                }
+            }
+        }
+        return ans;
+    }
+};
+
 
 // TC:O(26*n^2) SC:O(52)
 class Solution {
