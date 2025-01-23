@@ -2,6 +2,40 @@
 1234. Replace the Substring for Balanced String
 */
 
+
+// TC:O(n) SC:O(1)
+class Solution {
+public:
+    int balancedString(string s) {
+        int n = s.size(), ans = s.size(), i = 0;
+        // 可以知道有多少個多餘的字元 他們分別是哪些 去找出符合這些字元的最短子串
+        int target = n/4;
+        vector<int> redundant(4, -target);
+        unordered_map<char, int> mp = {{'Q', 0}, {'W',1},{'E',2}, {'R',3}};
+        for(auto &ch : s) {
+            redundant[mp[ch]] += 1;
+        }
+        int sum = 0;
+        for(auto &r : redundant) {
+            if(r > 0) sum += 1;
+        }
+        if(sum == 0) return 0;
+        int valid = 0;
+        vector<int> cnt(4);
+        for(int j = 0; j < n; j++) {
+            cnt[mp[s[j]]] += 1;
+            if(cnt[mp[s[j]]] == redundant[mp[s[j]]]) valid += 1;
+            while(valid == sum) {
+                ans = min(ans, j - i + 1);
+                if(cnt[mp[s[i]]] == redundant[mp[s[i]]]) valid -= 1;
+                cnt[mp[s[i]]] -= 1;
+                i += 1;
+            }
+        }
+        return ans;
+    }
+};
+
 // TC:O(n*4) SC:O(n)
 class Solution {
     unordered_map<char, int> count;
