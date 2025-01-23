@@ -2,6 +2,40 @@
 1574. Shortest Subarray to be Removed to Make Array Sorted
 */
 
+// 2025.01.23 同向雙指針 TC:O(n) SC:O(1)
+class Solution {
+public:
+    int findLengthOfShortestSubarray(vector<int>& nums) {
+        int n = nums.size();
+        int left = 0, right = n-1;
+        while(left+1 < n) {
+            if(nums[left] <= nums[left+1]) left += 1;
+            else break;
+        }
+        while(right - 1 >= 0) {
+            if(nums[right-1] <= nums[right]) right -= 1;
+            else break;
+        }
+        if(left >= right) return 0;
+        // 目前各自停在自己的最大left 最小right點
+        if(nums[left] <= nums[right]) return right - left - 1;
+        int base = right - left - 1;
+        // 先嘗試移動left 讓他能夠容納
+        int ans = min(left + 1, n - right) + base;
+        int i = 0, j = right;
+        while(i <= left && j < n) {
+            if(nums[i] <= nums[j]) {
+                ans = min(ans, base + left - i + j - right);
+                i += 1;
+            }
+            else {
+                j += 1;
+            }
+        }
+        return ans;
+    }
+};
+
 // Two Pointer TC:O(n) SC:O(1)
 class Solution {
 public:
