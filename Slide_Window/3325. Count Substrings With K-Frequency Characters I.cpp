@@ -2,28 +2,39 @@
 3325. Count Substrings With K-Frequency Characters I
 */
 
-// TC:O(n) SC:O(n)
+// TC:O(n) SC:O(1)
 class Solution {
 public:
     int numberOfSubstrings(string s, int k) {
         int n = s.size();
-        unordered_map<char, int> map;
-        int i = 0;
-        bool flag = false;
-        int res = 0;
-        int j = 0;
-        for(int i = 0; i < n; i++) {
-            while(j < n && flag == 0) {
-                map[s[j]] += 1;
-                if(map[s[j]] == k) flag = 1;
-                j++;
+        vector<int> cnt(26);
+        int valid = 0, i = 0, ans = 0;
+        for(int j = 0; j < n; j++) {
+            cnt[s[j] - 'a'] += 1;
+            if(cnt[s[j] - 'a'] >= k) valid += 1;
+            while(valid == 1) {
+                ans += (n - j);
+                if(cnt[s[i] - 'a'] == k) valid -= 1;
+                cnt[s[i++] - 'a'] -= 1;
             }
-            
-            if(flag) res += (n-j+1);
-            map[s[i]] -= 1;
-            if(map[s[i]] == k-1) flag = 0;
         }
-        
-        return res;
+        return ans;
+    }
+};
+
+// 第二種寫法
+class Solution {
+public:
+    int numberOfSubstrings(string s, int k) {
+        int ans = 0, left = 0, cnt[26]{};
+        for (char c : s) {
+            cnt[c - 'a']++;
+            while (cnt[c - 'a'] >= k) {
+                cnt[s[left] - 'a']--;
+                left++;
+            }
+            ans += left;
+        }
+        return ans;
     }
 };
