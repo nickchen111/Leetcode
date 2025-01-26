@@ -2,6 +2,26 @@
 1186. Maximum Subarray Sum with One Deletion
 */
 
+// 狀態機DP TC:O(n) SC:O(1)
+class Solution {
+public:
+    int maximumSum(vector<int>& nums) {
+        int n = nums.size(), ans = INT_MIN;
+        // vector<vector<int>> dp(n+1, vector<int>(2, INT_MIN/2));
+        int f1 = INT_MIN/2, f2 = INT_MIN/2;
+        for(int i = 0; i < n; i++) {
+            // dp[i+1][0] = max(dp[i][0], 0) + nums[i];
+            // dp[i+1][1] = max(dp[i][1] + nums[i], dp[i][0]);
+            f2 = max(f2 + nums[i], f1);
+            f1 = max(f1, 0) + nums[i];
+            ans = max({ans, f2, f1});
+        }
+        return ans;
+    }
+};
+
+
+
 // DP 雙狀態 TC:O(n) SC:O(2*n)
 class Solution {
 public:
