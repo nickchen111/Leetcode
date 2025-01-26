@@ -2,6 +2,46 @@
 930. Binary Subarrays With Sum
 */
 
+// 2025.01.26 兩種寫法 1. 三指針 2.兩次滑窗
+class Solution {
+public:
+    int numSubarraysWithSum(vector<int>& nums, int goal) {
+        int n = nums.size(); 
+        int i1 = 0, i2 = 0, sum1 = 0, sum2 = 0, ans = 0;
+        for(int j = 0; j < n; j++) {
+            sum1 += nums[j];
+            sum2 += nums[j];
+            while(sum1 >= goal && i1 <= j) {
+                sum1 -= nums[i1++];
+            }
+            while(sum2 >= goal+1 && i2 <= j) {
+                sum2 -= nums[i2++];
+            }
+            ans += i1-i2;
+        }
+        return ans;
+    }
+};
+
+class Solution {
+public:
+    int numSubarraysWithSum(vector<int>& nums, int goal) {
+        int n = nums.size(); 
+        auto atLeastK = [&](int k) -> int {
+            int i = 0, sum = 0, ans = 0;
+            for(int j = 0; j < n; j++) {
+                sum += nums[j];
+                while(i <= j && sum >= k) {
+                    sum -= nums[i++];
+                }
+                ans += i;
+            }
+            return ans;
+        };
+        return atLeastK(goal) - atLeastK(goal+1);
+    }
+};
+
 // Hash + Presum TC:O(n) SC:O(n)
 class Solution {
 public:
@@ -22,43 +62,3 @@ public:
         return res;
     }
 };
-
-
-// Slide Window  TC:O(n) SC:O(n)
-class Solution {
-public:
-    int numSubarraysWithSum(vector<int>& nums, int goal) {
-        // 預處理
-        int n = nums.size();
-        vector<int> postZero(n);
-        int count = 0;
-        for(int i = n-1; i>=0; i--){
-            postZero[i] = count;
-            if(nums[i] == 0) count++;
-            else count = 0;
-        }
-
-        int j = 0;//滑動點
-        int sum = 0;
-        int res= 0;
-        for(int i =0; i<n; i++){
-            //只有到i追上j or sum太小
-            while(j == i || (j < n && sum < goal)){
-                sum+=nums[j];
-                j++;
-            }
-            if(sum == goal){
-                res+=postZero[j-1]+1; //自己不是零也達到目標也要加進去
-            }
-            sum-=nums[i];
-        }
-
-        return res;
-    }
-};
-
-/*
-1 0 1 0 1
-1 1 2 2 3
--1 -1 0 0 1  -goal    
-*/
