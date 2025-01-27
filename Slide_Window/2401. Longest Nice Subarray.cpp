@@ -2,6 +2,23 @@
 2401. Longest Nice Subarray
 */
 
+// 2025.01.27
+class Solution {
+public:
+    int longestNiceSubarray(vector<int>& nums) {
+        int n = nums.size();
+        int ans = 1, i = 0, state = 0;
+        for(int j = 0; j < n; j++) {
+            while(state & nums[j]) {
+                state ^= nums[i++];
+            }
+            state |= nums[j];
+            ans = max(ans, j - i + 1);
+        }
+        return ans;
+    }
+};
+
 // TC:O(n) SC:O(1)
 class Solution {
 public:
