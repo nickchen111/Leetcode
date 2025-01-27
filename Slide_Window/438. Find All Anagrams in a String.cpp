@@ -2,6 +2,47 @@
 438. Find All Anagrams in a String
 */
 
+// 2025.01.27 定長 與 不定長
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        // 定長寫法
+        int n = s.size(), m = p.size(), valid = 0, i = 0, target = 0;
+        vector<int> cnt1(26), cnt2(26), ans;
+        for(auto &ch : p) {
+            if(++cnt2[ch - 'a'] == 1) target += 1;
+        }
+        for(int j = 0; j < n; j++) {
+            if(++cnt1[s[j] - 'a'] == cnt2[s[j] - 'a']) valid += 1;
+            else if((cnt1[s[j] - 'a'] == cnt2[s[j] - 'a'] + 1) && cnt2[s[j] - 'a']) valid -= 1;
+            if(j - i + 1 == m) {
+                if(valid == target) ans.push_back(i);
+                if((cnt1[s[i] - 'a'] == cnt2[s[i] - 'a'] + 1) && cnt2[s[i] - 'a']) valid += 1;
+                else if(cnt1[s[i] - 'a'] == cnt2[s[i] - 'a'] && cnt2[s[i] - 'a']) valid -= 1;
+                cnt1[s[i++] - 'a'] -= 1;
+            }
+        }
+        return ans;
+    }
+};
+
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        // 不定長
+        vector<int> cnt(26), ans;
+        for(auto &ch : p) cnt[ch - 'a'] += 1;
+        int i = 0, n = s.size(), m = p.size();
+        for(int j = 0; j < n; j++) {
+            cnt[s[j] - 'a'] -= 1;
+            while(cnt[s[j] - 'a'] < 0) {
+                cnt[s[i++] - 'a'] += 1;
+            }
+            if(j - i + 1 == m) ans.push_back(i);
+        }
+        return ans;
+    }
+};
 
 
 //slide window TC:O(n) SC:O(k)
