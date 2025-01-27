@@ -2,6 +2,44 @@
 424. Longest Repeating Character Replacement
 */
 
+// 2025.01.26 兩種寫法 TC:O(n) / O(26*n) SC:O(1)
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        int n = s.size(), ans = 0, i = 0, mx = 0; // mx會是歷史出現的最大次數的滿足條件的滑窗 所以就算縮小窗口時會是不滿足條件的 但也不影響答案
+        vector<int> cnt(26);
+        for(int j = 0; j < n; j++) {
+            mx = max(mx, ++cnt[s[j] - 'A']);
+            while(j - i + 1 - mx > k) {
+                cnt[s[i++]-'A'] -= 1;
+            }
+            ans = max(ans, j - i + 1);
+        }
+        return ans;
+    }
+};
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        int n = s.size(), ans = 0;
+        for(char ch = 'A'; ch <= 'Z'; ch++) {
+            if(s.find(ch) == string::npos) continue;
+            int i = 0, cnt = 0;
+            for(int j = 0; j < n; j++) {
+                cnt += (s[j] != ch);
+                while(cnt > k) {
+                    cnt -= (s[i++] != ch);
+                }
+                ans = max(ans, j - i + 1);
+            }
+        } 
+        return ans;
+    }
+};
+
+
+
 //slide window TC:O(26*n) SC:O(26)
 class Solution {
 public:
