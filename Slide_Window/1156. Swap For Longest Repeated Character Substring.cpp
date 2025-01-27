@@ -2,6 +2,36 @@
 1156. Swap For Longest Repeated Character Substring
 */
 
+// 2025.01.27
+class Solution {
+public:
+    int maxRepOpt1(string s) {
+        int n = s.size(), ans = 1;
+        vector<int> totalCh(26);
+        for(auto &ch : s) {
+            totalCh[ch-'a'] += 1;
+        }
+        for(char ch = 'a'; ch <= 'z'; ch++) {
+            if(totalCh[ch-'a'] == 0 || totalCh[ch-'a'] == 1) continue;
+            int i = 0, cnt = 1;
+            for(int j = 0; j < n; j++) {
+                if(s[j] != ch && cnt) {
+                    cnt -= 1;
+                }
+                else if(s[j] != ch) {
+                    while(!cnt) {
+                        cnt += (s[i++] != ch);
+                    }
+                    cnt -= 1;
+                }
+                // cout << j - i + 1 << ' ' << i << ' ' << cnt << endl;
+                ans = max(ans, min(totalCh[ch-'a'], j - i + 1));
+            }
+        }
+        return ans;
+    }
+};
+
 // 資料結構優化前 TC:O(26*n) SC:O(26) 
 class Solution {
 public:
