@@ -7,63 +7,48 @@ class Solution {
 public:
     bool checkPalindromeFormation(string a, string b) {
         int n = a.size();
-        if(n == 1){
-            return true;
-        }
-
+        if(n == 1) return true;
         if(a[0] == b[n-1]){
-            int left = 0;
-            int right = b.size()-1;
-            bool flag = 0;
+            int left = 1;
+            int right = n-2;
             while(left < right){
                 if(a[left] == b[right]){
                     left++;
                     right--;
                 }
-                else {
-                    if(check(a,left,right) || check(b,left,right)) return true;
-                    else flag = 1;
-                }
-                if(flag == 1) break;
+                else if(check(a,left, right) || check(b, left, right)) return true;
+                else break;
             }
-
-            if(flag == 0) return true;
+            if(left >= right) return true;
         }
-         if(b[0] == a[n-1]){
-            int left = 0;
-            int right = a.size()-1;
-            bool flag = 0;
+
+        if(a[n-1] == b[0]){
+            int left = 1;
+            int right = n-2;
             while(left < right){
                 if(b[left] == a[right]){
                     left++;
                     right--;
                 }
-                else {
-                    if(check(a,left,right) || check(b,left,right)) return true;
-                    else flag = 1;
-                }
-                if(flag == 1) break;
+                else if(check(a,left, right) || check(b, left, right)) return true;
+                else break;
             }
-            if(flag == 0) return true;
+            if(left >= right) return true;
         }
+        if(check(a, 0, n-1) || check(b, 0, n-1)) return true;
 
         return false;
     }
-
     bool check(string& s, int left, int right){
-        bool flag = 1;
         while(left < right){
             if(s[left] == s[right]){
                 left++;
                 right--;
             }
-            else {
-                flag = 0;
-                break;
-            }
+            else return false;
         }
 
-        return flag;
+        return true;
     }
 };
 
