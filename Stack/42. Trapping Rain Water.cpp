@@ -2,6 +2,37 @@
 42. Trapping Rain Water
 */
 
+// 前後綴分解 & Two Pointer
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int n = height.size();
+        vector<int> suffix(n, height[n-1]);
+        for(int i = n - 2; i >= 0; i--) {
+            suffix[i] = max(suffix[i+1], height[i]);
+        }
+        int prefix = 0, ans = 0;
+        for(int i = 0; i < n; i++) {
+            prefix = max(prefix, height[i]);
+            ans += min(prefix, suffix[i]) - height[i];
+        }
+        return ans;
+    }
+};
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int ans = 0, left = 0, right = height.size() - 1, pre_max = 0, suf_max = 0;
+        while (left < right) {
+            pre_max = max(pre_max, height[left]);
+            suf_max = max(suf_max, height[right]);
+            ans += pre_max < suf_max ? pre_max - height[left++] : suf_max - height[right--];
+        }
+        return ans;
+    }
+};
+
 //three pass TC:O(n) SC:O(n)
 class Solution {
 public:
