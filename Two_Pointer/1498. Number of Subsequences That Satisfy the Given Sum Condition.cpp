@@ -2,6 +2,31 @@
 1498. Number of Subsequences That Satisfy the Given Sum Condition
 */
 
+// 2025.01.28
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int numSubseq(vector<int>& nums, int target) {
+        ranges::sort(nums);
+        LL ans = 0;
+        int n = nums.size(), left = 0, right = n - 1;
+        vector<LL> power(n+1);
+        power[0] = 1;
+        for(int i = 1; i <= n; i++) power[i] = (power[i-1] * 2) % MOD;
+        while(left <= right) {
+            if(nums[left] + nums[right] > target) {
+                right --;
+            }
+            else {
+                ans = (ans + power[right - left]) % MOD;
+                left++;
+            }
+        }
+        return ans;
+    }
+};
+
 //TC:O(n+nlgn) SC:O(n)
 class Solution {
 public:
