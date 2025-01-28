@@ -1,4 +1,4 @@
-// O(nlogn+q(n+m))，其中 m 為 edges 的長度，q 為 queries 的長度。 SC:O(n + m)
+// TC: O(nlogn+q(n+m))，其中 m 為 edges 的長度，q 為 queries 的長度。 SC:O(n + m)
 class Solution {
 public:
     vector<int> countPairs(int n, vector<vector<int>>& edges, vector<int>& queries) {
