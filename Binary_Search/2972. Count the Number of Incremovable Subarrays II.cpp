@@ -2,6 +2,28 @@
 2972. Count the Number of Incremovable Subarrays II
 */
 
+// 2025.01.29 Two Pointer TC:O(n) SC:O(1)
+using LL = long long;
+class Solution {
+public:
+    long long incremovableSubarrayCount(vector<int>& nums) {
+        int n = nums.size();
+        // 思路是這題說可以刪除任意子數組 讓其餘數組會是遞增 合併起來的數組肯定兩段都要是遞增 並且要前段的尾巴 < 後段的頭
+        // 所以我們先找說他前段可以走到哪最多，最多的地方 就會先有一段答案是 i+2 將後段整個消除的可能性
+        int i = 0;
+        while(i < n - 1 && nums[i+1] > nums[i]) i += 1;
+        if(i == n - 1) return (LL)n*(n+1) / 2;
+        LL ans = i + 2;
+        int j = n - 1;
+        while(j == n-1 || nums[j+1] > nums[j]) {
+            while(i >= 0 && nums[i] >= nums[j]) i --;
+            ans += (LL)i + 2;
+            j--;
+        }
+        return ans;
+    }
+};
+
 // TC:O(n+ m*lgk) SC:O(1)
 class Solution {
     using LL = long long;
