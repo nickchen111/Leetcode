@@ -38,3 +38,31 @@ public:
         
     }
 };
+
+// 補一個前綴和 + 分組取最大
+class Solution {
+    using LL = long long;
+    LL MOD = 1e9 + 7;
+public:
+    int maxSum(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size(), m = nums2.size(), i = 0, j = 0;
+        vector<LL> presum1(n+1), presum2(m+1);
+        for(int i = 0; i < n; i++) presum1[i+1] = presum1[i] + (LL)nums1[i];
+        for(int i = 0; i < m; i++) presum2[i+1] = presum2[i] + (LL)nums2[i];
+        vector<pair<int,int>> arr{{0,0}};
+        while(i < n && j < m) {
+            if(nums1[i]<nums2[j]) i++;
+            else if(nums1[i]>nums2[j]) j++;
+            else {
+                arr.emplace_back(i+1,j+1);
+                i ++, j++;
+            }
+        }
+        arr.emplace_back(n,m);
+        LL ans = 0;
+        for(int i = 1; i < arr.size();i++) {
+            ans += max(presum1[arr[i].first] - presum1[arr[i-1].first], presum2[arr[i].second] - presum2[arr[i-1].second]);
+        }
+        return ans % MOD;
+    }
+};
