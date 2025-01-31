@@ -18,6 +18,7 @@ public:
             for(int j = 0; j < n; j++) 
                 if(grid[i][j] == 1) 
                     area.emplace_back(dfs(dfs, i, j));
+        if(area.empty()) return 1;
         unordered_set<int> set;
         int ans = 0;
         for(int i = 0; i < n; i++)
