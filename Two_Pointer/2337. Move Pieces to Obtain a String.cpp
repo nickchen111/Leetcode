@@ -6,30 +6,20 @@
 class Solution {
 public:
     bool canChange(string start, string target) {
-        int j = 0;
-        for(int i = 0; i < start.size(); i++){
-            if(start[i] == '_'){
-                continue;
+        int n = start.size(), i = 0, j = 0;
+        while(i < n && j < n) {
+            while(start[i] == '_') i += 1;
+            while(target[j] == '_') j += 1;
+            if(i == n && j ==n) return true;
+            if(start[i] == target[j] && ((start[i] == 'R' && i <= j) || (start[i] == 'L' && i >= j))) {
+                i += 1;
+                j += 1;
             }
-            while(j < start.size() && target[j] == '_') j++;
-
-            if(start[i] != target[j]) return false;
-
-            if(start[i] == 'L' && i < j){
-                return false;
-            }
-
-            if(start[i] == 'R' && i > j){
-                return false;
-            }
-            j++;
+            else return false;
         }
-
-        for(int k = j; j < target.size(); j++){
-            if(target[j] == 'L' || target[j] == 'R') return false;
-        }
-        
-        return true;
+        while(i < n && start[i] == '_') i += 1;
+        while(j < n && target[j] == '_') j += 1;
+        return i == n && j == n;
     }
 };
 
