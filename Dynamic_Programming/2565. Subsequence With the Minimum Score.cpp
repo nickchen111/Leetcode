@@ -2,6 +2,30 @@
 2565. Subsequence With the Minimum Score
 */
 
+// 2025.0203 不同定義 
+class Solution {
+public:
+    int minimumScore(string s, string t) {
+        int m = s.size(), n = t.size();
+        vector<int> suffix(m); // 儲存能夠匹配的t長度
+        int i = m-1, j = n-1;
+        while(i >= 0 && j >= 0) {
+            if(s[i] == t[j]) j -= 1;
+            suffix[i] = n - 1 - j;
+            i -= 1;
+        }
+        int prefix = 0, ans = n - suffix[0];
+        i = 0, j = 0;
+        while(i < m && j < n) {
+            if(s[i] == t[j]) j += 1;
+            prefix = j;
+            ans = min(ans, max(0, n - prefix - (i + 1 < m ? suffix[i+1] : 0)));
+            i += 1;
+        }
+        return ans;
+    }
+};
+
 
 // TC:O(n) SC:O(n)
 class Solution {
