@@ -2,6 +2,40 @@
 2563. Count the Number of Fair Pairs
 */
 
+// 2025. 02. 04 Three Pointer & Binary Search 可以選定範圍Search 就不用處理條件判斷 TC:O(nlgn) SC:O(1) 
+class Solution {
+    using LL = long long;
+public:
+    long long countFairPairs(vector<int>& nums, int lower, int upper) {
+        ranges::sort(nums);
+        LL ans = 0;
+        int n = nums.size();
+        int i = n-1, k = n-1;
+        for(int j = 0; j < n; j++) {
+            while(i && lower - nums[j] <= nums[i-1]) i -= 1;
+            while(k && upper - nums[j] < nums[k-1]) k -= 1;
+            ans += min(k, j) - min(i,j);
+        }
+        return ans;
+    }
+};
+
+class Solution {
+    using LL = long long;
+public:
+    long long countFairPairs(vector<int>& nums, int lower, int upper) {
+        ranges::sort(nums);
+        LL ans = 0;
+        int n = nums.size();
+        // BS
+        for(int j = 0; j < n; j++) {
+            auto iter1 = lower_bound(nums.begin(), nums.begin() + j, lower - nums[j]);
+            auto iter2 = upper_bound(nums.begin(), nums.begin() + j, upper - nums[j]);
+            ans += (LL)(iter2-iter1);
+        }
+        return ans;
+    }
+};
 
 // Two Pointer TC:O(nlgn) SC:O(1) 
 class Solution {
