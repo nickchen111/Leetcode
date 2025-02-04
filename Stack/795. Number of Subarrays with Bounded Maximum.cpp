@@ -2,6 +2,24 @@
 795. Number of Subarrays with Bounded Maximum
 */
 
+// Three Pointer 跳躍式 TC:O(n) SC:O(1)
+class Solution {
+public:
+    int numSubarrayBoundedMax(vector<int>& nums, int left, int right) {
+        int n = nums.size(), i1 = -1, i0 = -1, ans = 0;
+        for(int i = 0; i < n; i++) {
+            if(nums[i] > right) {
+                i0 = i;
+            }
+            if(nums[i] >= left) {
+                i1 = i;
+            }
+            ans += i1 - i0;
+        }
+        return ans;
+    }
+};
+
 // TC:O(n*3) SC:O(n)
 class Solution {
 public:
