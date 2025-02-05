@@ -2,7 +2,24 @@
 1887. Reduction Operations to Make the Array Elements Equal
 */
 
-// TC:O(n) SC:O(k)
+// 2025.02.05 分組循環 TC:O(nlgn) SC:O(1)
+class Solution {
+public:
+    int reductionOperations(vector<int>& nums) {
+        ranges::sort(nums);
+        int n = nums.size(), i = 0, k = 0, ans = 0;
+        while(i < n) {
+            int start = i;
+            while(i + 1 < n && nums[i] == nums[i+1]) i += 1;
+            ans += (i - start + 1) * k;
+            k += 1;
+            i += 1;
+        }
+        return ans;
+    }
+};
+
+// TC:O(nlgn) SC:O(k)
 class Solution {
 public:
     int reductionOperations(vector<int>& nums) {
