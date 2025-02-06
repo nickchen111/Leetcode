@@ -2,6 +2,36 @@
 1726. Tuple with Same Product
 */
 
+// 2025.02.6 分組循環 TC:O(n^2) SC:O(n^2)
+class Solution {
+public:
+    int tupleSameProduct(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> arr;
+        for(int i = 0; i < n; i++) {
+            for(int j = i + 1; j < n; j++) {
+                arr.push_back(nums[i] * nums[j]);
+                // mp[nums[i] * nums[j]] += 1;
+            }
+        }
+        sort(arr.begin(), arr.end());
+        int ans = 0;
+        // for(auto &[val, freq] : mp) ans += (freq-1) * freq / 2;
+        int cnt = 0, i = 0;
+        while(i < arr.size()) {
+            cnt += 1;
+            if(i + 1 < arr.size() && arr[i] == arr[i+1]) {
+                i ++;
+                continue;
+            }
+            ans += cnt * (cnt - 1) / 2;
+            cnt = 0;
+            i ++;
+        }
+        return ans * 8;
+    }
+};
+
 // 公式解 TC:O(n^2) SC:O(n)
 class Solution {
 public:
