@@ -2,6 +2,31 @@
 1839. Longest Substring Of All Vowels in Order
 */
 
+// 2025.02.06 分組循環
+class Solution {
+public:
+    int longestBeautifulSubstring(string word) {
+        int n = word.size(), i = 0, ans = 0;
+        // unordered_map<char, int> mp = {{'a', 0}, {'e', 1}, {'i', 2}, {'o',3}, {'u', 4}};
+        while(i < n) {
+            if(word[i] != 'a') {
+                i ++;
+                continue;
+            }
+            int start = i;
+            int cnt = 1;
+            while(i + 1 < n && word[i] <= word[i+1]) {
+                cnt += (word[i] != word[i+1]);
+                i += 1;
+            }
+            if(cnt == 5) {
+                ans = max(ans, i - start + 1);
+            }
+            i ++;
+        }
+        return ans;
+    }
+};
 // Slide Window + Map
 class Solution {
 public:
