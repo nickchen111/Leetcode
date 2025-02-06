@@ -2,6 +2,25 @@
 1578. Minimum Time to Make Rope Colorful
 */
 
+// 2025.02.06 分組循環
+class Solution {
+public:
+    int minCost(string colors, vector<int>& neededTime) {
+        int n = colors.size(), i = 0, ans = 0;
+        while(i < n) {
+            int sum = neededTime[i], mx = neededTime[i];
+            while(i + 1 < n && colors[i] == colors[i+1]) {
+                mx = max(mx, neededTime[i+1]);
+                sum += neededTime[i+1];
+                i ++;
+            }
+            ans += sum - mx;
+            i ++;
+        }
+        return ans;
+    }
+};
+
 // TC:O(n) SC:O(1) 簡潔寫法 帶著最大值candidate往後走
 class Solution {
 public:
