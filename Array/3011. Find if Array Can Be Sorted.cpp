@@ -2,6 +2,27 @@
 3011. Find if Array Can Be Sorted
 */
 
+// 分組循環 TC:O(nlgU) U為數字大小 SC:O(1)
+class Solution {
+public:
+    bool canSortArray(vector<int>& nums) {
+        int n = nums.size(), i = 0, mx = INT_MIN;
+        while(i < n) {
+            int curMin = nums[i], curMax = nums[i];
+            while(i + 1 < n && __builtin_popcount(nums[i]) == __builtin_popcount(nums[i+1])) {
+                curMin = min(curMin, nums[i+1]);
+                curMax = max(curMax, nums[i+1]);
+                i += 1;
+            }
+            if(curMin < mx) return false;
+            mx = max(mx, curMax);
+            i += 1;
+        }
+
+        return true;
+    }
+};
+
 // Slide Window TC:O(nlgU) U為數字大小 SC:O(n)
 class Solution {
 public:
