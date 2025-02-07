@@ -2,6 +2,59 @@
 2593. Find Score of an Array After Marking All Elements
 */
 
+// Stack
+class Solution {
+    using LL = long long;
+public:
+    long long findScore(vector<int>& nums) {
+        nums.push_back(INT_MAX);
+        int n = nums.size();
+        stack<int> stack;
+        LL res = 0;
+        for(int i = 0; i < n; i++) {
+            if(stack.empty() || stack.top() > nums[i]) {
+                stack.push(nums[i]);
+            }
+            else {
+                while(!stack.empty()) {
+                    res += stack.top();
+                    stack.pop();
+                    if(!stack.empty()) stack.pop();
+                }
+            }
+        }
+        
+
+        return res;
+    }
+};
+
+// 2025.02.07 分組循環 TC:O(nlgn) SC:O(n)
+class Solution {
+    typedef long long LL;
+public:
+    long long findScore(vector<int>& nums) {
+        int n = nums.size(), i = 0;
+        vector<bool> visited(n);
+        LL ans = 0;
+        vector<int> idx(n);
+        iota(idx.begin(), idx.end(), 0);
+        ranges::sort(idx, [&](int i , int j) { if(nums[i] != nums[j]) return nums[i] < nums[j]; else return i < j;});
+        while(i < n) {
+            if(visited[idx[i]]) {
+                i += 1;
+                continue;
+            }
+            visited[idx[i]] = true;
+            if(idx[i] - 1 >= 0) visited[idx[i] - 1] = true;
+            if(idx[i] + 1 < n) visited[idx[i] + 1] = true;
+            ans += nums[idx[i]];
+            i += 1;
+        }
+        return ans;
+    }
+};
+
 // TC:O(nlgn) SC:O(n)
 class Solution {
 public:
