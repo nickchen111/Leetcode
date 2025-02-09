@@ -2,6 +2,22 @@
 2364. Count Number of Bad Pairs
 */
 
+// 2025.02.09
+class Solution {
+    using LL = long long;
+public:
+    long long countBadPairs(vector<int>& nums) {
+        int n = nums.size();
+        LL ans = 0;
+        unordered_map<LL, LL> mp;
+        for(int i = 0; i < n; i++) {
+            mp[nums[i] - i] += 1;
+            ans += mp[nums[i] - i] - 1;
+        }
+        return (LL) n * (n-1) / 2 - ans;
+    }
+};
+
 // TC:O(n) SC:O(n)
 class Solution {
 public:
