@@ -3,6 +3,69 @@
 最長子序列
 */
 
+// 2025.02.12 all solution
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size(), ans = 0;
+        // 空間O(1) 優化
+        int ng = 0;
+        for(int i = 0; i < n; i++) {
+            int j = lower_bound(nums.begin(), nums.begin() + ng, nums[i]) - nums.begin();
+            if(j == ng) {
+                nums[ng] = nums[i];
+                ng += 1;
+            }
+            else nums[j] = nums[i];
+        }
+        return ng;
+        /*
+        貪心 + 二分
+        vector<int> arr;
+        for(int i = 0; i < n; i++) {
+            auto iter = lower_bound(arr.begin(), arr.end(), nums[i]);
+            if(iter == arr.end()) {
+                arr.push_back(nums[i]);
+            }
+            else *iter = nums[i];
+        }
+        return (int)arr.size();
+        */
+        /*
+        n^2遞推
+        vector<int> dp(n,0);
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < i; j++) {
+                if(nums[j] < nums[i])
+                    dp[i] = max(dp[i], dp[j]);
+            }
+            dp[i] += 1;
+            ans = max(ans, dp[i]);
+        }
+        return ans;
+        */
+        /*
+        遞歸
+        vector<int> memo(n, -1);
+        auto dfs = [&](auto &&dfs, int i) -> int {
+            if(i == n) return 0;
+            if(memo[i] != -1) return memo[i];
+            int ret = 0;
+            for(int j = 0; j < i; j++) {
+                if(nums[j] < nums[i])
+                    ret = max(ret, dfs(dfs, j));
+            }
+            return memo[i] = ret + 1;
+        };
+        int ans = 0;
+        for(int i = 0; i < n; i++) {
+            ans = max(ans, dfs(dfs, i));
+        }
+        return ans;
+        */
+    }
+};
+
 //dp解法 TC: O(n ^2) SC: O(n)
 class Solution {
 public:
