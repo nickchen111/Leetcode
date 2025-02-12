@@ -2,6 +2,53 @@
 10. Regular Expression Matching
 */
 
+// 2025.02.12
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.size(), n = p.size();
+        vector dp(m+1, vector<bool>(n+1, false));
+        dp[0][0] = true;
+        for(int j = 1; j < n; j++) {
+            if(p[j] == '*') dp[0][j+1] = dp[0][j-1];
+        }
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(s[i] == p[j] || p[j] == '.') {
+                    dp[i+1][j+1] = dp[i][j];
+                }
+                else if(p[j] == '*') {
+                    bool tmp1 = dp[i+1][j-1];
+                    bool tmp2 = j-1 >= 0 ? ((p[j-1] == s[i] || p[j-1] == '.') && dp[i][j+1]) : false;
+                    dp[i+1][j+1] = tmp1 || tmp2;
+                }
+            }
+        }
+        return dp[m][n];
+        /*
+        遞歸
+        vector memo(m+1, vector<int>(n+1, -1));
+
+        auto dfs = [&](auto &&dfs, int i, int j) -> bool {
+            if(j == n) return i == m;
+            if(memo[i][j] != -1) return memo[i][j];
+            bool ret = false;
+            bool first_match = (i < m && (s[i] == p[j] || p[j] == '.'));
+            if(j+1 < n && p[j+1] == '*') { 
+                // * 匹配 0 次 or 多次
+                ret = dfs(dfs, i, j+2) || (first_match && dfs(dfs, i+1, j));
+            } else {
+                ret = first_match && dfs(dfs, i+1, j+1);
+            }
+
+            return memo[i][j] = ret;
+        };
+
+        return dfs(dfs, 0, 0);
+        */
+    }
+};
+
 
 // TC:O(m*n) SC:O(m*n)
 class Solution {
