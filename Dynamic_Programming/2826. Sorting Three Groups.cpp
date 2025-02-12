@@ -2,6 +2,37 @@
 2826. Sorting Three Groups
 */
 
+// 2025.02.12 
+class Solution {
+public:
+    int minimumOperations(vector<int>& nums) {
+        int n = nums.size(), ng = 0;
+        // 空間優化 O(1)
+        for(int i = 0; i < n; i++) {
+            int j = upper_bound(nums.begin(), nums.begin() + ng, nums[i]) - nums.begin();
+            if(j == ng) {
+                nums[ng] = nums[i];
+                ng += 1;
+            } 
+            else nums[j] = nums[i];
+        }
+        return n - ng;
+        /*
+        LIS
+        int n = nums.size();
+        vector<int> arr;
+        for(int i = 0; i < n; i++) {
+            auto iter = upper_bound(arr.begin(), arr.end(), nums[i]);
+            if(iter == arr.end()) {
+                arr.push_back(nums[i]);
+            }
+            else *iter = nums[i];
+        }
+        return n - arr.size();
+        */
+    }
+};
+
 
 // 基本型I TC:O(n) SC:O(n)
 class Solution {
