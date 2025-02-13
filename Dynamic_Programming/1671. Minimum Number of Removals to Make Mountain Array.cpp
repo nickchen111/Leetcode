@@ -2,6 +2,42 @@
 1671. Minimum Number of Removals to Make Mountain Array
 */
 
+// 2025.02.13
+class Solution {
+public:
+    int minimumMountainRemovals(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> suffix(n,0);
+        vector<int> arr;
+        for(int i = n-1; i >= 0; i--) {
+            auto iter = lower_bound(arr.begin(), arr.end(), nums[i]);
+            if(iter == arr.end()) {
+                arr.push_back(nums[i]);
+                suffix[i] = arr.size();
+            }
+            else {
+                *iter = nums[i];
+                suffix[i] = iter - arr.begin() + 1;
+            }
+        }
+        arr.clear();
+        int ans = n;
+        for(int i = 0; i < n; i++) {
+            auto iter = lower_bound(arr.begin(), arr.end(), nums[i]);
+            if(iter == arr.end()) {
+                arr.push_back(nums[i]);
+            }
+            else {
+                *iter = nums[i];
+            }
+            if(suffix[i] > 1 && arr.size() > 1) {
+                ans = min(ans, n - (int)arr.size() - suffix[i] + 1);
+            }
+        }
+        return ans;
+    }
+};
+
 // TC:O(nlgn) SC:O(n)
 class Solution {
 public:
