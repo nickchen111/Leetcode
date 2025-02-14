@@ -2,6 +2,31 @@
 960. Delete Columns to Make Sorted III
 */
 
+// 2025.02.14
+class Solution {
+public:
+    int minDeletionSize(vector<string>& strs) {
+        int m = strs.size();
+        int n = strs[0].size();
+        vector<int> dp(n,1);
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < i; j++) {
+                bool flag = true;
+                for(int k = 0; k < m; k++) {
+                    if(strs[k][i] < strs[k][j]) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag) dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+
+        return n - *max_element(dp.begin(), dp.end());
+    }
+};
+
+
 // TC:O(n^2*m) SC:O(n)
 class Solution {
 public:
