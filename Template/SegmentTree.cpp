@@ -1,85 +1,37 @@
-class SegTreeNode
-{
-    public:
-    SegTreeNode* left = NULL;
-    SegTreeNode* right = NULL;
-    int start, end;
-    LL info;  // the sum value over the range
-    
-        
-    SegTreeNode(int a, int b, int val)  // init for range [a,b] with val
-    {                 
-       
-        start = a, end = b;
-        if (a==b)
-        {
-            info = val;
-            return;
-        }        
-        int mid = (a+b)/2;
-        if (left==NULL)
-        {
-            left = new SegTreeNode(a, mid, val);
-            right = new SegTreeNode(mid+1, b, val);            
-            info = left->info + right->info;  // check with your own logic
-        }        
-    }    
-    
-    SegTreeNode(int a, int b, vector<int>& val)  // init for range [a,b] with the same-size array val
-    {                 
-        
-        start = a, end = b;
-        if (a==b)
-        {
-            info = val[a];
-            return;
-        }        
-        int mid = (a+b)/2;
-        if (left==NULL)
-        {
-            left = new SegTreeNode(a, mid, val);
-            right = new SegTreeNode(mid+1, b, val);            
-            info = left->info + right->info;  // check with your own logic
-        }        
-    }    
+// 這份線段樹模板主要紀錄最值與總和
+int n, m;
+vector<int> mn;
+vector<long long> sum;
 
-    
-    void updateRange(int a, int b, int val)     // set range [a,b] with val
-    {        
-        if (b < start || a > end ) // not covered by [a,b] at all
-            return;        
-        if (a <= start && end <=b)  // completely covered within [a,b]
-        {
-            info = val * (end-start+1);
-            return;
-        }
-
-        if (left)
-        {     
-            left->updateRange(a, b, val);
-            right->updateRange(a, b, val);
-            info = left->info + right->info;  // write your own logic            
-        }        
+// 把下标 i 上的元素值增加 val 
+void update(int o, int l, int r, int i, int val) {
+    if (l == r) {
+        mn[o] += val;
+        sum[o] += val;
+        return;
     }
-    
-    LL queryRange(int a, int b)     // query the sum over range [a,b]
-    {
-        if (b < start || a > end )
-        {
-            return 0;  // check with your own logic
-        }
-        if (a <= start && end <=b)
-        {
-            return info;  // check with your own logic
-        }          
-        
-        if (left)
-        {
-            LL ret = left->queryRange(a, b) + right->queryRange(a, b);        
-            info = left->info + right->info;    // check with your own logic
-            return ret;
-        }
-        
-        return info;   // should not reach here
-    }  
-};
+    int m = (l + r) / 2;
+    if (i <= m) {
+        update(o * 2, l, m, i, val);
+    } else {
+        update(o * 2 + 1, m + 1, r, i, val);
+    }
+    mn[o] = min(mn[o * 2], mn[o * 2 + 1]);
+    sum[o] = sum[o * 2] + sum[o * 2 + 1];
+}
+
+// 返回区间 [L,R] 内的元素和
+long long querySum(int o, int l, int r, int L, int R) {
+    if (L <= l && r <= R) {
+        return sum[o];
+    }
+    long long res = 0;
+    int m = (l + r) / 2;
+    if (L <= m) {
+        res = querySum(o * 2, l, m, L, R);
+    }
+    if (R > m) {
+        res += querySum(o * 2 + 1, m + 1, r, L, R);
+    }
+    return res;
+}
