@@ -1,4 +1,4 @@
-// TC:O(2^n) SC:O(n)
+// TC: O(n!) 優化 SC:O(n)
 class Solution {
 public:
     vector<int> constructDistancedSequence(int n) {
