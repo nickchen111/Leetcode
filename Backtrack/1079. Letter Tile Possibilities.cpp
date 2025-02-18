@@ -2,33 +2,49 @@
 1079. Letter Tile Possibilities
 */
 
-// TC:O(2^n) SC:O(2^n) 
+// 利用字母特性做組合 排列自己算: TC:O(n * 2^n) SC:O(n)
 class Solution {
-    unordered_set<string> set;
-    vector<bool> visited;
 public:
     int numTilePossibilities(string tiles) {
-        string str = "";
-        int n = tiles.size();
-        visited = vector<bool>(n,0);
-        backtrack(tiles, str);
-
-        return (int)set.size();
+        unordered_map<char,int> mp;
+        for(auto &ch : tiles) mp[ch] += 1;
+        auto dfs = [&](auto &&dfs) -> int{
+            int total = 0;
+            for(auto &[ch, freq] : mp) {
+                if(freq != 0) {
+                    freq -= 1;
+                    total += 1 + dfs(dfs);
+                    freq += 1;
+                }
+            }
+            return total;
+        };
+        return dfs(dfs);
     }
-    void backtrack(string& tiles, string& str){
-       
-        for(int i = 0; i < tiles.size(); i++){
-            if(visited[i] == 1) continue;
+};
 
-            visited[i] = 1;
-            str += tiles[i];
-            set.insert(str);
-            backtrack(tiles,str);
-            str.pop_back();
-            visited[i] = 0;
-        }
-
-        
+// 直接backtrack: TC:O(n * n!) SC:O(n!) 
+class Solution {
+public:
+    int numTilePossibilities(string tiles) {
+        int n = tiles.size();
+        unordered_set<string> set;
+        auto backtrack = [&](auto &&backtrack, int state, int i, string& s) -> void {
+            set.insert(s);
+            if(i == n) {
+                return;
+            }
+            for(int j = 0; j < n; j++) {
+                if(((state >> j) & 1) == 0) {
+                    s.push_back(tiles[j]);
+                    backtrack(backtrack, state | (1 << j), i + 1, s);
+                    s.pop_back();
+                } 
+            }
+        };
+        string s;
+        backtrack(backtrack, 0, 0, s);
+        return (int)set.size() - 1;
     }
 };
 
