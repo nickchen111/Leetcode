@@ -2,6 +2,49 @@
 188. Best Time to Buy and Sell Stock IV
 */
 
+// 2025.02.20 TC:O(n * 2 * k) SC:O(2 * k)
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        int n = prices.size();
+        // 空間優化
+        vector dp(2, vector<int>(k+1, INT_MIN/2));
+        for(int i = 0; i <= k; i++) dp[0][i] = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = k; j >= 1; j--) {
+                dp[0][j] = max(dp[0][j], dp[1][j] + prices[i]);
+                dp[1][j] = max(dp[1][j], dp[0][j-1] - prices[i]);
+            }
+        }
+        return dp[0][k];
+        /*遞推
+        vector dp(n+1, vector<vector<int>>(2, vector<int>(k+1,INT_MIN/2)));
+        for(int i = 0; i <= k; i++) dp[0][0][i] = 0;
+        for(int i = 0; i < n; i++) {
+            dp[i+1][0][0] = 0; 
+            for(int j = 1; j <= k; j++) {
+                dp[i+1][0][j] = max(dp[i][0][j], dp[i][1][j] + prices[i]);
+                dp[i+1][1][j] = max(dp[i][1][j], dp[i][0][j-1] - prices[i]);
+            }
+        }
+        return dp[n][0][k];
+        */
+        /*
+        遞歸
+        vector memo(n, vector<vector<int>>(2, vector<int>(k+1,INT_MIN/2)));
+        auto dfs = [&](auto &&dfs, int i, int hold, int cnt) -> int {
+            if(i < 0) return hold ? INT_MIN/2 : 0;
+            if(cnt == 0 && !hold) return 0;
+            int &ret = memo[i][hold][cnt];
+            if(ret != INT_MIN/2) return ret;
+            if(hold) return ret = max(dfs(dfs, i-1, hold, cnt), dfs(dfs, i-1, 0, cnt-1) - prices[i]);
+            return ret = max(dfs(dfs, i-1, 0, cnt), dfs(dfs, i-1, 1, cnt) + prices[i]);
+        };
+        return dfs(dfs, n-1, 0, k);
+        */
+    }
+};
+
 //解法一： 此题是对之前股票系列I，II，III的综合考察，并推广到任意k次交易的条件。TC:O(n*k) SC:O(k) 
 //一樣是去思考dp[i] 以這天為結尾可以獲得的最大利益為多少,下列程式將天數省略優化空間 只考慮在此天數下可以操作的買賣次數情況下會有的最大利益
 class Solution {
