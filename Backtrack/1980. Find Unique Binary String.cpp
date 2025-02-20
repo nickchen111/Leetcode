@@ -2,7 +2,57 @@
 1980. Find Unique Binary String
 */
 
-// TC:O(2^n) S:O(2^n + n)
+// 2025.02.20 TC:O(n * 2^n) SC:O(n^2)
+class Solution {
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+        int n = nums.size();
+        unordered_set<string> numSet(nums.begin(), nums.end());
+        int mask = (1 << n) - 1;
+        int submask = mask;
+
+        while (submask >= 0) { 
+            string s = bitset<16>(submask).to_string().substr(16 - n);
+            if (numSet.find(s) == numSet.end()) {
+                return s;
+            }
+            int newmask = (submask - 1) & mask;
+            if(submask == newmask) break;
+            submask = newmask;
+        }
+        return "";
+    }
+};
+
+class Solution {
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+        int n = nums.size();
+        unordered_set<string> numSet(nums.begin(), nums.end());
+        string ans;
+        string s;
+        auto backtrack = [&](auto &&backtrack,string& s) -> void {
+            if(ans.size() > 0) return;
+            if(s.size() == n && numSet.find(s) == numSet.end()) {
+                ans = s;
+                return;
+            }
+            if(s.size() == n) return;
+            s += "0";
+            backtrack(backtrack, s);
+            s.pop_back();
+            s += "1";
+            backtrack(backtrack, s);
+            s.pop_back();
+        };
+        backtrack(backtrack, s);
+        return ans;
+    }
+};
+
+
+
+//
 class Solution {
     string res = "";
     unordered_set<string> set;
