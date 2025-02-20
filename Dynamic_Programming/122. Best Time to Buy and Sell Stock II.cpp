@@ -2,6 +2,46 @@
 122. Best Time to Buy and Sell Stock II
 */
 
+// 2025.02.20
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        // 空間壓縮
+        int hold = INT_MIN/2, unhold = 0;
+        for(int i = 0; i < n; i++) {
+            int prev_hold = hold;
+            hold = max(hold, unhold - prices[i]);
+            unhold = max(unhold, prev_hold + prices[i]);
+        }
+        return unhold;
+        /*
+        遞推
+        vector dp(n+1, vector<int>(2, INT_MIN));
+        dp[0][0] = 0;
+        for(int i = 0; i < n; i++) {
+            dp[i+1][1] = max(dp[i][1], dp[i][0] - prices[i]);
+            dp[i+1][0] = max(dp[i][0], dp[i][1] + prices[i]);
+        }
+        return dp[n][0];
+        */
+        /*
+        遞推
+        vector memo(n, vector<int>(2, INT_MIN/2));
+        auto dfs = [&](auto &&dfs, int i, int j) -> int {
+            if(i < 0) {
+                return j == 0 ? 0 : INT_MIN/2;
+            }
+            int &ret = memo[i][j];
+            if(ret != INT_MIN/2) return memo[i][j];
+            if(j == 1) return ret = max(dfs(dfs, i-1, 1), dfs(dfs, i-1, 0) - prices[i]);
+            return ret = max(dfs(dfs, i-1, 0), dfs(dfs, i-1, 1) + prices[i]);
+        };
+        return dfs(dfs, n-1, 0);
+        */
+    }
+};
+
 //雙狀態的dp類型 直接定義 當前天數的最大收益 然後可能的雙狀態   TC:O(n) SC:O(2*n)
 class Solution {
 public:
