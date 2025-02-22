@@ -2,45 +2,60 @@
 1028. Recover a Tree From Preorder Traversal
 */
 
-// queue TC:O(n) SC:O(n)
+// Stack iterate 
 class Solution {
-    
 public:
     TreeNode* recoverFromPreorder(string traversal) {
-        //先做字符串處理 將深度取出
-        queue<pair<int,int>> q;
-        for(int i = 0; i < traversal.size(); i++){
+        int n = traversal.size();
+        vector<TreeNode*> stack;
+        for(int i = 0; i < n; i++) {
             int j = i;
-            while(j < traversal.size() && traversal[j] == '-'){
-                j++;
-            }  
-            int depth = j-i;
-            i = j;
-            while(j < traversal.size() && isdigit(traversal[j])){
-                j++;
+            while(j < n && traversal[j] == '-') j += 1;
+            int depth = j - i;
+            int val = 0;
+            while(j < n && isdigit(traversal[j])) val = val*10 + (traversal[j++] - '0');
+            while(stack.size() > depth) stack.pop_back();
+            TreeNode* node = new TreeNode(val);
+            if(!stack.empty()) {
+                if(!stack.back()->left) stack.back()->left = node;
+                else stack.back()->right = node;
             }
-            int val = stoi(traversal.substr(i,j-i));
+            stack.push_back(node);
             i = j - 1;
-            q.push({val, depth});
         }
-        // 計算每一層的節點數量不包含自己 下面有多少個 可以讓我去避開這些節點找到右子樹的位置
-        return DFS(q);
+        return stack[0];
     }
-    TreeNode* DFS(queue<pair<int,int>>& q){
-        int cur  = q.front().first;
-        int depth = q.front().second;
-        q.pop();
-        
-        TreeNode* root = new TreeNode(cur);
-        
-        if(depth +1 == q.front().second){
-            root->left = DFS(q);
+};
+
+// queue TC:O(n) SC:O(n)
+class Solution {
+public:
+    TreeNode* recoverFromPreorder(string traversal) {
+        queue<pair<int,int>> q;
+        int n = traversal.size();
+        for(int i = 0; i < n; i++) {
+            int j = i;
+            while(j < n && traversal[j] == '-') j += 1;
+            int depth = j - i;
+            int val = 0;
+            while(j < n && isdigit(traversal[j])) val = val*10 + (traversal[j++] - '0');
+            q.push({val, depth});
+            i = j - 1;
         }
-        if(depth +1 == q.front().second){
-            root->right = DFS(q);
-        }
-        
-        return root;
+
+        auto dfs = [&](auto &&dfs, queue<pair<int,int>>& q) -> TreeNode* {
+            int depth = q.front().second, val = q.front().first;
+            q.pop();
+            TreeNode* node = new TreeNode(val);
+            if(!q.empty() && q.front().second == depth + 1) {
+                node -> left = dfs(dfs, q);
+            }
+            if(!q.empty() && q.front().second == depth + 1) {
+                node -> right = dfs(dfs, q);
+            }
+            return node;
+        };
+        return dfs(dfs, q);
     }
 };
 
