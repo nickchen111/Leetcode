@@ -1,67 +1,64 @@
-/*
-2771. Longest Non-decreasing Subarray From Two Arrays
-*/
-
 // TC:O(n) SC:O(1)
 class Solution {
 public:
     int maxNonDecreasingLength(vector<int>& nums1, vector<int>& nums2) {
-        int res = 1;
         int n = nums1.size();
-        int dp_1 = 1, dp_2 = 1;
-        
-        for(int i = 1; i < n; i++){
-            auto dp_tmp_1 = dp_1, dp_tmp_2 = dp_2;
-            dp_1 = 1, dp_2 = 1;
-            if(nums1[i] >= nums2[i-1]){
-                dp_1 = dp_tmp_2 + 1;
-            }
-            if(nums1[i] >= nums1[i-1]){
-                dp_1 = max(dp_1, dp_tmp_1 + 1);
-            }
-            if(nums2[i] >= nums2[i-1]){
-                dp_2 = dp_tmp_2 + 1;
-            }
-            if(nums2[i] >= nums1[i-1]){
-                dp_2 = max(dp_2, dp_tmp_1 + 1);
-            }
-            res = max(res, max(dp_1,dp_2));
+        int cnt1 = 1, cnt2 = 1, ans = 1;
+        for(int i = 1; i < n; i++) {
+            int prev1 = cnt1 , prev2 = cnt2;
+            if(nums1[i] >= nums1[i-1]) cnt1 = prev1 + 1;
+            else cnt1 = 1;
+            if(nums2[i] >= nums2[i-1]) cnt2 = prev2 + 1;
+            else cnt2 = 1;
+            if(nums1[i] >= nums2[i-1]) cnt1 = max(cnt1, prev2 + 1);
+            if(nums2[i] >= nums1[i-1]) cnt2 = max(cnt2, prev1 + 1);
+            ans = max({ans,cnt1, cnt2});
         }
-
-        return res;
+        return ans;
+        /*
+        遞歸
+        vector memo(n, vector<int>(2, -1));
+        auto dfs = [&](auto &&dfs, int i, int j) -> int {
+            if(i == 0) return 1;
+            int &ret = memo[i][j];
+            if(ret != -1) return ret;
+            ret = 1;
+            if (j) {
+                if (nums2[i] >= nums1[i - 1]) ret = max(ret, dfs(dfs, i - 1, 0) + 1);
+                if (nums2[i] >= nums2[i - 1]) ret = max(ret, dfs(dfs, i - 1, 1) + 1);
+            } else { 
+                if (nums1[i] >= nums1[i - 1]) ret = max(ret, dfs(dfs, i - 1, 0) + 1);
+                if (nums1[i] >= nums2[i - 1]) ret = max(ret, dfs(dfs, i - 1, 1) + 1);
+            }
+            return ret;
+        };
+        int ans = 1;
+        for(int i = 0; i < n; i++) {
+            ans = max({ans, dfs(dfs, i, 0), dfs(dfs, i, 1)});
+        }
+        return ans;
+        */
+        /*
+        遞推
+        vector dp(n, vector<int>(2, 1));
+        for(int i = 1; i < n; i++) {
+            if(nums1[i] >= nums1[i-1]) dp[i][0] = dp[i-1][0] + 1;
+            if(nums2[i] >= nums2[i-1]) dp[i][1] = dp[i-1][1] + 1;
+            if(nums1[i] >= nums2[i-1]) dp[i][0] = max(dp[i][0], dp[i-1][1] + 1);
+            if(nums2[i] >= nums1[i-1]) dp[i][1] = max(dp[i][1], dp[i-1][0] + 1);
+            ans = max({ans, dp[i][0], dp[i][1]});
+        }
+        return ans;
+        */
     }
 };
 
-// 未優化 TC:O(n) SC:O(n)
-class Solution {
-public:
-    int maxNonDecreasingLength(vector<int>& nums1, vector<int>& nums2) {
-        int res = 1;
-        int n = nums1.size();
-        vector<vector<int>> dp(n, vector<int>(2,1));
-        dp[0][0] = 1;
-        dp[0][1] = 1;
-
-        for(int i = 1; i < n; i++){
-            if(nums1[i] >= nums2[i-1]){
-                dp[i][0] = dp[i-1][1] + 1;
-            }
-            if(nums1[i] >= nums1[i-1]){
-                dp[i][0] = max(dp[i][0], dp[i-1][0] + 1);
-            }
-            if(nums2[i] >= nums2[i-1]){
-                dp[i][1] = dp[i-1][1] + 1;
-            }
-            if(nums2[i] >= nums1[i-1]){
-                dp[i][1] = max(dp[i][1], dp[i-1][0] + 1);
-            }
-            res = max(res, max(dp[i][0],dp[i][1]));
-        }
-
-        return res;
-    }
-};
-
+/*
+可以選擇nums1, nums2任意一個
+怎知選哪個，一般來說比較暴力的方法是先選一個往前去比較一下可以組多長 那也就是前一個選的可以組多長 + 1 如果當下那個 >= 他的話
+所以我們可以定義狀態
+dp[i][j]  走到i為止以nums j 打頭 可組成的最長長度
+*/
 
 /*
 基本型I
