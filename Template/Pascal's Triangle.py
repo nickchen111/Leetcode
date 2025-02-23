@@ -25,3 +25,16 @@ class Solution:
 class Solution:
     def getRow(self, rowIndex: int) -> List[int]:
         return [comb(rowIndex, i) for i in range(rowIndex+1)]
+
+#組合數學 加上 逆元
+n = 10 # 假設要求的項的index是下標10 其實代表會有11項
+MOD = 1000000007
+fac = [0] * (n+1)
+fac[0] = 1
+for i in range(1, n+1):
+    fac[i] = fac[i-1] * i
+inv = [0] * (n+1)
+inv[-1] = pow(fac[-1], -1)
+for i in range(n-1, -1, -1):
+    inv[i] = inv[i+1] * (i+1)
+c = [fac[n] * inv[i] * inv[n-i] for i in range(n+1)]    
