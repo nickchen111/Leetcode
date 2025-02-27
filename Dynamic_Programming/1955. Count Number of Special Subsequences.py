@@ -1,8 +1,7 @@
-# TC:O(n) SC:O(1)
 class Solution:
     def countSpecialSubsequences(self, nums: List[int]) -> int:
         '''
-        一定要有0 1 2 
+        一定要有0 1 2
         '''
         MOD = 10 ** 9 + 7
         n = len(nums)
@@ -17,17 +16,21 @@ class Solution:
         return f[2]
         '''
         遞推
-        domain = 4
-        dp = [[0] * domain for _ in range(n+1)]
-        dp[0][0] = 1
+        f = [[0] * 3 for _ in range(n+1)]
         for i in range(n):
-            for j in range(domain):
-                dp[i+1][j] = dp[i][j]
-                if j == nums[i] or j == nums[i] + 1:
-                    dp[i+1][j] += dp[i][nums[i]]
-           
-        return dp[n][3] % MOD
+            f[i+1][0] = f[i][0]
+            f[i+1][1] = f[i][1]
+            f[i+1][2] = f[i][2]
+            if nums[i] == 0:
+                f[i+1][0] = (f[i+1][0] * 2 + 1) % MOD
+            elif nums[i] == 1:
+                f[i+1][1] = (f[i+1][1] * 2 + f[i][0]) % MOD
+            else: 
+                f[i+1][2] = (f[i+1][2] * 2 + f[i][1]) % MOD
+            
+        return f[n][2] % MOD
         '''
+        
         '''
         遞歸 MLE
         @cache
