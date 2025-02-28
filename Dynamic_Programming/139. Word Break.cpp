@@ -2,6 +2,36 @@
 139. Word Break
 */
 
+// 2025.02.28 Hash Set 逆著存 + 劃分型DP TC:O(mL + n*L) m = wordDcit 長度, L為最長字串長度, n 為 string s長度
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        //DP
+        int n = s.size();
+        int max_len = 0;
+        unordered_set<string> set;
+        for(auto word : wordDict) {
+            max_len = max(max_len, (int)word.size());
+            reverse(word.begin(), word.end());
+            set.insert(word);
+        }
+        vector<int> dp(n+1);
+        dp[0] = true;
+        for(int i = 1; i<=n; i++){
+            string tmp;
+            for(int j = i-1; j >= max(0, i - max_len); j--) {
+                tmp += s[j];
+                if(set.count(tmp) && dp[j]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[n];
+    }
+};
+
 
 // 暴力解 
 class Solution {
@@ -113,14 +143,3 @@ public:
         
 
     }
-
-/*
-解題思路：
-1. backtrack每種可能暴力解 
-時間複雜度超高 o(n^n) 空間上可以用hash map來降低一些時間複雜度
-
-2. backtrack + trie 來讓搜索效率提升 且空間上也比較省 +memo剪枝
-
-3. dp
-dp[i] s[第幾個字符為止是合法的]
-*/
