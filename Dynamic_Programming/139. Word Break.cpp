@@ -85,57 +85,50 @@ public:
 };
 
 
-// DFS + Trie + memo    TC:O(n^2) SC:O(n^2)
+// 2025.02.28 DFS + Trie + memo TC:O(n^2) SC:O(n^2)
 class Solution {
     struct TrieNode{
-        TrieNode(){
+        TrieNode() {
+            for(int i = 0; i < 26; i++) children[i] = NULL;
             isEnd = false;
-            for(int i = 0; i<26; i++){
-                children.push_back(nullptr);
-            }
         }
         ~TrieNode(){
             for(auto child:children){
                 if(child) delete child;
             }
         }
-        vector<TrieNode*> children;
+        TrieNode* children[26];
         bool isEnd;
     };
-    int memo[300];
-    TrieNode* root;
+    TrieNode* root = new TrieNode();
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
-        root = new TrieNode();
         for(auto word:wordDict){
-
-            TrieNode* p = root;
-
-            for(auto ch: word){
-                if(p->children[ch - 'a'] == nullptr){
-                    p->children[ch - 'a'] = new TrieNode();
+            TrieNode* node = root;
+            for(auto ch:word){
+                if(node->children[ch-'a'] == NULL) node->children[ch-'a'] = new TrieNode();
+                node = node->children[ch-'a'];
+            }
+            node->isEnd = true;
+        }
+        int n = s.size();
+        vector<int> memo(n, -1);
+        auto dfs = [&](auto &&dfs, int cur) -> bool {
+            if(cur == n) return true;
+            if(memo[cur] != -1) return memo[cur];
+            TrieNode* node = root;
+            for(int i = cur; i < n; i++){
+                if(node->children[s[i]-'a']){
+                    node = node->children[s[i]-'a'];
+                    if(node->isEnd && dfs(dfs, i+1)) return memo[cur] = true;
                 }
-                p = p->children[ch-'a'];
+                else break;
             }
-            p->isEnd = true;
-        }
-        //分割string s 傳入 並確認他的後面是否也可以被分割 此題只需確認是否可分割 
-        return backtrack(s, 0);
 
-    }
-    bool backtrack(string& s, int cur){        
-        if(cur == s.size()) return true; //代表走到尾了都可以切割 
-        if(memo[cur] == -1) return false;//之前就走過是不行的
-        TrieNode* p = root;
-        for(int i = cur; i < s.size(); i++){
-            if(p->children[s[i] - 'a'] != nullptr){
-                p = p->children[s[i] - 'a'];
-                if(p->isEnd == true && backtrack(s, i+1)) return true;
-            }
-            else break;
-        }
-        memo[cur] = -1;
-        return false;
+            return memo[cur] = false;
+        };
+
+        return dfs(dfs, 0);
     }
 };
 
