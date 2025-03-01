@@ -2,7 +2,7 @@
 2707. Extra Characters in a String
 */
 
-// 2025.03.01 Hash Set + DP TC:O(n * L) SC:O(mL + n) L 為字串最大長度 m為字典中的字串數量
+// 2025.03.01 Hash Set + DP TC:O(n * L^2) set.count 也會有L的時間開銷 SC:O(mL + n) L 為字串最大長度 m為字典中的字串數量
 class Solution {
 public:
     int minExtraChar(string s, vector<string>& dictionary) {
