@@ -41,9 +41,7 @@ class Solution:
         # 空間優化
         f0, f1 = 0, nums[0]
         for i in range(1,n):
-            prev0, prev1 = f0, f1
-            f0 = f1
-            f1 = max(prev1 + nums[i], prev0 + nums[i-1] - nums[i])
+            f0, f1 = f1, max(prev1 + nums[i], prev0 + nums[i-1] - nums[i])
         return f1
         '''
         遞推 
