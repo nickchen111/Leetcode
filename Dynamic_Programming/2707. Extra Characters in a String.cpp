@@ -51,53 +51,69 @@ public:
     }
 };
  
-// DP + Trie: TC:O(n^2 +  M*L) SC:O(n + M*L) L為字串數量 M為平均長度
+// DP + Trie: TC:O(n^2 +  m*L) SC:O(n + m*L)
 class Solution {
-    class TrieNode{
-    public:
-        TrieNode():children(26,NULL), isValid(0){}
-        ~TrieNode(){
-            for(auto &child : children){
-                if(child) delete child;
-            }
-        } 
-        vector<TrieNode*> children; 
-        bool isValid;
+    struct TrieNode {
+        TrieNode* next[26];
+        bool isEnd;
+        TrieNode() {
+            for(int i = 0; i < 26; i++) next[i] = NULL;
+            isEnd = false;
+        }
     };
-
-    TrieNode* root;
+    TrieNode* root = new TrieNode();
 public:
     int minExtraChar(string s, vector<string>& dictionary) {
         int n = s.size();
-        
-        root = new TrieNode();
-        for(auto &word : dictionary){
+        for(auto &str : dictionary) {
             TrieNode* node = root;
-            for(auto &ch : word){
-                if(node->children[ch-'a'] == NULL) node->children[ch-'a'] = new TrieNode();
-                node = node->children[ch-'a'];
+            for(auto &ch : str) {
+                if(node->next[ch - 'a'] == NULL) node->next[ch - 'a'] = new TrieNode();
+                node = node->next[ch - 'a'];
             }
-            node->isValid = true;
+            node -> isEnd = true;
         }
-
         vector<int> dp(n+1, 0);
-        
-        
-        for(int i = n-1; i >= 0; i--){
-            dp[i] = dp[i+1] + 1;//這點去除的狀況下
+        for(int i = n-1; i >= 0; i--) {
+            dp[i] = dp[i+1] + 1; // 不選
             TrieNode* node = root;
-            for(int j = i; j < n; j++){
-                if(node->children[s[j] - 'a'] != NULL){
-                    node = node->children[s[j] - 'a'];
-                    if(node->isValid == true){
+            for(int j = i; j < n; j++) {
+                if(node -> next[s[j] - 'a'] != NULL) {
+                    node = node -> next[s[j] - 'a'];
+                    if(node -> isEnd) {
                         dp[i] = min(dp[i], dp[j+1]);
                     }
                 }
-
                 else break;
             }
         }
-
         return dp[0];
+        
+        /*
+        遞歸 TC:O(n^2 + mL) SC:O(n + mL)
+        vector<int> memo(n, INT_MAX/2);
+        auto dfs = [&](auto &&dfs, int i) -> int {
+            if (i == n) return 0;
+            int &ret = memo[i];
+            TrieNode* node = root;
+            if(ret != INT_MAX/2) return ret;
+            ret = min(ret, 1 + dfs(dfs, i+1)); // 不選
+            for(int j = i; j < n; j++) {
+                if(node->next[s[j] - 'a'] != NULL) {
+                    node = node->next[s[j] - 'a'];
+                    if(node -> isEnd) {
+                        ret = min(ret, dfs(dfs, j + 1));
+                    }
+                }
+                else {
+                    ret = min(ret, dfs(dfs, j+1) + j - i + 1);
+                    break;
+                }
+            }
+            return ret;
+        };
+        
+        return dfs(dfs, 0);
+        */
     }
 };
