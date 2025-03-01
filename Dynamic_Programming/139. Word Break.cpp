@@ -2,7 +2,7 @@
 139. Word Break
 */
 
-// 2025.02.28 Hash Set 逆著存 + 劃分型DP TC:O(mL + n*L) m = wordDcit 長度, L為最長字串長度, n 為 string s長度 SC:O(mL + n)
+// 2025.02.28 Hash Set 逆著存 + 劃分型DP TC:O(mL + n*L^2) m = wordDcit 長度, L為最長字串長度, n 為 string s長度 SC:O(mL + n)
 class Solution {
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
