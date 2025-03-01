@@ -1,6 +1,55 @@
 /*
 2707. Extra Characters in a String
 */
+
+// 2025.03.01 Hash Set + DP TC:O(n * L) SC:O(mL + n) L 為字串最大長度 m為字典中的字串數量
+class Solution {
+public:
+    int minExtraChar(string s, vector<string>& dictionary) {
+        int n = s.size();
+        unordered_set<string> set;
+        int max_len = 0;
+        for(auto str : dictionary) {
+            max_len = max(max_len, (int)str.size());
+            reverse(str.begin(), str.end());
+            set.insert(str);
+        }
+        vector<int> dp(n+1, INT_MAX/2);
+        dp[0] = 0;
+        for(int i = 1; i <= n; i++) {
+            string tmp;
+            for(int j = i - 1; j >= max(i - max_len, 0); j--) {
+                tmp += s[j];
+                if(set.count(tmp)) {
+                    dp[i] = min(dp[i], dp[j]);
+                }
+                else {
+                    dp[i] = min(dp[i], dp[j] + i - j);
+                }
+            }
+        }
+        return dp[n];
+        /*
+        遞歸 TC:O(n * L) SC:O(mL + n) L 為字串最大長度 m為字典中的字串數量
+        vector<int> memo(n, INT_MAX);
+        auto dfs = [&](auto &&dfs, int i) -> int {
+            if(i < 0) return 0;
+            int &ret = memo[i];
+            if(ret != INT_MAX) return ret;
+            string tmp;
+            for(int j = i; j >= 0; j--) {
+                tmp += s[j];
+                if(set.count(tmp)) {
+                    ret = min(ret, dfs(dfs, j-1));
+                }
+                else ret = min(ret, dfs(dfs, j-1) + i - j + 1);
+            }
+            return memo[i] = ret;
+        };
+        return dfs(dfs, n - 1);
+        */
+    }
+};
  
 // DP + Trie: TC:O(n^2 +  M*L) SC:O(n + M*L) L為字串數量 M為平均長度
 class Solution {
@@ -50,117 +99,5 @@ public:
         }
 
         return dp[0];
-    }
-};
-
-
-// DP + Hash Set TC:O(n^3 + M*L) L為字串數量 M為平均長度 SC:O(n + M*L)
-class Solution {
-public:
-    int minExtraChar(string s, vector<string>& dictionary) {
-        int n = s.size();
-        int maxVal = n+1;
-        vector<int> dp(n+1, maxVal);//一個不可能到達的數字
-        dp[0] = 0;
-
-        unordered_set<string> set(dictionary.begin(), dictionary.end());
-
-        for(int i = 1; i <= n; i++){
-            dp[i] = dp[i-1] + 1;//這點去除的狀況下
-            for(int j = 1; j <= i; j++){
-                if(set.find(s.substr(i-j,j)) != set.end()){
-                    dp[i] = min(dp[i], dp[i-j]);
-                }
-            }
-        }
-
-        return dp[n];
-    }
-};
-
-/*
-將一串字串去字典樹找有無相應的字 盡量讓剩下的字串越少越好 最少可以剩下幾個字
-50*50*50*50 6e6
-leetscode -> leets leet code
-1. Trie+DFS : 每走一步都要從頭確認 會超時 且代碼難寫
-dp[i] 從[1:i] 需要去除的最少字母量 
-2. Hash set : TC:O(n^3 + M*L) L為字串數量 M為平均長度
-3. 用trie的話要反過來寫 正著寫會不曉得j會涵蓋到哪裡 只知道要取他前面那串的最小值 但不曉得他有沒有包含了i
-x x x j x x x i
-*/
-
-// Trie + DFS -> WA
-class Solution {
-    class TrieNode{
-    public:
-        TrieNode():children(26,NULL), isValid(0){}
-        ~TrieNode(){
-            for(auto &child : children){
-                if(child) delete child;
-            }
-        } 
-        vector<TrieNode*> children; 
-        bool isValid;
-    };
-
-    TrieNode* root;
-    int res = INT_MAX;
-public:
-    int minExtraChar(string s, vector<string>& dictionary) {
-        root = new TrieNode();
-        for(auto &word : dictionary){
-            TrieNode* node = root;
-            for(auto &ch : word){
-                if(node->children[ch-'a'] == NULL) node->children[ch-'a'] = new TrieNode();
-                node = node->children[ch-'a'];
-            }
-            node->isValid = true;
-        }
-
-        int n = s.size();
-        
-        for(int i = 0; i < n; i++){
-            TrieNode* node = root;
-            int sum = i;
-            for(int j = i; j < n; j++){
-                if(node->children[s[j]-'a'] != NULL){
-                    node = node->children[s[j]-'a'];
-                    //這點當切割點往後跑
-                    if(node->isValid == true){
-                        DFS(s, sum, j+1);
-                    }
-                }
-                else break;
-            }
-        }
-       
-
-        return res;
-    }
-
-    void DFS(string& s, int sum, int cur){
-        if(cur == s.size()){
-            res = min(res, sum);
-            return;
-        }
-
-        int n = s.size();
-        //新的開始
-
-        for(int i = cur; i < n; i++){
-            TrieNode* node = root;
-            sum = sum + (i-cur);
-            for(int j = i; j < n; j++){
-                if(node->children[s[j]-'a'] != NULL){
-                    node = node->children[s[j]-'a'];
-                    if(node->isValid == true){
-                        DFS(s, sum, j+1);
-                    }
-                }
-                else break;
-            }
-        }
-
-        res = min(res, sum);
     }
 };
