@@ -5,10 +5,12 @@ public:
         auto Prime = [&](int n) -> vector<int> {
             vector<int> a(n+1);
             for(int i = 2; i * i <= n; i++) {
-                int j = i * i;
-                while(j <= n) {
-                    a[j] = 1;
-                    j += i;
+                if(a[i] == 0) {
+                    int j = i * i;
+                    while(j <= n) {
+                        a[j] = 1;
+                        j += i;
+                    }
                 }
             }
             vector<int> ans;
@@ -18,6 +20,7 @@ public:
             return ans;
         };
         vector<int> prime = Prime(right);
+        if(prime.size() < 2) return {-1, -1};
         int diff = INT_MAX;
         vector<int> ans{-1,-1};
         for(int i = 1; i < prime.size(); i++) {
