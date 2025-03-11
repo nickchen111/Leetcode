@@ -2,90 +2,70 @@
 53. Maximum Subarray
 */
 
-//這題也可以用slide window & presum
-//iterative TC:O(n)  SC:O(n)
+// 2025.03.11 DP 優化前
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        int n = nums.size();
-        if(n == 1) return nums[0];
-
-        vector<int> dp(n);
-        //初始化
-        dp[0] = nums[0]; //dp數組的index就是nums的index
-
-        int res = dp[0];
-        for(int i = 1; i<n; i++){
-            dp[i] = nums[i];
-            dp[i] = max(dp[i], dp[i-1]+ nums[i]);
-            res = max(res, dp[i]);
+        vector<int> f(nums.size());
+        f[0] = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            f[i] = max(f[i - 1], 0) + nums[i];
         }
-
-        return res;
-
-
-
+        return ranges::max(f);
     }
 };
 
-//SC:O(1)
+// 優化後DP Kadane
 class Solution {
-    //優化空間iterative
 public:
     int maxSubArray(vector<int>& nums) {
-        int n = nums.size();
-        if(n == 1) return nums[0];
-
-        int dp_0 = nums[0];
-        int dp_1 = 0;
-        int res = nums[0];
-        for(int i = 1; i<n; i++){
-            dp_1 = max(dp_0+nums[i], nums[i]);
-            res = max(res, dp_1);
-            dp_0 = dp_1;
-            dp_1 = 0;
+        int ans = INT_MIN;
+        int f = 0;
+        for (int x : nums) {
+            f = max(f, 0) + x;
+            ans = max(ans, f);
         }
-
-        return res;
+        return ans;
     }
 };
 
-//recursion+memo TC:O(n)  SC:O(n)
+// Prefix Sum 
 class Solution {
-    //recursion
-    vector<int> memo;
 public:
     int maxSubArray(vector<int>& nums) {
-        int n = nums.size();
-        if(n == 1) return nums[0];
-       
-        memo = vector<int> (n, INT_MIN);
-        int res = nums[0];
-
-        dp(nums, n-1);
-        for(int i = 0; i<n; i++){
-            res = max(res, memo[i]);
+        int ans = INT_MIN;
+        int min_pre_sum = 0;
+        int pre_sum = 0;
+        for (int x : nums) {
+            pre_sum += x; 
+            ans = max(ans, pre_sum - min_pre_sum);
+            min_pre_sum = min(min_pre_sum, pre_sum); 
         }
-        
-        
-        return res;
-    }
-
-    int dp(vector<int>& nums,  int index){
-        int n = nums.size();
-        if(index == 0) return nums[0];
-        if(index < 0) return 0;
-        
-        if(memo[index] != INT_MIN) return memo[index];
-
-        memo[index] = max(dp(nums, index-1)+nums[index], nums[index]);
-
-  
-        return memo[index];
+        return ans;
     }
 };
 
-/*
-此題有點類似LCS的含義 可以不斷加上前面數(必須是連續的) 來看有沒有比較大or 自己才是更大的
-dp[i] = max(nums[i], dp[i-1]+nums[i])
-*/
+// Divide and Conquer 線段樹分治思想雛形
+class Solution {
+public:
+    struct Status {
+        int iSum, rSum, lSum, mSum;
+    };
+    Status pushUp(Status l, Status r) {
+        int iSum = l.iSum + r.iSum;
+        int lSum = max(l.lSum, l.iSum + r.lSum);
+        int rSum = max(r.rSum, r.iSum + l.rSum);
+        int mSum = max({l.mSum, r.mSum, l.rSum + r.lSum});
+        return (Status) {iSum, rSum, lSum, mSum};
+    }
+    Status get(vector<int>&a, int l, int r) {
+        if (l == r) return (Status) {a[l], a[l], a[l], a[l]};
+        int m = (l + r) / 2;
+        Status lSum = get(a, l, m);
+        Status rSum = get(a, m + 1, r);
+        return pushUp(lSum, rSum);
+    }
+    int maxSubArray(vector<int>& nums) {
+        return get(nums, 0, nums.size() - 1).mSum;
+    }
+};
