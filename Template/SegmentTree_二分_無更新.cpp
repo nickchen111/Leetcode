@@ -1,4 +1,4 @@
-// 這份線段樹模板主要紀錄最值與總和
+// 這份線段樹模板主要紀錄最值與查詢區間總和
 int n, m;
 vector<int> mn;
 vector<long long> sum;
