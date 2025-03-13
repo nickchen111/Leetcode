@@ -2,6 +2,27 @@
 3356. Zero Array Transformation II
 */
 
+// 2025.03.13 Presum: TC:O(n + m) SC:O(n)
+class Solution {
+public:
+    int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        int n = nums.size(), k = 0, sum = 0;
+        vector<int> cnt(n+1, 0);
+        for(int i = 0; i < n; i++) {
+            while(sum + cnt[i] < nums[i]) {
+                if(k == queries.size()) return -1;
+                int l = queries[k][0], r = queries[k][1], val = queries[k][2];
+                k ++;
+                if (r < i) continue;
+                cnt[max(i, l)] += val; // 代表之前的就不管了 畢竟都過了 代表肯定可以讓他變0
+                cnt[r+1] -= val;
+            }
+            sum += cnt[i];
+        }
+        return k;
+    }
+};
+
 // TC:O((n + m)lgm) SC:O(n)
 class Solution {
     using LL = long long;
