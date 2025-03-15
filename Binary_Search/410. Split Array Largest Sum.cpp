@@ -2,75 +2,68 @@
 410. Split Array Largest Sum
 */
 
-//TC:O(n) SC:O(1)
-class Solution {
-public:
-    int splitArray(vector<int>& nums, int k) {
-        int left = INT_MAX;
-        int right = 0;
-        for(int i = 0; i<nums.size(); i++){
-            left = min(left, nums[i]);
-            right+=nums[i];
-        }
-
-        while(left < right){
-            int cap = left + (right-left)/2;
-            if(checkOk(nums, k, cap)){
-                right = cap;
-            }
-            else{
-                left = cap+1;
-            }
-        }
-
-        return left;
-    }
-
-    bool checkOk(vector<int>& nums, int k, int cap){
-        int count = 0;
-        for(int i =0; i<nums.size(); i++){
-            int j = i;
-            int sum = 0;
-            while(j < nums.size() && sum+nums[j] <= cap){
-                sum+=nums[j];
-                j++;
-            }
-            count++;
-
-            if(count > k) return false;
-            i = j-1;
-        }
-
-        return true;
-    }
-};
-//DP TC:O(n^3) SC:O(n^2)
+// 2025.03.15  DP & 二分 TC:O(n*n*k) SC:O(n*k) & TC:O(nlgU) SC:O(1)
 class Solution {
 public:
     int splitArray(vector<int>& nums, int k) {
         int n = nums.size();
-        auto dp = vector<vector<long>>(n+1, vector<long>(k+1));
-        nums.insert(nums.begin(), 0);
-
-        //base case
-        for(int i =1; i<=n; i++){
-            dp[i][1] += dp[i-1][1] + nums[i];
+        // 二分
+        int left = *max_element(nums.begin(), nums.end());
+        int right = reduce(nums.begin(), nums.end(), 0);
+        auto check = [&](int mid) -> bool {
+            int cnt = 0, i = 0;
+            while (i < n) {
+                int j = i, sum = 0;
+                while(j < n && sum + nums[j] <= mid) {
+                    sum += nums[j++];
+                }
+                cnt += 1;
+                i = j;
+            }
+            return cnt <= k;
+        };
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (check(mid)) right = mid;
+            else left = mid + 1;
         }
-        for(int i = 1; i<=n; i++){
-            //因為2個數字不可能分三份 三個數字不可能份四份...
-            for(int K = 2; K<=min(k,i); K++){
-                dp[i][K] = max(dp[i-1][K-1],(long)nums[i]);
-                //定義t 為讓 i到t之前可能有好幾派 留一派出來
-                for(int j = 1; j<=i-1; j++){
-                    long temp = max((j >=K-1) ? dp[j][K-1]:INT_MAX, dp[i][1]-dp[j][1]);// 用dp數組就可以計算前綴和 t+1~i
-                    dp[i][K] = min(dp[i][K], temp);
+        return left;
+        /*
+        遞推
+        vector<int> presum(n+1);
+        for(int i = 1; i <= n; i++) presum[i] = presum[i-1] + nums[i-1];
+        vector dp(n+1, vector<int>(k+1, INT_MAX/2));
+        dp[0][0] = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = 1; j <= min(i+1, k); j++) {
+                for(int t = i; t >= 0; t--) {
+                    dp[i+1][j] = min(dp[i+1][j], max(dp[t][j-1], presum[i+1] - presum[t]));
                 }
             }
         }
-
         return dp[n][k];
+        */
+        /*
+        遞歸 TC:O(n*n*k)
+        vector memo(n, vector<int>(k+1, INT_MAX/2));
+        auto dfs = [&](auto &&dfs, int i, int cnt) -> int {
+            if(i < 0) return 0;
+            if(cnt == 1) {
+                return presum[i+1];
+            }
+            int &ret = memo[i][cnt];
+            if(ret != INT_MAX/2) return ret;
+            for(int j = i; j >= 0; j--) {
+                ret = min(ret, max(dfs(dfs, j-1, cnt - 1), presum[i+1] - presum[j]));
+            }
+            return ret;
+        };
+        return dfs(dfs, n-1, k);
+        */
     }
 };
+
+
 
 /*
 此題跟 1011相同概念
