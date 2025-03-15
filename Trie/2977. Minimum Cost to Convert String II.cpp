@@ -2,6 +2,106 @@
 2977. Minimum Cost to Convert String II
 */
 
+// 2025.03.15 遞歸TLE + 遞推
+class Solution {
+    using ll = long long;
+    struct TrieNode {
+        TrieNode* next[26];
+        int idx;
+        TrieNode() {
+            for(int i = 0; i < 26; i++) next[i] = NULL;
+            idx = -1;
+        }
+    };
+    TrieNode* root = new TrieNode();
+public:
+    long long minimumCost(string source, string target, vector<string>& original, vector<string>& changed, vector<int>& cost) {
+        /*
+        首先這種字串處理會讓我想到Trie 整理起來 or hash map 去對應
+        目標是要將字串轉換成target 可能有很多方式 所以要再轉換的斷點中尋找成本最小的方式 那就可以將一個大字串切割成規模較小的小字串
+        並且處理相同的問題，現在問題來了 該如何快速判斷一個字串是否可以轉成另一個字串 從資料規模可以推測只能traverse一層
+        比較難想到的就是將字串節點化 賦予他index 然後去做floyd 即可
+        */
+        unordered_set<string> set;
+        for(auto &o : original) reverse(o.begin(), o.end());
+        for(auto &c : changed) reverse(c.begin(), c.end());
+        set.insert(original.begin(), original.end()), set.insert(changed.begin(), changed.end());
+        int m = set.size();
+        unordered_map<string, int> mp;
+        int index = 0;
+        for(auto &s : set) {
+            mp[s] = index;
+            TrieNode* node = root;
+            for(auto &ch : s) {
+                if(node->next[ch - 'a'] == NULL) node->next[ch - 'a'] = new TrieNode();
+                node = node->next[ch - 'a'];
+            }
+            node->idx = index;
+            index += 1;
+        }
+
+        vector d(m, vector<ll>(m, LLONG_MAX/2));
+        for(int i = 0; i < m; i++) {
+            d[i][i] = 0;
+        }
+        for(int i = 0; i < original.size(); i++) {
+            int a = mp[original[i]], b = mp[changed[i]];
+            d[a][b] = min(d[a][b], (ll)cost[i]); // 因為有可能有重複 所以取最小值
+        }
+        for(int k = 0; k < m; k++) {
+            for(int i = 0; i < m; i++) {
+                for(int j = 0; j < m; j++) {
+                    d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+                }
+            }
+        }
+        int n = source.size();
+        vector<ll> dp(n + 1, LLONG_MAX/2);
+        dp[0] = 0;
+        for(int i = 0; i < n; i++) {
+            TrieNode* node1 = root;
+            TrieNode* node2 = root;
+            if(source[i] == target[i]) dp[i+1] = dp[i];
+            for(int j = i; j >= 0; j--) {
+                if(node1->next[source[j] - 'a'] == NULL) break;
+                if(node2->next[target[j] - 'a'] == NULL) break;
+                node1 = node1->next[source[j] - 'a'];
+                node2 = node2->next[target[j] - 'a'];
+                int index1 = node1 -> idx, index2 = node2 -> idx;
+                if(index1 != -1 && index2 != -1) {
+                    dp[i+1] = min(dp[i+1], dp[j] + d[index1][index2]);
+                }
+            }
+        }
+        return dp[n] == LLONG_MAX/2 ? -1 : dp[n];
+        /*
+        遞歸
+        vector<ll> memo(n, LLONG_MAX/2);
+        auto dfs = [&](auto &&dfs, int i) -> ll {
+            if(i < 0) return 0;
+            ll &ret = memo[i];
+            if(ret != LLONG_MAX/2) return ret;
+            TrieNode* node1 = root;
+            TrieNode* node2 = root;
+            if(source[i] == target[i]) ret = dfs(dfs, i - 1);
+            for(int j = i; j >= 0; j--) {
+                if(node1->next[source[j] - 'a'] == NULL) break;
+                if(node2->next[target[j] - 'a'] == NULL) break;
+                node1 = node1->next[source[j] - 'a'];
+                node2 = node2->next[target[j] - 'a'];
+                int index1 = node1 -> idx, index2 = node2 -> idx;
+                if(index1 != -1 && index2 != -1) {
+                    ret = min(ret, dfs(dfs, j-1) + d[index1][index2]);
+                }
+            }
+            return ret;
+        };
+        ll res = dfs(dfs, n-1);
+        return res == LLONG_MAX/2 ? -1 : res;
+        */
+    }
+};
+
 // "TC:O(原始單詞數量 * 平均單詞長度 (構造Trie)+ n^3(Floyd) + m^2 * Trie查找單詞速度) SC:O(原始單詞數量 * 平均單詞長度 + n^2 + m)"
 class Solution {
     using LL = long long;
