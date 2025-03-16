@@ -1,3 +1,45 @@
+// 分開做01背包 寫法 TC:O(m*n*U) U為max(nums) SC:O(nU)
+class Solution {
+public:
+    int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        if (ranges::all_of(nums, [](int x) { return x == 0; })) {
+            return 0;
+        }
+
+        int n = nums.size();
+        const int MAX_CAP = 10001;
+        vector<bitset<MAX_CAP>> dp(n); // vector<vector<int>> dp(n);
+        for(int i = 0; i < n; i++) {
+            // dp[i].resize(nums[i] + 1);
+            dp[i][0] = 1;
+        }
+        for(int k = 0; k < queries.size(); k++) { // 物品
+            auto &q = queries[k];
+            int val = q[2];
+            for(int i = q[0]; i <= q[1]; i++) { // 需要加入的區間 多個背包
+                dp[i] |= (dp[i] << val); // 左移 這是轉成bitset寫法
+                /*
+                一般背包
+                for(int target = nums[i]; target >= val; target--) { // 容量
+                    dp[i][target] = dp[i][target] || dp[i][target - val];
+                }
+                */
+            }
+            bool check = true;
+            for(int i = 0; i < dp.size(); i ++) {
+                if (!dp[i].test(nums[i])) { 
+                    check = false; 
+                    break; 
+                }
+            }
+            if(check) return k + 1;
+        }
+        return -1;
+    }
+};
+
+
+
 // Bineary Search + 01背包 TC:O(lgm * n * (m + m * target / W)) W為bitset操作時看是32 or 64位一次操作可處理位數
 class Solution {
 public:
@@ -47,63 +89,5 @@ public:
                 lo = mid + 1;
         }
         return lo == m + 1 ? -1 : lo;
-    }
-};
-
-// 暴力迭代寫法 TC:O(m * n * (m + m * target / w)) SC:O(m)
-class Solution {
-public:
-    int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
-        int n = nums.size();
-        int m = queries.size();
-        bool allZero = true;
-        for (int x : nums) {
-            if (x != 0) { allZero = false; break; }
-        }
-        if (allZero) return 0;
-        
-        auto check = [&](vector<int>& vals, int target) -> bool {
-           
-            // bitset寫法
-            bitset<10001> dp;
-            dp[0] = 1;
-            for(int &v : vals) {
-                dp |= (dp << v);
-                if(dp[target]) return true;
-            }
-            return false;
-            
-            /*
-            背包寫法
-            vector<bool> dp(target + 1);
-            dp[0] = true;
-            for(int &v : vals) { // 物品
-                for(int sum = target; sum >= v; sum--) { // 容量
-                    if(dp[sum - v]) dp[sum] = true;
-                    if(dp[target]) return true;
-                }
-            }
-            return false;
-            */
-        };
-        for (int k = 0; k < m; k++) {
-            bool possible_all = true;
-            for(int i = 0; i < n; i++) {
-                if(nums[i] == 0) continue;
-                int target = nums[i];
-                vector<int> vals;
-                for(int j = 0; j <= k; j++) {
-                    int l = queries[j][0], r = queries[j][1], val = queries[j][2];
-                    if(l <= i && i <= r) vals.push_back(val);
-                }
-                if(!check(vals, target)) {
-                    possible_all = false;
-                    break;
-                }
-            }
-            if(possible_all) return k+1;
-        }
-    
-        return -1;
     }
 };
