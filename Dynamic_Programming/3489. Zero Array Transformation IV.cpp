@@ -1,4 +1,4 @@
-// 分開做01背包 寫法 TC:O(m*n*U) U為max(nums) SC:O(nU)
+// 分開做01背包 寫法 TC:O(m*n*U) U為max(nums) SC:O(nU) 加上 bitset: TC:O(m*n*U / W) U為max(nums) SC:O(nU / W)
 class Solution {
 public:
     int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
@@ -38,6 +38,35 @@ public:
     }
 };
 
+// 空間優化bitset 需要把for n & k 調換  TC:O(m*n*U / W) U為max(nums) SC:O(U / W)
+class Solution {
+public:
+    int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        int ans = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            int x = nums[i];
+            if (x == 0) {
+                continue;
+            }
+            bitset<10001> f;
+            f.set(0);
+            for (int k = 0; k < queries.size(); k++) {
+                auto& q = queries[k];
+                if (q[0] <= i && i <= q[1]) {
+                    f |= f << q[2];
+                }
+                if (f[x]) {
+                    ans = max(ans, k + 1);
+                    break;
+                }
+            }
+            if (!f[x]) {
+                return -1;
+            }
+        }
+        return ans;
+    }
+};
 
 
 // Bineary Search + 01背包 TC:O(lgm * n * (m + m * target / W)) W為bitset操作時看是32 or 64位一次操作可處理位數
