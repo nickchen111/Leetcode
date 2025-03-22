@@ -2,6 +2,41 @@
 1959. Minimum Total Space Wasted With K Resizing Operations
 */
 
+// 2025.03.22 優化遞推 TC:O(n * k * n) SC:O(n * k)
+class Solution {
+public:
+    int minSpaceWastedKResizing(vector<int>& nums, int k) {
+        int n = nums.size();
+        int f[n+1][k+1];
+        for (int i = 0; i <= n; i++)
+            fill(f[i], f[i] + k + 1, INT_MAX/2);
+        f[0][0] = 0;
+        int mx = 0, tot = 0;
+        for (int i = 0; i < n; i++) {
+            mx = max(mx, nums[i]);
+            tot += nums[i];
+            f[i + 1][0] = mx * (i + 1) - tot;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            int groups = min(i + 1, k);
+            // j 表示已完成的切分數（0-indexed，j+1 段）
+            for (int j = 0; j < groups; j++) {
+                mx = 0, tot = 0;
+                for (int t = i; t >= 0; t--) {
+                    // 如果 t < j，表示前 t 個元素不足以分成 j+1 段，提前結束
+                    if (t + 1 < j) break;
+                    mx = max(mx, nums[t]);
+                    tot += nums[t];
+                    f[i + 1][j + 1] = min(f[i + 1][j + 1], f[t][j] + mx * (i - t + 1) - tot);
+                }
+            }
+        }
+        return f[n][k];
+    }
+};
+
+
 
 // TC:O(n*k*n) SC:O(n*k)
 class Solution {
