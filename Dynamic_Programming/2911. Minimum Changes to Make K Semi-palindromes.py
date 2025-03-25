@@ -38,12 +38,29 @@ class Solution:
             for j in range(i+1, n):
                 tmp += s[j]
                 modify[i][j] = get_modify(tmp)
-        # 遞推 + 空間優化
+        #空間優化
         f = modify[0]
         for i in range(1, k):
             for j in range(n - 1 - (k - 1 - i) * 2, i * 2, -1):
                 f[j] = min(f[L - 1] + modify[L][j] for L in range(i * 2, j))
         return f[-1]
+
+        '''
+        遞推
+        f = [[0] * n for _ in range(n)]
+        f[0] = modify[0]
+        for i in range(1, k):
+            for j in range(i * 2 + 1, n):
+                res = inf
+                for t in range(i*2, j):
+                    tmp = f[i-1][t-1] + modify[t][j]
+                    if tmp < res:
+                        res = tmp
+                f[i][j] = res
+        return f[k-1][n-1]
+        '''
+
+
         '''
         遞歸
         @cache
@@ -57,7 +74,6 @@ class Solution:
             return ans
         return dfs(k-1, n-1)
         '''
-
   # 剛開始自己過的時候還沒修的寫法 邏輯稍微不同 但大同小異
   class Solution:
     def minimumChanges(self, s: str, k: int) -> int:
