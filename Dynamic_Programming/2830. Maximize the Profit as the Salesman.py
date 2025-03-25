@@ -1,4 +1,4 @@
-# TC:O(n + m) SC:O(n)
+# TC:O(n + m) SC:O(n + m)
 class Solution:
     def maximizeTheProfit(self, n: int, offers: List[List[int]]) -> int:
         groups = [[] for _ in range(n)]
