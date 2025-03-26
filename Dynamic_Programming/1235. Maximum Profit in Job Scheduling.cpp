@@ -22,7 +22,7 @@ public:
         sort(arr.begin(), arr.end(), cmp);
         for(int i = 0; i < n; i++) {
             LL start = arr[i][1], end = arr[i][0], benefit = arr[i][2];
-            int j = upper_bound(arr.begin(), arr.begin() + i, array<LL, 3>{start, LLONG_MAX}) - arr.begin();
+            int j = upper_bound(arr.begin(), arr.begin() + i, array<LL, 3>{start, LLONG_MAX}) - arr.begin(); // 如果是.begin(), .begin() + 0會是搜索空區間，返回begin()
             dp[i+1] = max(dp[i], dp[j] + benefit);
         }
 
