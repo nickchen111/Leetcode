@@ -1,4 +1,4 @@
-# 不排序: TC:O(n) SC:O(n) 排序 + 二分 : TC:O(mlgm) SC:O(m) m = 3 * 1e3,n = 1e5
+# 不排序: TC:O(n + m) SC:O(n) 排序 + 二分 : TC:O(mlgm) SC:O(m) m = 3 * 1e3,n = 1e5
 class Solution:
     def maxTaxiEarnings(self, n: int, rides: List[List[int]]) -> int:
         # 當數據很大的話需排序來做 
