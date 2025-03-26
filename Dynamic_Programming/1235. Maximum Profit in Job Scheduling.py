@@ -9,8 +9,9 @@ class Solution:
         dp = [0] * (n+1)
         for i in range(n):
             end, start, gain = interval[i]
-            j = bisect_right(interval, (start, inf, inf), 0, i)
+            j = bisect_right(interval, (start, inf, inf), 0, i) # 也可以是 bisect_right(interval, (start, inf, inf), hi=i)
             dp[i+1] = max(dp[i], dp[j] + gain)
         return dp[-1]
+
 
         
