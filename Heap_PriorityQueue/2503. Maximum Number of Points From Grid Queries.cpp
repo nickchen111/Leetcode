@@ -2,103 +2,97 @@
 class Solution {
 public:
     vector<int> maxPoints(vector<vector<int>>& grid, vector<int>& queries) {
-        int m = grid.size(), n = grid[0].size();
-        int k = queries.size();
+        /*
+        首先肯定離線排序 先從較小的數值開始
+        有兩個想法
+        1. Dijstra 去拿數字
+        2. Union Find 去把可以到達的數字串一起
+        */
+
+        int m = grid.size(), n = grid[0].size(), k = queries.size();
+        vector<int> idx(k);
+        iota(idx.begin(), idx.end(), 0);
+        ranges::sort(idx, [&](int i, int j) { return queries[i] < queries[j]; });
         
         vector<int> ans(k);
-        vector<pair<int, int>> query_with_index;
-        
-        for (int i = 0; i < k; i++) {
-            query_with_index.push_back({queries[i], i});
-        }
-        
-        sort(query_with_index.begin(), query_with_index.end());
-        
-        vector<vector<bool>> visited(m, vector<bool>(n, false));
-        vector<int> dirs = {0, 1, 0, -1, 0};
-        
-        // 優先隊列處理 BFS，按數值排序
+        int cnt = 0;
         priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
-        pq.push({grid[0][0], 0, 0});
-        visited[0][0] = true;
-        
-        int count = 0;
-        int prev_query = 0;
-        
-        for (auto [limit, index] : query_with_index) {
-            while (!pq.empty() && get<0>(pq.top()) < limit) {
-                auto [val, x, y] = pq.top();
+        pq.emplace(grid[0][0], 0, 0);
+        grid[0][0] = 0; // 充當visited數組
+        vector<int> dirs = {0, 1, 0, -1, 0};
+        for (int i = 0; i < k; i++) {
+            int curQuery = queries[idx[i]];
+            while (!pq.empty() && get<0>(pq.top()) < curQuery) {
+                auto [cellVal, x, y] = pq.top();
+                cnt += 1;
                 pq.pop();
-                count++;
-                
-                for (int i = 0; i < 4; i++) {
-                    int nx = x + dirs[i];
-                    int ny = y + dirs[i + 1];
-                    if (nx >= 0 && ny >= 0 && nx < m && ny < n && !visited[nx][ny]) {
-                        visited[nx][ny] = true;
-                        pq.push({grid[nx][ny], nx, ny});
+                for (int t = 1; t < dirs.size(); t++) {
+                    int nx = x + dirs[t-1];
+                    int ny = y + dirs[t];
+                    if (nx >= 0 && nx < m && ny >= 0 && ny < n && grid[nx][ny]) {
+                        pq.emplace(grid[nx][ny], nx, ny);
+                        grid[nx][ny] = 0;
                     }
                 }
             }
-            ans[index] = count;
+            ans[idx[i]] = cnt;
         }
-        
         return ans;
     }
 };
 
-// Union Find 
+// Union Find  
 class Solution {
+    const int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 public:
     vector<int> maxPoints(vector<vector<int>>& grid, vector<int>& queries) {
-        int m = grid.size(), n = grid[0].size();
-        int k = queries.size(), mn = m*n;
-        
-        vector<int> size(mn,1);
-        vector<int> pa(mn);
+        const int m = grid.size(), n = grid[0].size(), mn = m * n;
+        vector<int> pa(mn), size(mn, 1);
         iota(pa.begin(), pa.end(), 0);
-        auto find = [&](int x) -> int {
+        auto find = [&](int x) -> int { 
             int rt = x;
-            while(rt != pa[rt]) rt = pa[rt];
-            if(x != rt) pa[x] = rt;
+            while (rt != pa[rt])
+                rt = pa[rt];
+            while (x != pa[x]) {
+                int tmp = pa[x];
+                pa[x] = rt;
+                x = tmp;
+            }
             return rt;
         };
-        auto merge = [&](int fr, int to) -> void {
-            fr = find(fr), to = find(to);
-            if(fr < to) {
-                pa[to] = fr;
-                size[fr] += size[to];
-            }
-            else if((fr > to)){
-                pa[fr] = to;
-                size[to] += size[fr];
+        auto merge = [&](int from, int to) {
+            from = find(from);
+            to = find(to);
+            if (from != to) {
+                pa[from] = to;
+                size[to] += size[from];
             }
         };
 
-        vector<pair<int,int>> query(k);
-        for(int i = 0; i < k; i++) {
-            query[i] = {queries[i], i};
-        }
-        sort(query.begin(), query.end());
-        vector<tuple<int,int,int>> edges;
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(i) edges.push_back({max(grid[i][j], grid[i-1][j]), i*n + j, (i-1)*n + j});
-                if(j) edges.push_back({max(grid[i][j], grid[i][j-1]), i*n + j, i*n + j - 1});
-            }
-        }
-        sort(edges.begin(), edges.end());
+        array<int, 3> a[mn];
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < n; ++j)
+                a[i * n + j] = {grid[i][j], i, j};
+        sort(a, a + mn);
+        int k = queries.size(), id[k];
+        iota(id, id + k, 0);
+        sort(id, id + k, [&](int i, int j) { return queries[i] < queries[j]; });
+
         vector<int> ans(k);
         int j = 0;
-        for(int i = 0; i < k; i++) {
-            int limit = query[i].first, idx = query[i].second;
-            while(j < edges.size() && get<0>(edges[j]) < limit) {
-                merge(get<1>(edges[j]), get<2>(edges[j]));
-                j++;
+        for (int i : id) {
+            int q = queries[i];
+            for (; j < mn && a[j][0] < q; ++j) {
+                int x = a[j][1], y = a[j][2];
+                for (auto &d : dirs) {
+                    int x2 = x + d[0], y2 = y + d[1];
+                    if (0 <= x2 && x2 < m && 0 <= y2 && y2 < n && grid[x2][y2] < q)
+                        merge(x * n + y, x2 * n + y2);
+                }
             }
-            if(grid[0][0] < limit) ans[idx] = size[0];
+            if (grid[0][0] < q)
+                ans[i] = size[find(0)];
         }
-
         return ans;
     }
 };
