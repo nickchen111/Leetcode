@@ -27,6 +27,42 @@ public:
                 }
             }
         }
+        int ans = n;
+        vector<int> pa(n);
+        iota(pa.begin(), pa.end(), 0);
+        auto find = [&](int x) -> int {
+            int rt = x;
+            while(rt != pa[rt]) rt = pa[rt];
+            while(pa[x] != rt) {
+                int tmp = pa[x];
+                pa[x] = rt;
+                x = tmp;
+            }
+            return rt;
+        };
+        auto merge = [&](int x, int y) -> void {
+            x = find(x), y = find(y);
+            if(x < y) pa[y] = x;
+            else if(x > y) pa[x] = y;
+            else return;
+            ans -= 1;
+        };
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                int cnt = 0;
+                for (int x : set[j]) {
+                    if (set[i].contains(x)) {
+                        cnt++;
+                    }
+                }
+                if (cnt >= k) {
+                    merge(i, j);
+                }
+            }
+        }
+
+        return ans;
+        /*
         vector<bool> visited(n);
         auto dfs = [&](auto &&dfs, int cur) -> void {
             visited[cur] = true;
@@ -42,5 +78,6 @@ public:
             dfs(dfs, i);
         }
         return ans;
+        */
     }
 };
