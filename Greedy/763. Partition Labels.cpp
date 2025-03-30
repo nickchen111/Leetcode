@@ -2,6 +2,32 @@
 763. Partition Labels
 */
 
+// 2025.03.30
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        int n = s.size();
+        vector<int> lastPos(26, -1);
+        for(int i = n - 1; i >= 0; i--) {
+            if(lastPos[s[i] - 'a'] == -1) {
+                lastPos[s[i] - 'a'] = i;
+            }
+        }
+        vector<int> ans;
+        for(int i = 0; i < n; i++) {
+            int j = i;
+            int pos = lastPos[s[i] - 'a'];
+            while(j < n && j < pos) {
+                pos = max(pos, lastPos[s[j] - 'a']);
+                j += 1;
+            }
+            ans.emplace_back(j - i + 1);
+            i = j;
+        }
+        return ans;
+    }
+};
+
 
 // 最快速的方式 用陣列查找 TC:O(n) SC:O(128)
 class Solution {
