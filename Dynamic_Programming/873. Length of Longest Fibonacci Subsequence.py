@@ -20,5 +20,22 @@ class Solution:
                         if f[i][j] > ans:
                             ans = f[i][j]
         return ans if ans >= 3 else 0
+        '''
+        遞歸
+        mp = {nums[i]: i for i in range(n)}
 
+        @cache
+        def dfs(i: int, j: int) -> int:
+            diff = nums[j] - nums[i]
+            # 如果 diff 不存在或其索引不在 i 之前，就表示不能延續
+            if diff not in mp or mp[diff] >= i:
+                return 2
+            return dfs(mp[diff], i) + 1
+        ans = 0
+        for i in range(n):
+            for j in range(i+1, n):
+                ans = max(ans, dfs(i, j))
+        dfs.cache_clear()
+        return ans if ans >= 3 else 0
+        '''
 
