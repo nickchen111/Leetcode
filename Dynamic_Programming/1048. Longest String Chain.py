@@ -1,4 +1,4 @@
-# TC:O(nlgn + n * n * k) SC:O(n * k)
+# TC:O(nlgn + n * k * k) SC:O(n * k) 可以不排序
 class Solution:
     def longestStrChain(self, words: List[str]) -> int:
         '''
