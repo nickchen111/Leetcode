@@ -9,8 +9,6 @@ class Solution:
         words.sort(key=lambda x: len(x))
         @cache
         def dfs(i:int) -> int:
-            if i == n:
-                return 0
             m =len(words[i])
             ans = 1
             for j in range(m):
