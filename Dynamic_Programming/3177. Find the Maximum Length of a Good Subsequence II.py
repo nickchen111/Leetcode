@@ -3,9 +3,8 @@ class Solution:
     def maximumLength(self, nums: List[int], k: int) -> int:
         '''
         最多只能有k個不同pair, 其他要相同的最長子序列
-        n = 500, k = 25 大概 n^2 * k是可行的
         走到i的時候最多j個不同pair 可以有的最長長度？
-        dfs(i, j, prev) 走到i時 已經有j個不同pair 現在是選or不選可以有的最長長度?
+        dfs(i, j, prev) 走到i時 已經有j個不同pair 現在是選or不選可以有的最長長度? 狀態過多遞歸MLE
         這題要以值域去做思考 畢竟是相鄰相關，
         走到nums[i] = x時 至多有j個不同pair能有的最大長度
         f[x][j] = max(f[x][j] + 1, f[y][j-1] + 1) 並且枚舉選哪個 否則MLE
