@@ -11,8 +11,8 @@ class Solution:
         f[0] = 1
         for k in range(steps):
             prev, nxt = 0, 0
-            farDist = mn + 1 if mn < k + 1 else k + 2
-            for i in range(0, farDist):
+            farDist = mn if mn < k + 1 else k + 1
+            for i in range(0, farDist + 1):
                 nxt = f[i+1] if i + 1 <= mn else 0
                 prev, f[i] = f[i], (f[i] + prev + nxt) % MOD
         return f[0]
