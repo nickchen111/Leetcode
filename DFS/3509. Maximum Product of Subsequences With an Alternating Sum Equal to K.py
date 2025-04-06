@@ -1,4 +1,4 @@
-# TC:O(n * 162 * 354 * 2 ) SC:O(n * 162 * 2 * 2 * 2)
+# TC:O(n * 162 * 394 * 2 ) SC:O(n * 162 * 2 * 2 * 2)
 class Solution:
     def maxProduct(self, nums: List[int], k: int, limit: int) -> int:
         n = len(nums)
