@@ -2,6 +2,25 @@
 416. Partition Equal Subset Sum
 */
 
+// 位運算優化 TC:O(n * m) m = target / word_size SC:O(m)
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int total = accumulate(nums.begin(), nums.end(), 0);
+        if (total % 2 != 0) return false;
+        int target = total / 2;
+        // 假設 target 最大不會超過 10000，根據題目實際情況調整大小
+        bitset<20001> dp;
+        dp[0] = 1;
+        for (int num : nums) {
+            if (num <= target) {
+                dp |= (dp << num);
+            }
+        }
+        return dp[target];
+    }
+};
+
 // 遞推 + 遞歸
 class Solution {
 public:
