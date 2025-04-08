@@ -11,6 +11,20 @@ class Solution:
         for i in range(m):
             for j in range(n):
                 pre[j][grid[i][j]] += 1
+        '''
+        遞歸
+        @cache
+        def dfs(i:int, prev:int) -> int:
+            if i < 0:
+                return 0
+            # 判斷這次要選啥然後所需的cost 去取最小的 並且不能跟上次的一樣
+            ans = inf
+            for k in range(10):
+                if k != prev:
+                    ans = min(ans, dfs(i-1, k) + m - pre[i][k])
+            return ans
+        return dfs(n-1, -1)
+        '''
         f = [[inf] * 10 for _ in range(n)]
         for j in range(n-1, -1, -1):
             # 計算上一行最小的元素與次小的
@@ -31,3 +45,5 @@ class Solution:
                         f[j][k] = m - pre[j][k] + mn2
         return min(f[0][k] for k in range(10))
         
+        
+
