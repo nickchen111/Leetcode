@@ -58,17 +58,17 @@ public:
         };
         build(n);
         vector<vector<vector<LL>>> memo(n, vector<vector<LL>>(n/2+1, vector<LL>(sum+1, -1)));
-        function<int(int,int,int)> dfs = [&](int i, int left, int left_sum) -> int {
+        auto dfs = [&](auto &&dfs, int i, int left, int left_sum) -> int {
             if(i < 0) {
                 return (left == 0 && left_sum == sum/2) ? 1 : 0;
             }
             if(left_sum > sum/2) return 0;
 
             if(memo[i][left][left_sum] != -1) return memo[i][left][left_sum];
-            int res = dfs(i-1, left, left_sum);
+            int res = dfs(dfs, i-1, left, left_sum);
             int x = num[i]-'0';
             if(left) {
-                res = (res + dfs(i-1, left-1, left_sum+x)) % MOD;
+                res = (res + dfs(dfs, i-1, left-1, left_sum+x)) % MOD;
             }
             
             return memo[i][left][left_sum] = res;
@@ -91,7 +91,7 @@ public:
         
         
         LL res = (fac[n/2] * fac[n - n/2]) % MOD;
-        res = (res*dfs(n-1, n/2, 0)) % MOD;
+        res = (res*dfs(dfs, n-1, n/2, 0)) % MOD;
         for(int i = 0; i < 10; i++) {
             res = (res*inv[coins[i]]) % MOD;
         }
@@ -100,4 +100,3 @@ public:
        
     }
 };
-
