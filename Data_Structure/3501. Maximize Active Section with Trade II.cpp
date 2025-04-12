@@ -1,4 +1,4 @@
-// TC:O(nlgn) SC:O(n)
+// TC:O((n + q) * lgn) SC:O(nlgn)
 struct Pair {int l, r;};
 class SparseTable {
     vector<vector<int>> st;
