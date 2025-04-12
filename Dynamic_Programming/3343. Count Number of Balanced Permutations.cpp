@@ -21,7 +21,7 @@ public:
         01背包方案數 * n1 * (n - n1)! / c0! *c1! *c2!...c9!
         */
         int n = num.size();
-        vector<int> coins(10); // 物品選擇, 數量
+        vector<LL> coins(10); // 物品選擇, 數量
         
         LL sum = 0;
         for(auto x : num) {
@@ -57,41 +57,43 @@ public:
             }
         };
         build(n);
-        vector<vector<vector<LL>>> memo(n, vector<vector<LL>>(n/2+1, vector<LL>(sum+1, -1)));
-        auto dfs = [&](auto &&dfs, int i, int left, int left_sum) -> int {
-            if(i < 0) {
-                return (left == 0 && left_sum == sum/2) ? 1 : 0;
-            }
-            if(left_sum > sum/2) return 0;
-
-            if(memo[i][left][left_sum] != -1) return memo[i][left][left_sum];
-            int res = dfs(dfs, i-1, left, left_sum);
-            int x = num[i]-'0';
-            if(left) {
-                res = (res + dfs(dfs, i-1, left-1, left_sum+x)) % MOD;
-            }
-            
-            return memo[i][left][left_sum] = res;
-        };
-        
-        
-        // vector<LL> dp(sum/2+1);
-        // /// 10
-        // dp[0] = 1;
-        // for(int i = 0; i < 10; i++) {
-        //     LL cnt = coins[i].second, val = coins[i].first; 
-        //     for(int c = sum/2; c > 0; c--) {
-        //         for(int k = 1; k <= cnt; k++) {
-        //             if(c < k * val) break;
-        //             dp[c] = (dp[c] + dp[c - k * val]) % MOD;
-        //         }
+        // vector<vector<vector<LL>>> memo(n, vector<vector<LL>>(n/2+1, vector<LL>(sum+1, -1)));
+        // auto dfs = [&](auto &&dfs, int i, int left, int left_sum) -> int {
+        //     if(i < 0) {
+        //         return (left == 0 && left_sum == sum/2) ? 1 : 0;
         //     }
-        // }
-        // // cout << dp[sum/2] << endl;
+        //     if(left_sum > sum/2) return 0;
+
+        //     if(memo[i][left][left_sum] != -1) return memo[i][left][left_sum];
+        //     int res = dfs(dfs, i-1, left, left_sum);
+        //     int x = num[i]-'0';
+        //     if(left) {
+        //         res = (res + dfs(dfs, i-1, left-1, left_sum+x)) % MOD;
+        //     }
+            
+        //     return memo[i][left][left_sum] = res;
+        // };
+        
+        int target = sum / 2;
+        vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(n/2 + 1, vector<int>(target + 1, 0)));
+        dp[0][0][0] = 1;
+        for (int i = 0; i < n; i++) {
+            int x = num[i] - '0';
+            for (int j = 0; j <= n/2; j++) {
+                for (int s = 0; s <= target; s++) {
+                    // 不選 num[i]
+                    dp[i+1][j][s] = (dp[i+1][j][s] + dp[i][j][s]) % MOD;
+                    // 選 num[i]，前提是還能選（j < k）且 s+x 不超過 target
+                    if(j < n/2 && s + x <= target) {
+                        dp[i+1][j+1][s+x] = (dp[i+1][j+1][s+x] + dp[i][j][s]) % MOD;
+                    }
+                }
+            }
+        }
         
         
         LL res = (fac[n/2] * fac[n - n/2]) % MOD;
-        res = (res*dfs(dfs, n-1, n/2, 0)) % MOD;
+        res = (res*dp[n][n/2][sum/2]) % MOD;
         for(int i = 0; i < 10; i++) {
             res = (res*inv[coins[i]]) % MOD;
         }
