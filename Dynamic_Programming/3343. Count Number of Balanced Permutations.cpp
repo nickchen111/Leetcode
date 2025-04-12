@@ -8,6 +8,18 @@ class Solution {
     LL MOD = 1e9 + 7;
 public:
     int countBalancedPermutations(string num) {
+
+        /*
+        排列問題共通思路:
+        拆分成組合問題 + 任意排列問題
+        組合: AB, BA是相同的
+        組合問題 = 子序列問題 = 01 背包 (for LC. 3343)
+        從一個長度為n 中選出 n / 2 恰好組成 sum/2的方案數
+        n1 = floor(n/2)
+        n1 * (n - n1)! / c0! *c1! *c2!...c9!
+        最終答案: 
+        01背包方案數 * n1 * (n - n1)! / c0! *c1! *c2!...c9!
+        */
         int n = num.size();
         vector<int> coins(10); // 物品選擇, 數量
         
@@ -89,7 +101,3 @@ public:
     }
 };
 
-/*
-找到幾種拆分方法 能夠讓 兩邊加總相同 然後去求他的!就可以了 輕鬆
-那就是問說 1-n中有幾種方法可以到達 sum/2 -> 背包
-*/
