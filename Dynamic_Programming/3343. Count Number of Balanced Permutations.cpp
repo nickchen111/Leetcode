@@ -75,17 +75,17 @@ public:
         // };
         
         int target = sum / 2;
-        vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(n/2 + 1, vector<int>(target + 1, 0)));
-        dp[0][0][0] = 1;
+        // vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(n/2 + 1, vector<int>(target + 1, 0)));
+        vector dp(n/2 + 1,vector<int>(target + 1, 0));
+        dp[0][0] = 1;
         for (int i = 0; i < n; i++) {
             int x = num[i] - '0';
+            auto dp_prev = dp;
             for (int j = 0; j <= n/2; j++) {
                 for (int s = 0; s <= target; s++) {
-                    // 不選 num[i]
-                    dp[i+1][j][s] = (dp[i+1][j][s] + dp[i][j][s]) % MOD;
                     // 選 num[i]，前提是還能選（j < k）且 s+x 不超過 target
                     if(j < n/2 && s + x <= target) {
-                        dp[i+1][j+1][s+x] = (dp[i+1][j+1][s+x] + dp[i][j][s]) % MOD;
+                        dp[j+1][s+x] = (dp[j+1][s+x] + dp_prev[j][s]) % MOD;
                     }
                 }
             }
@@ -93,7 +93,7 @@ public:
         
         
         LL res = (fac[n/2] * fac[n - n/2]) % MOD;
-        res = (res*dp[n][n/2][sum/2]) % MOD;
+        res = (res*dp[n/2][sum/2]) % MOD;
         for(int i = 0; i < 10; i++) {
             res = (res*inv[coins[i]]) % MOD;
         }
