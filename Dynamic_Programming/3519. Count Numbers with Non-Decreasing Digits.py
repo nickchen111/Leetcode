@@ -1,4 +1,4 @@
-# TC:O(lgn + n * 2 * 2 * 10) n = 100 SC:O(n * 2 * 2 * 10 + lgn)
+# TC:O(lgn + n * 2 * 2 * 10 * U) U 為前一個數字~10的長度 n = 100 SC:O(n * 2 * 2 * 10 + lgn)
 class Solution:
     def countNumbers(self, l: str, r: str, b: int) -> int:
         MOD = 10 ** 9 + 7
