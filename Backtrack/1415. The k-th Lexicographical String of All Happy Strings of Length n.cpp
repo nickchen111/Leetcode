@@ -2,6 +2,47 @@
 1415. The k-th Lexicographical String of All Happy Strings of Length n
 */
 
+// 2025.04.13
+class Solution {
+public:
+    string getHappyString(int n, int k) {
+        /*
+        選擇一個數字 後面每個位置的排列為
+        n - i - 1 項 1 << (n - i - 1)
+        */
+        if (k > 3 * (1 << (n - 1))) return "";
+        string ans;
+        // cout << "pass";
+        for (int i = 0; i < n; i++) {
+            // 第一個才有3個可選
+            if (ans.empty()) {
+                for(int j = 0; j < 3; j++) {
+                    int p = 1 << (n - i - 1);
+                    if (p >= k) {
+                        ans.push_back(j + 'a');
+                        break;
+                    }
+                    k -= p;
+                }
+            }
+            else {
+                for(int j = 0; j < 3; j++) {
+                    if (j == ans.back() - 'a') continue;
+                    int p = 1 << (n - i - 1);
+                    if (p >= k) {
+                        ans.push_back(j + 'a');
+                        break;
+                    }
+                    k -= p;
+                }
+            }
+        }
+
+        return ans;
+
+    }
+};
+
 // Math: TC:O(k) SC:O(k)
 class Solution {
     string res;
