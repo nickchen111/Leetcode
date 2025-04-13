@@ -12,6 +12,6 @@ public:
         */
         int n = nums.size();
         int m = bit_width(unsigned(n));
-        return n >= 3 ? pow(2, m) : n;
+        return n >= 3 ? 1 << m : n;
     }
 };
