@@ -1,37 +1,24 @@
-/*
-1922. Count Good Numbers
-*/
-
 // TC:O(lgn) SC:O(lgn)
 class Solution {
-    using LL = long long;
-    LL M = 1e9 + 7;
+    using ll = long long;
+    ll MOD = 1e9 + 7;
 public:
     int countGoodNumbers(long long n) {
-        LL numOfOdd = n/2;
-        LL numOfEven = n/2 + n%2;
-        return (power(5,numOfEven) * power(4,numOfOdd)) % M;
+        auto quickMul = [&](ll a, ll b) -> ll {
+            ll ans = 1;
+            while (b) {
+                if (b & 1) {
+                    ans = (ans * a) % MOD;
+                }
+                b >>= 1;
+                a = (a * a) % MOD;
+            }
+            return ans;
+        };
+        /*
+        問說長度為n的數字有哪些符合 偶數位為偶數，奇數位為prime(2,3,5,7) 四種
+        那就是數學了 嘗試第一位可以填 5 *  
+        */
+        return quickMul(5, (n + 1) / 2) * quickMul(4, n / 2) % MOD;
     }
-    LL power(LL x, LL n){
-        if(n == 0) return 1;
-
-        LL res = power(x, n/2);
-        res = res * res;
-        res %= M;
-        if(n % 2 == 1){
-            res *= x;
-            res %= M;
-        }
-
-        return res;
-    }
-
 };
-
-/*
-在偶數位上必須是偶數數字 -> 0 2 4 6 8 五個
-奇數位上必須是質數 -> 2 3 5 7 四個
-這是O(n)解法 把每一位數可能性相乘 但這題 n = 10^15 會超時...
-如果n 為 偶數 那就會有 n/2 個 5 n/2  個 4
-odd: n/2+1個 5 n/2個 4
-*/
