@@ -2,31 +2,15 @@
 class Solution:
     def countNumbers(self, l: str, r: str, b: int) -> int:
         MOD = 10 ** 9 + 7
-        def convert_to_base8(decimal_str,):
-            if decimal_str == "0":
-                return "0"
-            num = [int(c) for c in decimal_str]
+        def trans(s: str) -> List[int]:
+            x = int(s)
+            digits = []
+            while x:
+                x, r = divmod(x, b)
+                digits.append(r)
+            digits.reverse()
+            return digits
 
-            octal_result = ""
-
-            # 不斷地除以b，直到商為0
-            while num and not (len(num) == 1 and num[0] == 0):
-                remainder = 0
-                new_num = []
-                leading_zero = True
-
-                for digit in num:
-                    current = remainder * 10 + digit
-                    if current // b != 0 or not leading_zero or len(new_num) > 0:
-                        new_num.append(current // b)
-                        leading_zero = False
-                    remainder = current % b
-
-                # 添加這一次的餘數到結果開頭
-                octal_result = str(remainder) + octal_result
-                num = new_num
-
-            return octal_result
         def check(s:str) -> int:
             m = len(s)
             flag = True
@@ -35,8 +19,8 @@ class Solution:
                     flag = False
                     break
             return 1 if flag else 0
-        l_b = convert_to_base8(l)
-        r_b = convert_to_base8(r)
+        l_b = trans(l)
+        r_b = trans(r)
         def countNUmber(s:str) -> int:
             n = len(s)
             @cache
