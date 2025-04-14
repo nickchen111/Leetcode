@@ -1,3 +1,4 @@
+// 適用於需要對某個數值單點開線段樹
 struct SegmentTreeNode {
         int count;
         SegmentTreeNode *left, *right;
