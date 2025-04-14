@@ -7,23 +7,10 @@ class Solution:
         '''
         MOD = 10 ** 9 + 7
         n = len(locations)
-        '''
-        遞推
-        dp = [[0] * (fuel + 1) for _ in range(n)]
-        dp[start][fuel] = 1
-        for f in range(fuel, -1, -1):
-            for i in range(n):
-                for j in range(n):
-                    if i == j: continue
-                    cost = abs(locations[i] - locations[j])
-                    if f >= cost:
-                        dp[j][f - cost] = (dp[j][f - cost] + dp[i][f]) % MOD
-        return sum(dp[finish][j] for j in range(fuel+1)) % MOD
-        '''
-        #遞歸 藉由sort優化 就可以及時打住 不用全部traverse
         start_location = locations[start]
         finish_location = locations[finish]
         locations.sort()
+         #遞歸 藉由sort優化 就可以及時打住 不用全部traverse
         @cache
         def dfs(location_id:int, j:int) -> int:
             location = locations[location_id]
@@ -42,3 +29,24 @@ class Solution:
         start_id = locations.index(start_location)
         # print(start_id)
         return dfs(start_id, fuel) % MOD
+        '''
+        # 遞推優化 藉由sort優化 就可以及時打住 不用全部traverse
+        start_id = locations.index(start_location)
+        finish_id = locations.index(finish_location)
+        dp = [[0] * (fuel + 1) for _ in range(n)]
+        dp[start_id][fuel] = 1
+        for f in range(fuel, -1, -1):
+            for i in range(n):
+                for j in range(i+1, n):
+                    cost = abs(locations[i] - locations[j])
+                    if f >= cost:
+                        dp[j][f - cost] = (dp[j][f - cost] + dp[i][f]) % MOD
+                    else: break
+                for j in range(i-1, -1, -1):
+                    cost = abs(locations[i] - locations[j])
+                    if f >= cost:
+                        dp[j][f - cost] = (dp[j][f - cost] + dp[i][f]) % MOD
+                    else: break
+        return sum(dp[finish_id][j] for j in range(fuel+1)) % MOD
+        '''
+       
