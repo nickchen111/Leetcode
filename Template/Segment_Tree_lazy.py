@@ -51,7 +51,7 @@ class Solution:
                 update(o * 2 + 1, m + 1, r, L, R)
             # maintain
             maintain(o)
-        build(1,0,n-1)
+        build(1,0,n-1) # 1 - index
         ans = []
           s = sum(nums2)
           for op, l, r in queries:
