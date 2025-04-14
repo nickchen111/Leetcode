@@ -32,7 +32,7 @@ class Solution:
             cnt1[o] = r - l + 1 - cnt1[o]
             todo[o] = not todo[o] # 區間翻轉
         def update(o:int, l:int, r:int, L: int, R:int) -> None: # add:int 
-            if L <= l and r <= R:
+            if L <= l and r <= R: # 當你查詢的區間完全包含當前遞歸到的區間不論查詢or更新就都不用繼續走了
                 do(o, l, r)
                 # todo[o] += add 原本會寫成 todo = [0] * (4 * n) 但這題的更新只是
                 return
