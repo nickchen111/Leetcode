@@ -2,6 +2,55 @@
 732. My Calendar III
 */
 
+// 動態開點lazy 線段樹
+struct SegmentTreeNode {
+    int val = 0,lazy = 0;
+    SegmentTreeNode* left = NULL;
+    SegmentTreeNode* right = NULL;
+};
+void push(SegmentTreeNode* node) {
+    if (!node->left) node->left = new SegmentTreeNode();
+    if (!node->right) node->right = new SegmentTreeNode();
+    if (node->lazy) {
+        node->left->lazy += node->lazy;
+        node->left->val += node->lazy;;
+        node->right->lazy += node->lazy;
+        node->right->val += node->lazy;;
+    }
+    node->lazy = 0;
+}
+// [L,R]為要更新的區間
+void update(SegmentTreeNode* node, int l, int r, int L, int R, int v) {
+    if (!node) node = new SegmentTreeNode();
+    if (L > r || R < l) return; // 不重疊
+    if (L <= l && R >= r) { // 完全包含
+        node->val += v;
+        node->lazy += v;
+        return;
+    }
+    push(node);
+    int m = (l + r) / 2;
+    update(node->left, l, m, L, R, v);
+    update(node->right, m + 1, r, L, R, v);
+    node->val = max(node->left->val, node->right->val);
+}
+class MyCalendarThree {
+    SegmentTreeNode* root;
+    int MAX = 1e9;
+    int ans = 0;
+public:
+    MyCalendarThree() {
+        root = new SegmentTreeNode();
+    }
+    
+    int book(int startTime, int endTime) {
+        update(root, 0, MAX, startTime, endTime-1, 1);
+        ans = max(ans, root->val);
+        return ans;
+    }
+};
+
+
 
 //sweeping line "TC:O(n^2) SC:O(n)
 // 因為傳入一次整包的事件就要n 
