@@ -91,7 +91,7 @@ public:
         b.erase(unique(b.begin(), b.end()), b.end());
         int m = b.size();
         // auto t = new BIT(m + 1);
-        BIT t(m + 1);
+        BIT t(m + 1); // 這裡可以不用寫成 BIT<int> t(m+1) 是因為我套的是已經決定好用int的 而不是第一個模板要帶入資料型別的T
         long long ans = 0L;
         for (auto &x : a) {
             ans += t.query(ranges::upper_bound(b, x + diff) - b.begin());
