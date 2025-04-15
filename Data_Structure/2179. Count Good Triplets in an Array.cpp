@@ -56,3 +56,124 @@ public:
         return ans;
     }
 };
+
+
+// 模擬python 的 sortlist 分塊技術 做到n * sqrt(n) 此題會超時
+class BlockSortedList {
+private:
+    static const long long BLOCK_SIZE = 100;  // 每塊大小（可調）
+    vector<vector<long long>> blocks;         // 每塊是一個排序的 vector
+    int size = 0;
+
+    void rebuild() {
+        // 將所有元素拉平，重新分塊
+        vector<long long> all;
+        for (auto& block : blocks) {
+            all.insert(all.end(), block.begin(), block.end());
+        }
+        blocks.clear();
+        for (int i = 0; i < (int)all.size(); i += BLOCK_SIZE) {
+            int end = min((long long)i + BLOCK_SIZE, (long long)all.size());
+            blocks.emplace_back(all.begin() + i, all.begin() + end);
+        }
+    }
+
+public:
+    void add(int x) {
+        for (auto& block : blocks) {
+            if (block.empty() || x <= block.back()) {
+                auto it = lower_bound(block.begin(), block.end(), x);
+                block.insert(it, x);
+                size++;
+                if ((long long)block.size() > 2 * BLOCK_SIZE) {
+                    rebuild(); // 平衡塊數
+                }
+                return;
+            }
+        }
+        // 沒插入成功 => 插入最後一塊或新建
+        if (blocks.empty() || !blocks.back().empty()) {
+            blocks.emplace_back();
+        }
+        blocks.back().push_back(x);
+        size++;
+    }
+
+    void discard(int x) {
+        for (auto& block : blocks) {
+            auto it = lower_bound(block.begin(), block.end(), x);
+            if (it != block.end() && *it == x) {
+                block.erase(it);
+                size--;
+                if ((int)block.size() < BLOCK_SIZE / 2) {
+                    rebuild(); // 平衡塊數
+                }
+                return;
+            }
+        }
+    }
+
+    long long bisect_left(int x) {
+        long long idx = 0;
+        for (auto& block : blocks) {
+            if (block.empty() || block.back() < x) {
+                idx += block.size();
+            } else {
+                return idx + lower_bound(block.begin(), block.end(), x) - block.begin();
+            }
+        }
+        return idx;
+    }
+
+    long long bisect_right(int x) {
+        long long idx = 0;
+        for (auto& block : blocks) {
+            if (block.empty() || block.back() <= x) {
+                idx += block.size();
+            } else {
+                return idx + upper_bound(block.begin(), block.end(), x) - block.begin();
+            }
+        }
+        return idx;
+    }
+
+    long long get_size() const {
+        return size;
+    }
+
+    void print() const {
+        for (auto& block : blocks) {
+            for (int x : block) {
+                cout << x << " ";
+            }
+        }
+        cout << endl;
+    }
+};
+class Solution {
+public:
+    long long goodTriplets(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size();
+        vector<int> idx(n);
+        for (int i = 0; i < n; i++) {
+            idx[nums2[i]] = i;
+        }
+        BlockSortedList left;
+        left.add(idx[nums1[0]]);
+        BlockSortedList right;
+        for (int i = 1; i < n; i++) {
+            right.add(idx[nums1[i]]);
+        }
+
+        long long ans = 0;
+        for (int i = 1; i < n; i++) {
+            long long x = idx[nums1[i]];
+            right.discard(x);
+            long long left_count = left.bisect_left(x);
+            long long right_count = n - i - 1 - right.bisect_right(x);
+            ans += left_count * right_count;
+            left.add(x);
+        } 
+        return ans;
+    }
+};
