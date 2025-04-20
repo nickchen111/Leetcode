@@ -8,7 +8,7 @@ public:
         // 建造圖，如果要知道自己之前的parent 回頭traverse n^2
         next.resize(n);
         deep.resize(n);
-        power = log2(n);
+        power = log2(n); // 或者可以直接bit_width(unsigned(n));
         stjump.resize(n, vector<int>(power+1));
         for(int i = 0; i < parent.size(); i++) {
             if(parent[i] != -1) {
