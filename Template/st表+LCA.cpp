@@ -71,7 +71,7 @@ public:
         if(cur == 0) deep[cur] = 1;
         else deep[cur] = deep[prev] + 1;
         stjump[cur][0] = prev;
-        for(int p = 1; (1 << p) <= deep[cur]; p++) {
+        for(int p = 1; (1 << p) < deep[cur]; p++) {
             stjump[cur][p] = stjump[stjump[cur][p-1]][p-1];
         }
         for(auto &nxt : next[cur]) {
