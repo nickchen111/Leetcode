@@ -1,3 +1,32 @@
+// 一般array 模板
+template<typename T>
+class SparseTable {
+    vector<vector<int>> st;
+public:
+    // 創建表的build function
+    SparseTable (vector<T>& a) {
+        int n = a.size() - 1;
+        int sz = bit_width(unsigned(n));
+        st.resize(n, vector<int>(sz));
+        // 走2^0步的時候所有點兩個區間加總
+        for (int i = 0; i < n; i++) {
+            st[i][0] = a[i].r - a[i].l + a[i+1].r - a[i+1].l; // 轉成題目要做的事情
+        }
+        for(int j = 1; j < sz; j++) {
+            for (int i = 0; i + (1 << j) <= n; i++) {
+                st[i][j] = max(st[i][j-1], st[i + (1 << (j - 1))][j-1]); // 改成題目要做的事情
+            }
+        }
+    }
+    int query(int l, int r) { // 左閉右開 查詢完整區間的最大值 只有一個區間不算
+        if (l >= r) return 0;
+        int k = bit_width(unsigned(r - l)) - 1;
+        return max(st[l][k], st[r - (1 << k)][k]);
+    }
+};
+
+
+// LCA 模板
 class TreeAncestor {
     vector<vector<int>> next;
     vector<int> deep;
