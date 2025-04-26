@@ -15,7 +15,7 @@ class Solution:
         '''
         # 空間優化
         f = [0] * (k + 1)
-        for i in count(1):
+        for i in count(1): # 這裡的最大值就是1884題的狀況 大概是 sqrt(8 * n) / 2
             for j in range(k, 0, -1):
                 f[j] += f[j - 1] + 1
             if f[k] >= n:
