@@ -16,8 +16,7 @@ class Solution:
         for mask in range(N):
             if dp[mask] == float('-inf'):
                 continue
-            
-            k = bin(mask).count('1')
+            k = mask.bit_count()
             for i in range(n):
                 if not (mask & (1 << i)) and ((mask & pre[i]) == pre[i]):
                     nxt = mask | (1 << i)
