@@ -1,6 +1,6 @@
 // TC:O((n + q) lgn) SC:O(nlgn)
 class Solution {
-    static constexpr int MAXLOG = 17; // 2^17 = 131072 > 1e5
+    // static constexpr int MAXLOG = 17; // 2^17 = 131072 > 1e5
 public:
     vector<int> pathExistenceQueries(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {
         vector<int> idx(n);
@@ -11,7 +11,7 @@ public:
             map_idx[idx[i]] = i;
         }
         ranges::sort(nums);
-        
+        int MAXLOG = bit_width(unsigned(n));
         // 計算跳一步最遠能跳去哪
         vector<int> r(n);
         for (int i = 0, j = 0; i < n; i++) {
@@ -19,7 +19,8 @@ public:
             r[i] = j;
         }
         // 建立倍增表 f
-        static int f[100000][MAXLOG+1];
+        // static int f[100000][MAXLOG+1];
+        vector<vector<int>> f(n, vector<int>(MAXLOG+1)); 
         // k=0
         for (int i = 0; i < n; i++) {
             f[i][0] = r[i];
@@ -55,3 +56,4 @@ public:
         return ans;
     }
 };
+
