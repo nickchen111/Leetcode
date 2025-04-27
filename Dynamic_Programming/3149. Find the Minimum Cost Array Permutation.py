@@ -26,7 +26,7 @@ class Solution:
         return ans
                 
         '''
-        遞推
+        遞歸
         @cache
         def dfs(mask:int, j:int) -> int:
             if mask == (1 << n) - 1:
