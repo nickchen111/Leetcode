@@ -20,7 +20,7 @@ public:
             res = max(res, dp[j]);
         }
 
-        return res;
+        // return res;
         /*
         遞推 TC:O(n*maxVal+ nlgn) SC:O(n*maxVal)
         vector<vector<int>> dp(n+1, vector<int>(rewardValues[n-1]+1, INT_MIN/2));
@@ -48,16 +48,15 @@ public:
         return res;
         */
         /*
-        遞歸 TC:O(n*maxVal+ nlgn) SC:O(n*maxVal)
-        vector<vector<int>> memo(n, vector<int>(rewardValues[0]+2, -1));
-        function<int(int i, int sum, int curMax)> dfs = [&](int i, int sum, int curMax) -> int {
-            if(i < 0) return sum;
+        vector<vector<int>> memo(n, vector<int>(rewardValues.back()+1, -1));
+        auto dfs = [&](this auto&& dfs, int i, int curMax) -> int {
+            if(i == n) return 0;
             if(memo[i][curMax] != -1) return memo[i][curMax];
 
-            return memo[i][curMax] = max(dfs(i-1, sum, curMax), curMax < rewardValues[i] ? dfs(i-1, sum + rewardValues[i], curMax + rewardValues[i] >= rewardValues[0] ? rewardValues[0]+1 : curMax + rewardValues[i]) : INT_MIN);
+            return memo[i][curMax] = max(dfs(i+1, curMax), curMax < rewardValues[i] ? dfs(i+1, curMax + rewardValues[i] >= rewardValues.back() ? rewardValues.back() : curMax + rewardValues[i]) + rewardValues[i]: INT_MIN);
         };
 
-        return dfs(n-1, 0, 0);
+        return dfs(0, 0);
         */
     }
 };
