@@ -6,12 +6,6 @@ class Solution {
         bool deleted;
         Node(int v) : value(v), prev(nullptr), next(nullptr), deleted(false) {}
     };
-    struct Cmp {
-        bool operator()(const Node* a, const Node* b) const {
-            return a->value < b->value;
-        }
-    };
-
     void deleteNode(Node* node) {
         node->prev->next = node->next;
         node->next->prev = node->prev;
@@ -30,8 +24,10 @@ public:
             nodes[i]->next = nodes[(i + 1) % n];
             nodes[i]->prev = nodes[(i - 1 + n) % n];
         }
-    
-        priority_queue<Node*, vector<Node*>, Cmp> pq;
+        auto cmp = [&](const Node* a, const Node* b) {
+            return a->value < b->value;
+        };
+        priority_queue<Node*, vector<Node*>, decltype(cmp)> pq(cmp);
         for (auto p : nodes) {
             pq.push(p);
         }
