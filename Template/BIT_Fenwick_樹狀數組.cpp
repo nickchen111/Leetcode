@@ -8,7 +8,7 @@ public:
 
     // a[i] 增加 val
     // 1 <= i <= n
-    // 时间複雜度 O(log n)
+    // 時間複雜度 O(log n)
     void update(int i, T val) {
         for (; i < tree.size(); i += i & -i) {
             tree[i] += val;
@@ -17,7 +17,7 @@ public:
 
     // 求前缀和 a[1] + ... + a[i]
     // 1 <= i <= n
-    // 时间複雜度 O(log n)
+    // 時間複雜度 O(log n)
     T pre(int i) const {
         T res = 0;
         for (; i > 0; i &= i - 1) {
@@ -26,9 +26,9 @@ public:
         return res;
     }
 
-    // 求區间和 a[l] + ... + a[r]
+    // 求區間和 a[l] + ... + a[r]
     // 1 <= l <= r <= n
-    // 时间複雜度 O(log n)
+    // 時間複雜度 O(log n)
     T query(int l, int r) const {
         if (r < l) {
             return 0;
