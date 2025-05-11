@@ -1,5 +1,4 @@
 // 遞歸 如果要寫成遞推可以用set才不會超時 TC:O((n+m)kt) SC:O(nkt) Bitset: TC:O(mkt/w) m 為 edges數量 SC:O(nkt/w)
-// 似乎還可以用拓墣排序做
 static const int MAXSTEP = 601;
 class Solution {
 public:
@@ -28,37 +27,39 @@ public:
         return ans;
         
         /*
+        遞歸 
         vector<vector<pair<int,int>>> next(n);
         for (auto &e : edges) {
             next[e[0]].emplace_back(e[1], e[2]);
         }
         
-        vector<unordered_map<int, int>> memo(n * (k+1));
-        
-        auto dfs = [&](this auto&&dfs, int node, int cnt, int sum) -> int {
-            if (sum >= t) return -1;
-            if (cnt == k) return sum;
-            int idx = node * (k+1) + cnt;
-            
+        // vector<unordered_map<int, int>> memo(n * (k+1));
+        unordered_set<int> memo;
+        int ans = -1;
+        auto dfs = [&](this auto&&dfs, int node, int cnt, int sum) -> void {
+            if (cnt == k) {
+                ans = max(ans, sum);
+                return;
+            }
+            // int idx = node * (k+1) + cnt;
+            int mask = node << 20 | cnt << 10 | sum;
             // auto it = memo[idx].find(sum);
-            if (memo[idx].find(sum) != memo[idx].end()) {
-                return memo[idx][sum];
-            }
+            // if (memo[idx].find(sum) != memo[idx].end()) {
+            //     return;
+            // }
+            if (!memo.insert(mask).second) return;
+            // memo[idx][sum] = 1;
         
-            int ans = -1;
             for (auto [nxt, w] : next[node]) {
-                ans = max(ans, dfs(nxt, cnt + 1, sum + w));
+                if (w + sum < t)
+                    dfs(nxt, cnt + 1, sum + w);
             }
-            
-            memo[idx][sum] = ans;
-            return ans;
         };
-        int answer = -1;
         for (int i = 0; i < n; i++) {
-            answer = max(answer, dfs(i, 0, 0));
+            dfs(i, 0, 0);
         }
         
-        return answer;
+        return ans;
         */
     }
 };
