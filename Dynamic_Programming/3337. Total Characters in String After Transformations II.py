@@ -1,4 +1,4 @@
-# TC:O(m*m + m^3 * lgt) t = 最多10^9次數, m 為字母數量26 SC:O(26^2)
+# TC:O(n + m^3 * lgt) t = 最多10^9次數, m 為字母數量26 SC:O(26^2)
 MOD = 10 ** 9 + 7
 # a @ b 矩陣乘法
 def Mul (a : List[List[int]], b : List[List[int]]) -> List[List[int]]:
