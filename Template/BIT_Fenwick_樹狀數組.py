@@ -5,7 +5,6 @@ class FenwickTree:
         while i < len(self.tree):
             self.tree[i] += val
             i += i & -i
-
     def pre(self, i: int) -> int:
         res = 0
         while i > 0:
