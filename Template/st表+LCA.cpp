@@ -26,6 +26,88 @@ public:
 };
 
 
+// LCA 修改模板
+class Solution {
+public:
+    vector<int> minimumWeight(vector<vector<int>>& edges, vector<vector<int>>& queries) {
+        int n = edges.size() + 1;
+        int power = bit_width(unsigned(n));
+        vector<vector<pair<int, int>>> next(n);
+        vector<vector<int>> stjump(n, vector<int>(power, -1));
+        vector<int> deep(n, 0), dist(n, 0); // dist 用來當作root 到 i 的weight和 想成前綴和
+
+        for (auto& e : edges) {
+            int u = e[0], v = e[1], w = e[2];
+            next[u].emplace_back(v, w);
+            next[v].emplace_back(u, w);
+        }
+
+        // DFS 建立深度與父節點表
+        function<void(int, int)> dfs = [&](int u, int p) {
+            // 拿到外面做liting即可
+            // stjump[u][0] = p;
+            // for(int step = 1; (1 << step) <= deep[u]; step++) {
+            //     if (stjump[u][step-1] != -1) {
+            //         stjump[u][step] = stjump[stjump[u][step-1]][step-1];
+            //     }
+            // }
+            for (auto& [v, w] : next[u]) {
+                if (v == p) continue;
+                deep[v] = deep[u] + 1;
+                stjump[v][0] = u; // 走一步放在這裡
+                dist[v] = dist[u] + w;
+                dfs(v, u);
+            }
+        };
+        dfs(0, -1);
+
+        // Binary Lifting 預處理
+        for (int j = 1; j < power; ++j) {
+            for (int i = 0; i < n; ++i) {
+                if (stjump[i][j - 1] != -1) {
+                    stjump[i][j] = stjump[stjump[i][j - 1]][j - 1];
+                }
+            }
+        }
+
+        // LCA 查詢
+        auto lca = [&](int u, int v) {
+            if (deep[u] < deep[v]) swap(u, v);
+            for (int j = power - 1; j >= 0; --j) {
+                if (stjump[u][j] != -1 && deep[stjump[u][j]] >= deep[v]) {
+                    u = stjump[u][j];
+                }
+            }
+            if (u == v) return u;
+            for (int j = power - 1; j >= 0; --j) {
+                if (stjump[u][j] != -1 && stjump[u][j] != stjump[v][j]) {
+                    u = stjump[u][j];
+                    v = stjump[v][j];
+                }
+            }
+            return stjump[u][0];
+        };
+
+        // auto get_dist = [&](int u, int v) {
+        //     int anc = lca(u, v);
+        //     return dist[u] + dist[v] - 2 * dist[anc];
+        // };
+
+        // vector<int> ans;
+        // for (auto& q : queries) {
+        //     int a = q[0], b = q[1], c = q[2];
+        //     int ab = get_dist(a, b);
+        //     int ac = get_dist(a, c);
+        //     int bc = get_dist(b, c);
+        //     int total = (ab + ac + bc) / 2;
+        //     ans.push_back(total);
+        // }
+
+        // return ans;
+    }
+};
+
+
 // LCA 模板
 class TreeAncestor {
     vector<vector<int>> next;
