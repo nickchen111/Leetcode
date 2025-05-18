@@ -46,3 +46,14 @@ class Solution:
                 f[i][j] = sum(f[i - 1][k] for k in nxt[j]) % MOD
         return sum(f[-1]) % MOD
         '''
+        
+        '''
+        遞歸
+        @cache
+        def dfs(i: int, j: int) -> int:
+            if i == 0:
+                return 1
+            return sum(dfs(i - 1, k) for k in nxt[j]) % MOD
+        return sum(dfs(n - 1, j) for j in range(nv)) % MOD
+        '''
+
