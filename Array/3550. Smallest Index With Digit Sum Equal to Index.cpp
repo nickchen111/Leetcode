@@ -3,7 +3,7 @@ class Solution {
 public:
     int smallestIndex(vector<int>& nums) {
         int n = nums.size();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < min(28, n); i++) {
             int x = nums[i];
             int sum = 0;
             while (x) {
