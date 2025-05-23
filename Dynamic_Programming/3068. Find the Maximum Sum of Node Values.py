@@ -34,27 +34,19 @@ class Solution:
 
         '''
         遞歸 其實不需要建圖
-        n = len(nums)
-        g = [[] for _ in range(n)]
-        for u, v in edges:
-            g[u].append(v)
-            g[v].append(u)
-        def dfs(u: int, parent: int) -> (int, int):
-            # 初始狀態：這個節點自己做/不做 XOR
-            dp0 = nums[u]        # 偶數次 XOR，沒改 nums[u]
-            dp1 = nums[u] ^ k    # 奇數次 XOR，改過 nums[u]
+        g = [[] for _ in nums]
+        for x, y in edges:
+            g[x].append(y)
+            g[y].append(x)
 
-            for v in g[u]:
-                if v == parent:
-                    continue
-                child0, child1 = dfs(v, u)
-                new_dp0 = max(dp0 + child0, dp1 + child1)  # 偶數 XOR + 偶數，或奇數 + 奇數 = 偶數
-                new_dp1 = max(dp0 + child1, dp1 + child0)  # 偶數 XOR + 奇數，或奇數 + 偶數 = 奇數
-
-                dp0, dp1 = new_dp0, new_dp1
-            return dp0, dp1
-        res0, res1 = dfs(0, -1)
-        return res0  # 我們只能選偶數次 XOR
+        def dfs(x: int, fa: int) -> Tuple[int, int]:
+            f0, f1 = 0, -inf  # f[x][0] 和 f[x][1]
+            for y in g[x]:
+                if y != fa:
+                    r0, r1 = dfs(y, x)
+                    f0, f1 = max(f0 + r0, f1 + r1), max(f1 + r0, f0 + r1)
+            return max(f0 + nums[x], f1 + (nums[x] ^ k)), max(f1 + nums[x], f0 + (nums[x] ^ k))
+        return dfs(0, -1)[0]
         '''
 
 
