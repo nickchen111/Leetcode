@@ -84,11 +84,13 @@ class Solution:
                 if a[i] == c:
                     continue
                 pre, nxt = (i-1) % n, (i + 1) % n
+                # 修改前先去掉結束位置
                 if a[pre] == a[i]:
                     remove(pre)
                 if a[nxt] == a[i]:
                     remove(i)
                 a[i] = c
+                # 修改後添加新的結束位置
                 if a[pre] == a[i]:
                     add(pre)
                 if a[nxt] == a[i]:
