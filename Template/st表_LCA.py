@@ -1,4 +1,6 @@
-tree = defaultdict(list)
+n = len(edges) + 1
+LOG = n.bit_length()
+tree = defaultdict(list) # tree = [[] for _ in range(n + 1)]
 for u, v, w in edges:
     tree[u].append((v, w))
     tree[v].append((u, w))
@@ -34,3 +36,5 @@ def lca(u, v):
             u = stjump[u][j]
             v = stjump[v][j]
     return stjump[u][0]
+def path_dist(x:int, y:int, anc:int) -> int:
+    return dist[x] + dist[y] - 2 * dist[anc]
