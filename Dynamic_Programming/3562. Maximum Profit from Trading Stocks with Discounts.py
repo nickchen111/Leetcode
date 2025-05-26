@@ -10,7 +10,7 @@ class Solution:
         for u, v in hierarchy:
             g[u - 1].append(v - 1)
 
-        @cache
+        
         def dfs(u:int) -> List[List[int]]:
             sub_f = [[0, 0] for _ in range(budget + 1)] # 目前這個節點(might be a set) 有至多budget的空間並且能or不能使用discount 可以得到的最多收益是多少?
             for y in g[u]:
@@ -42,7 +42,7 @@ class Solution:
         for u, v in hierarchy:
             g[u - 1].append(v - 1)
 
-        @cache
+        
         def dfs(u:int) -> List[Dict[int, int]]:
             sub_f = [defaultdict(int), defaultdict(int)] # 目前這個節點(might be a set) 有至多budget的空間並且能or不能使用discount 可以得到的最多收益是多少?
             sub_f[0][0] = sub_f[1][0] = 0 # 在選or不選 容量0 時 所得到的最大收益都是0
