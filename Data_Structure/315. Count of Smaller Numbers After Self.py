@@ -27,13 +27,13 @@ class Solution:
         ans = [0] * n
         arr = list(enumerate(nums))  # [(index, value)]
 
-        def merge_sort(start, end):
-            if start == end:
-                return arr[start:end + 1]
+        def merge_sort(l, r):
+            if l == r:
+                return [arr[l]]
             
-            mid = (start + end) // 2
-            left = merge_sort(start, mid)
-            right = merge_sort(mid + 1, end)
+            mid = (l + r) // 2
+            left = merge_sort(l, mid)
+            right = merge_sort(mid + 1, r)
             merged = []
             j = 0  # 右邊有多少個小於左邊的數
             i = 0
@@ -57,7 +57,6 @@ class Solution:
             return merged
         merge_sort(0, n - 1)
         return ans
-            
             
 
         '''
