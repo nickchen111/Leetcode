@@ -66,6 +66,37 @@ class Solution:
             bit.update(x + 1, 1)
         return ans
         '''
+        merge sort
+        def merge_sort(l:int, r:int) -> List[int]:
+            if l == r:
+                return [nums[l]]
+            nonlocal ans
+            mid = (l + r) // 2
+            left = merge_sort(l, mid)
+            right = merge_sort(mid + 1, r)
+            # 從右邊的角度往左看 有多少逆序對
+            i = j = 0
+            while j < len(right):
+                while i < len(left) and right[j] >= left[i]:
+                    i += 1
+                ans += len(left) - i
+                j += 1
+            i = j = 0
+            merged = []
+            while i < len(left) and j < len(right):
+                if left[i] <= right[j]:
+                    merged.append(left[i])
+                    i += 1
+                else:
+                    merged.append(right[j])
+                    j += 1
+            merged.extend(left[i:])
+            merged.extend(right[j:])
+            return merged
+        merge_sort(0, len(nums) - 1)
+        return ans
+        '''
+        '''
         # 貪心 + 暴力交換
         num_k = num[:]
         ans = 0
