@@ -66,6 +66,14 @@ class Solution:
             bit.update(x + 1, 1)
         return ans
         '''
+        SortedList
+        sl = SortedList()
+        for i, x in enumerate(nums):
+            ans += i - sl.bisect_left(x)
+            sl.add(x)
+        return ans
+        '''
+        '''
         merge sort
         def merge_sort(l:int, r:int) -> List[int]:
             if l == r:
