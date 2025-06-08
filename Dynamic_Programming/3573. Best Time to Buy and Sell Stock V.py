@@ -39,6 +39,7 @@ class Solution:
             else:
                 ans = max(ans, dfs(i + 1, cnt + 1, 0) - prices[i])
             return ans
+        ans = dfs(0, 0, 0)
         dfs.cache_clear()
-        return dfs(0, 0, 0)
+        return ans
             
