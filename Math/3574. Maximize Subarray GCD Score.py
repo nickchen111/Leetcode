@@ -1,4 +1,3 @@
-# TC:O(n * n * lgU) SC:O(n)
 # TC:O(n * (n + lgU)) SC:O(n) 最優解是logTrick可做到nlgU
 def cnt_2(x:int) -> int:
     cnt = 0
