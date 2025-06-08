@@ -1,4 +1,5 @@
 # TC:O(n * n * lgU) SC:O(n)
+# TC:O(n * (n + lgU)) SC:O(n) 最優解是logTrick可做到nlgU
 def cnt_2(x:int) -> int:
     cnt = 0
     while x & 1 == 0:
@@ -17,20 +18,20 @@ class Solution:
         超過的話k就不起作用惹
         '''
         n = len(nums)
-        div_2 = [cnt_2(x) for x in nums]
+        # div_2 = [cnt_2(x) for x in nums]
         ans = 0
         for i in range(n):
-            g = nums[i]
-            cnt = 0
-            cur_cnt2 = div_2[i]
+            g = lowbit_cnt = 0
+            lowbit_min = inf
             for j in range(i, n):
                 g = gcd(g, nums[j])
-                if div_2[j] < cur_cnt2:
-                    cnt = 1
-                    cur_cnt2 = div_2[j]
-                elif div_2[j] == cur_cnt2:
-                    cnt += 1
-                if cnt <= k:
+                lb = nums[j] & -nums[j]
+                if lb < lowbit_min:
+                    lowbit_cnt = 1
+                    lowbit_min = lb
+                elif lowbit_min == lb:
+                    lowbit_cnt += 1
+                if lowbit_cnt <= k:
                     ans = max(ans, g * 2 * (j - i + 1))
                 else:
                     ans = max(ans, g * (j - i + 1))
