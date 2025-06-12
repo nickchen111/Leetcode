@@ -4,6 +4,7 @@ class Solution:
         MOD = 10 ** 9 + 7
         n = len(nums)
         prefix = [0] * (n + 1)
+        prefix[0] = 1
         min_q = deque()
         max_q = deque()
 
@@ -24,7 +25,7 @@ class Solution:
                 if max_q[0] < l:
                     max_q.popleft()
             if l == 0:
-                cur = prefix[r] + 1
+                cur = prefix[r]
             else:
                 cur = (prefix[r] - prefix[l - 1] + MOD) % MOD
             prefix[r+1] = (prefix[r] + cur) % MOD
