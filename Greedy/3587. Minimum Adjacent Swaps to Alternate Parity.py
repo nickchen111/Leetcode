@@ -45,27 +45,23 @@ class Solution:
                 even.append(x)
         if abs(len(odd) - len(even)) > 1:
             return -1
-        arr = []
         # 判斷從哪個開始收集 一開始odd or even
-        def helper(flag: bool) -> None:
-            nonlocal arr
+        def helper(flag: bool) -> List[int]:
+            arr = []
             i = j = 0
-            if flag:
-                while i < len(odd) and j < len(even):
-                    if (len(arr) % 2) == 0:
-                        arr.append(odd[i])
-                        i += 1
-                    else:
-                        arr.append(even[j])
-                        j += 1
-            else:
-                while i < len(odd) and j < len(even):
-                    if (len(arr) % 2) == 0:
-                        arr.append(even[j])
-                        j += 1
-                    else:
-                        arr.append(odd[i])
-                        i += 1
+            while i < len(odd) and j < len(even):
+                if (len(arr) % 2) == 0 and flag:
+                    arr.append(odd[i])
+                    i += 1
+                elif (len(arr) % 2) == 1 and flag:
+                    arr.append(even[j])
+                    j += 1
+                elif (len(arr) % 2) == 0 and not flag:
+                    arr.append(even[j])
+                    j += 1
+                else:
+                    arr.append(odd[i])
+                    i += 1
             if i < len(odd):
                 arr.append(odd[i])
             if j < len(even):
@@ -86,5 +82,3 @@ class Solution:
             return ans
         ans = min(determine(True), determine(False))
         return ans
-        
-        
