@@ -67,7 +67,7 @@ class Solution:
             if j < len(even):
                 arr.append(even[j])
             return arr
-        def determine(flag: bool) -> int:
+        def cal(flag: bool) -> int:
             ans = 0
             arr = helper(flag)           
             mp = defaultdict(int)
@@ -80,5 +80,5 @@ class Solution:
                 ans += i - bit.pre(idx + 1)
                 bit.update(idx + 1, 1)
             return ans
-        ans = min(determine(True), determine(False))
+        ans = min(cal(True), cal(False))
         return ans
