@@ -1,5 +1,17 @@
-# Greedy
-
+# Greedy TC:O(n) SC:O(n)
+class Solution:
+    def minSwaps(self, nums: List[int]) -> int:
+        pos1 = [i for i,x in enumerate(nums) if x % 2]
+        n = len(nums)
+        m = len(pos1)
+        if abs(n - 2 * m) > 1:
+            return -1
+        def cal(start:int) ->int:
+            if (n - start + 1) // 2 != m:
+                return inf
+            return sum(abs(i - j) for i, j in zip(range(start, n, 2), pos1))
+        return min(cal(0), cal(1))
+        
 # 樹狀數組 TC:O(nlgn) SC:O(n)
 class FenwickTree:
     def __init__(self, n: int):
