@@ -1,5 +1,4 @@
-# TC:O(n + lglgU) SC:O(U + n)
-
+# TC:O(n + U * lglgU) SC:O(U + n)
 BASE = 50000
 is_prime = [False, False] + [True] * (BASE - 1)
 for i in range(2, int(BASE ** 0.5) + 1):
