@@ -23,7 +23,9 @@ class Solution:
             i = j
         return ans
 # Trie TC:O(n * 26) SC:O(n * 26)
-ans = []
+class Solution:
+    def partitionString(self, s: str) -> List[str]:
+        ans = []
         t = []
         cur = root = {}
         for c in s:
@@ -36,6 +38,7 @@ ans = []
             else:
                 cur = cur[c]
         return ans
+
 
 # Brute TC:O(n * sqrt(n)) SC:O(n)
 class Solution:
