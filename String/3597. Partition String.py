@@ -22,6 +22,21 @@ class Solution:
                 st.add(tmp)
             i = j
         return ans
+# Trie TC:O(n * 26) SC:O(n * 26)
+ans = []
+        t = []
+        cur = root = {}
+        for c in s:
+            t.append(c)
+            if c not in cur:  
+                cur[c] = {}  
+                ans.append(''.join(t))
+                t.clear()  
+                cur = root 
+            else:
+                cur = cur[c]
+        return ans
+
 # Brute TC:O(n * sqrt(n)) SC:O(n)
 class Solution:
     def partitionString(self, s: str) -> List[str]:
