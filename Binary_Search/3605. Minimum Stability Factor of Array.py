@@ -1,4 +1,4 @@
-# logtrick + 二分內部處理: TC:O(nlogUlogM) U 為處理logtrick時間nums最大值 M為二分常數 SC:O(logU) logtrick預處理 + 二分: TC:O(nlogU+nlogM) SC:O(n) Sliding Window + stack + 二分 + logtrick:
+# logtrick + 二分內部處理: TC:O(nlogUlogM) U 為處理logtrick時間nums最大值 M為二分常數 SC:O(logU) logtrick預處理 + 二分: TC:O(nlogU+nlogM) SC:O(n) Sliding Window + stack + 二分 + logtrick: TC: O(nlogU+nlogM) SC:O(n)
 class Solution:
     def minStable(self, nums: List[int], maxC: int) -> int:
         left, right = 0, len(nums)
