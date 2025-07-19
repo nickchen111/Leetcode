@@ -15,7 +15,7 @@ public:
             bool flag = true;
             int i = 0;
             while (i < s.size()) {
-                while (i < s.size() && s[i] == '/') i += 1;
+                if (i < s.size() && s[i] == '/') i += 1;
                 string tmp = "";
                 while (i < s.size() && s[i] != '/') {
                     auto ch = s[i];
