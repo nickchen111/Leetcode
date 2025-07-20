@@ -30,6 +30,48 @@ class Solution:
                 right = mid - 1
         return left
 
+# Topological Sort + DP
+class Solution:
+    def findMaxPathScore(self, edges: List[List[int]], online: List[bool], k: int) -> int:
+        n = len(online)
+
+        max_wt = max((cost for u, v, cost in edges if online[u] and online[v]), default=0)
+        g = [[] for _ in range(n)]
+        for u, v, cost in edges:
+            if online[u] and online[v]:
+                g[u].append((v, cost))
+        def check(min_cost: int) -> bool:
+            indegree = [0] * n
+            for u, v, cost in edges:
+                if online[u] and online[v] and cost >= min_cost:
+                    indegree[v] += 1
+            # Topo sort + DP
+            dp = [inf] * n
+            dp[0] = 0
+
+            q = deque(i for i in range(n) if indegree[i] == 0)
+            while q:
+                x = q.popleft()
+                for y, cost in g[x]:
+                    if cost >= min_cost:
+                        if dp[x] + cost < dp[y]:
+                            dp[y] = dp[x] + cost
+                        indegree[y] -= 1
+                        if indegree[y] == 0:
+                            q.append(y)
+            return dp[n - 1] <= k
+
+        left, right = -1, max_wt
+        while left < right:
+            mid = (left + right + 1) // 2
+            if check(mid):
+                left = mid
+            else:
+                right = mid - 1
+
+        return left
+
+
 # Dijkstra TC:O((n+m)logmlogU) SC:O(n + m)
 class Solution:
     def findMaxPathScore(self, edges: List[List[int]], online: List[bool], k: int) -> int:
