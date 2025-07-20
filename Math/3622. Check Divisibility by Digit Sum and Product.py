@@ -5,8 +5,8 @@ class Solution:
         sum1 = 0
         sum2 = 1
         while x:
-            cur = x % 10
-            sum1 += cur
-            sum2 *= cur
-            x //= 10
+            x, d = divmod(x, 10)
+            sum1 += d
+            sum2 *= d
+            # x //= 10
         return n % (sum1 + sum2) == 0
