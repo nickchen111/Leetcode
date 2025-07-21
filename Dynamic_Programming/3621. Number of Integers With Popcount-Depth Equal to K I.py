@@ -3,7 +3,7 @@ def compute_popcount_depth():
     depth_map = {}
     for i in range(1, 50): # 2 ^ 50次方內
         x = i
-        d = 0
+        d = 1
         while x != 1:
             x = bin(x).count("1")
             d += 1
@@ -14,7 +14,7 @@ depth_map = compute_popcount_depth()
 depth_count = defaultdict(list)
 for bits in range(1, 50):
     if depth_map.get(bits) is not None:
-        depth_count[depth_map[bits] + 1].append(bits)  # depth starts from 1
+        depth_count[depth_map[bits]].append(bits)
 class Solution:
     def popcountDepth(self, n: int, k: int) -> int:
         if k == 0:
