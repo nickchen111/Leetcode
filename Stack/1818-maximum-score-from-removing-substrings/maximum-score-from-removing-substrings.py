@@ -1,25 +1,21 @@
 class Solution:
     def maximumGain(self, s: str, x: int, y: int) -> int:
-        '''
-        一律抓ab 如果 x < y -> reverse(s), swap(x, y)
-        後續就可以用stack做消消樂 最後再看有多少個ba即可
-        '''
         if x < y:
-            s = reversed(s)
+            s = s[::-1]
             x, y = y, x
-        st = [] # 模擬stack
-        ans = 0
-        for ch in s:
-            if len(st) > 0 and st[-1] + ch == 'ab':
-                ans += x
-                st.pop()
-                continue
-            st.append(ch)
-        st2 = []
-        for ch in st:
-            if len(st2) > 0 and st2[-1] + ch == 'ba':
-                ans += y
-                st2.pop()
-                continue
-            st2.append(ch)
-        return ans
+        first, second = 'ab', 'ba'
+        
+        def remove_pair(s: str, pattern: str, score: int) -> tuple[str, int]:
+            stack = []
+            total = 0
+            for ch in s:
+                if stack and stack[-1] + ch == pattern:
+                    stack.pop()
+                    total += score
+                else:
+                    stack.append(ch)
+            return ''.join(stack), total
+
+        remain, gain1 = remove_pair(s, first, x)
+        _, gain2 = remove_pair(remain, second, y)
+        return gain1 + gain2
