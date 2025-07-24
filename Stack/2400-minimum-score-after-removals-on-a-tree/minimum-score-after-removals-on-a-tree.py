@@ -14,7 +14,7 @@ class Solution:
         3rd: subtree2尾
         包含:
         1st: all_xor ^ 最低公共祖先(subtree1頭, subtree2頭)
-        2ns: 最低公共祖先(subtree1尾, subtree2尾) ^ subtree1頭 or subtree2頭
+        2ns: subtree1尾 ^ subtree2尾
         3rd: subtree1尾 or subtree2尾
         '''
         n = len(nums)
@@ -77,7 +77,6 @@ class Solution:
                     a = subtree[v1]
                     b = subtree[v2] ^ subtree[v1]
                     c = total_xor ^ subtree[v2]
-
                 vals = [a, b, c]
                 ans = min(ans, max(vals) - min(vals))
 
