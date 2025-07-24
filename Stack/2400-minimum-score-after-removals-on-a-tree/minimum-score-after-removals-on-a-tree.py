@@ -79,5 +79,7 @@ class Solution:
                     c = total_xor ^ subtree[v2]
                 vals = [a, b, c]
                 ans = min(ans, max(vals) - min(vals))
+                if ans == 0:
+                    return 0
 
         return ans
