@@ -6,6 +6,6 @@ class Solution:
             result = 0
             nums = set(nums)
             for i in nums:
-                if i >=0 :
+                if i >= 0:
                     result += i
             return result
