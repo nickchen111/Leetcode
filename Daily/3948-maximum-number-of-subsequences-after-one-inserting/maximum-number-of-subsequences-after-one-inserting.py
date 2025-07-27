@@ -3,14 +3,12 @@ class Solution:
         n, m = len(s), len(t)
         if n < m:
             return 0
-        dp = [1] + [0] * m
+        f = [1] + [0] * m
         for i, x in enumerate(s):
-            prev = dp[0]
-            for j, y in enumerate(t):
-                tmp = dp[j+1]
-                dp[j+1] = prev + dp[j+1] if x == y else dp[j+1]
-                prev = tmp
-        return dp[m]
+            for j in range(min(i, m - 1), max(m - n + i, 0) - 1, -1):
+                if x == t[j]:
+                    f[j + 1] += f[j]
+        return f[m]
         # dp = [[0] * (m + 1) for _ in range(n + 1)]
         # dp[0][0] = 1
         # for i, x in enumerate(s):
