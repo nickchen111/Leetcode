@@ -1,20 +1,21 @@
 class Solution:
     def smallestSubarrays(self, nums: List[int]) -> List[int]:
         n = len(nums)
-        # 需要一個資料結構紀錄以某個點為右端點 他能夠達到最大值的左端點是？
-        ors = []
         ans = [0] * n
-        for i in range(n - 1, -1, -1):
-            ors.append([nums[i], i])
-            idx = 0
-            ors[0][0] |= nums[i]
-            for j in range(1, len(ors)):
-                ors[j][0] |= nums[i]
-                if ors[j][0] == ors[idx][0]:
-                    ors[idx][1] = ors[j][1]
-                else:
-                    idx += 1
-                    ors[idx] = ors[j]
-            ors = ors[: idx + 1]
-            ans[i] = ors[0][1] - i + 1
+        ans[-1] = 1
+        if n == 1:
+            return ans
+
+        nums[-1] |= nums[-2]
+        left_or, right, bottom = 0, n - 1, n - 2
+        for left in range(n - 2, -1, -1):
+            left_or |= nums[left]
+            while right > left and (left_or | nums[right]) == (left_or | nums[right - 1]):
+                right -= 1
+                if bottom >= right:
+                    for i in range(left + 1, right + 1):
+                        nums[i] |= nums[i - 1]
+                    bottom = left
+                    left_or = 0
+            ans[left] = right - left + 1
         return ans
