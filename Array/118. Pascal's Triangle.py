@@ -1,4 +1,4 @@
-# TC:O(n ^ 2) SC:O(n ^ 2)
+# TC:O(n ^ 2) SC:O(n)
 class Solution:
     def generate(self, numRows: int) -> List[List[int]]:
         if numRows == 1:
