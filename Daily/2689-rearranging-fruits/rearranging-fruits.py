@@ -8,23 +8,22 @@ class Solution:
         做成這樣的資料結構 [num, cnt] cnt = abs(b1 - b2) // 2 需要替換的次數
         在按照大小排序即可 bug -> 卡在可以考慮最小的元素去交換兩次的狀況
         '''
-        cnt = Counter(basket1) + Counter(basket2)
-        for v in cnt.values():
-            if v % 2: return -1
-        
-        delta = Counter(basket1) - Counter(basket2)
-        extra = []
-        for k, v in delta.items():
-            extra.extend([k] * (v // 2))
+        cnt = defaultdict(int)
+        for x, y in zip(basket1, basket2):
+            cnt[x] += 1
+            cnt[y] -= 1
 
-        delta = Counter(basket2) - Counter(basket1)
-        for k, v in delta.items():
-            extra.extend([k] * (v // 2))
+        a, b = [], []
+        for x, c in cnt.items():
+            if c % 2:
+                return -1
+            if c > 0:
+                a.extend([x] * (c // 2))
+            else:
+                b.extend([x] * (-c // 2))
 
-        extra.sort()
-        min_elem = min(cnt.keys())
-        ans = 0
-        n = len(extra)
-        for i in range(n // 2):
-            ans += min(extra[i], 2 * min_elem)
-        return ans
+        a.sort()
+        b.sort(reverse=True)
+        mn = min(cnt)
+
+        return sum(min(x, y, mn * 2) for x, y in zip(a, b))
