@@ -7,12 +7,13 @@ class Solution:
         3. 先去左再去右 or 先去右再去左
         '''
         n = len(fruits)
-        right_start = bisect_right(fruits, startPos, key=lambda x: x[0])
+        # right_start = bisect_right(fruits, startPos, key=lambda x: x[0])
         right_end = bisect_right(fruits, startPos + k, key=lambda x: x[0])
-        cur_sum = 0
-        for i in range(right_start, right_end):
-            cur_sum += fruits[i][1]
-        ans = cur_sum
+        # cur_sum = 0
+        # for i in range(right_start, right_end):
+        #     cur_sum += fruits[i][1]
+        # ans = cur_sum
+        ans = 0
         cur_sum = 0
         left_start = bisect_left(fruits, max(0, startPos - k), key=lambda x: x[0])
         left_end = bisect_right(fruits, startPos, key=lambda x: x[0])
@@ -24,7 +25,7 @@ class Solution:
         # print(left_start, left_end, right_start, right_end)
         for j in range(left_end, right_end):
             cur_sum += fruits[j][1]
-            while i < j and abs((startPos - fruits[i][0]) * 2) + abs(startPos - fruits[j][0]) > k and abs((startPos - fruits[i][0])) + abs((startPos - fruits[j][0]) * 2) > k:
+            while fruits[j][0] + startPos - fruits[i][0] * 2 > k and fruits[j][0] * 2 - startPos - fruits[i][0] > k:
                 cur_sum -= fruits[i][1]
                 i += 1
             ans = max(ans, cur_sum)
