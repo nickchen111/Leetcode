@@ -6,6 +6,16 @@ class Solution:
             return -1
         star = [0] * n
         def check(m:int):
+            star_set = set(order[:m+1])
+            stars = [i for i in range(n) if i in star_set]
+            cnt = 0
+            last = -1
+            for pos in stars:
+                cnt += (pos - last) * (n - pos)
+                last = pos
+            return cnt >= k
+            '''
+            滑窗寫法
             m += 1
             for i in range(m):
                 star[order[i]] = m
@@ -19,8 +29,9 @@ class Solution:
                     return True
             return False
             '''
+            '''
             容斥
-            star_pos = order[:t+1]
+            star_pos = order[:m+1]
             star_pos.sort()
             star_pos = [-1] + star_pos + [n]
             
