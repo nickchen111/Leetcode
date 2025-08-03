@@ -6,6 +6,21 @@ class Solution:
             return -1
         star = [0] * n
         def check(m:int):
+            # 容斥
+            star_pos = order[:m+1]
+            star_pos.sort()
+            star_pos = [-1] + star_pos + [n]
+            clean = 0
+            for i in range(1, len(star_pos)):
+                l = star_pos[i-1]
+                r = star_pos[i]
+                len_clean = r - l - 1
+                if len_clean > 0:
+                    clean += len_clean * (len_clean + 1) // 2
+            return total - clean >= k
+
+            '''
+            貢獻法
             star_set = set(order[:m+1])
             stars = [i for i in range(n) if i in star_set]
             cnt = 0
@@ -14,6 +29,7 @@ class Solution:
                 cnt += (pos - last) * (n - pos)
                 last = pos
             return cnt >= k
+            '''
             '''
             滑窗寫法
             m += 1
@@ -28,21 +44,6 @@ class Solution:
                 if cnt >= k:
                     return True
             return False
-            '''
-            '''
-            容斥
-            star_pos = order[:m+1]
-            star_pos.sort()
-            star_pos = [-1] + star_pos + [n]
-            
-            clean = 0
-            for i in range(1, len(star_pos)):
-                l = star_pos[i-1]
-                r = star_pos[i]
-                len_clean = r - l - 1
-                if len_clean > 0:
-                    clean += len_clean * (len_clean + 1) // 2
-            return total - clean >= k
             '''
         lo, hi = 0, n - 1
         ans = -1
