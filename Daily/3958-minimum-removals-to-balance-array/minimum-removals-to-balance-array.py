@@ -4,9 +4,9 @@ class Solution:
         nums.sort()
         n = len(nums)
         ans = n
-        for i in range(n):
-            max_val = nums[i] * k
-            j = bisect_right(nums, max_val)
-            keep = j - i
-            ans = min(ans, n - keep)
+        i = 0
+        for j in range(n):
+            while nums[i] * k < nums[j]:
+                i += 1
+            ans = min(ans, n - (j - i + 1))
         return ans
