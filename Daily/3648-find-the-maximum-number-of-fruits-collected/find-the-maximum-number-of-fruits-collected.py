@@ -18,8 +18,9 @@ class Solution:
             return max(dfs(i - 1, j - 1), dfs(i - 1, j + 1), dfs(i - 1, j)) + fruits[i][j]
         ans += dfs(n - 2, n - 1)
         dfs.cache_clear()
-        for i in range(n):
-            for j in range(n):
-                fruits[i][j] = fruits[j][i]
+        # for i in range(n):
+        #     for j in range(n):
+        #         fruits[i][j] = fruits[j][i]
+        fruits = list(zip(*fruits))
         ans += dfs(n - 2, n - 1)
         return ans
