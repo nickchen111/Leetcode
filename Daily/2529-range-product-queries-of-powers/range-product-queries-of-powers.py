@@ -1,21 +1,23 @@
 class Solution:
     def productQueries(self, n: int, queries: List[List[int]]) -> List[int]:
-        MOD = 10**9 + 7
-        
-        powers = []
-        bit = 0
+        mod = 10**9 + 7
+
+        bins, rep = [], 1
         while n > 0:
-            if n & 1:
-                powers.append(1 << bit)
-            bit += 1
-            n >>= 1
-        
-        prefix = [1]
-        for p in powers:
-            prefix.append((prefix[-1] * p) % MOD)
-        
+            if n % 2 == 1:
+                bins.append(rep)
+            n //= 2
+            rep *= 2
+
+        m = len(bins)
+        results = [[0] * m for _ in range(m)]
+        for i in range(m):
+            cur = 1
+            for j in range(i, m):
+                cur = cur * bins[j] % mod
+                results[i][j] = cur
+
         ans = []
-        for l, r in queries:
-            total = prefix[r+1] * pow(prefix[l], MOD-2, MOD) % MOD
-            ans.append(total)
+        for left, right in queries:
+            ans.append(results[left][right])
         return ans
