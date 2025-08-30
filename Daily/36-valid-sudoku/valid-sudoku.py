@@ -10,7 +10,6 @@ class Solution:
                 if board[i][j] != '.':
                     k = (i // 3) * 3 + (j // 3)
                     num = int(board[i][j])
-                    print(num)
                     if row[i][num] or col[j][num] or grid[k][num]:
                         return False
                     row[i][num] = col[j][num] = grid[k][num] = 1
