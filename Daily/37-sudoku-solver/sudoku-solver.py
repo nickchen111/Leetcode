@@ -49,11 +49,11 @@ class Solution:
                 return False
 
             while candidates:
-                # 提取最低位的1（選擇一個數字）
+                # 提取最低位的1
                 bit = candidates & (-candidates)
-                candidates ^= bit  # 移除這個bit
+                candidates ^= bit
                 
-                num = bit.bit_length()  # bit位置+1就是數字
+                num = bit.bit_length()
                 
                 board[i][j] = str(num)
                 rows[i] |= bit
