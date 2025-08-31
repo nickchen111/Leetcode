@@ -1,6 +1,6 @@
 class Solution:
     def getLeastFrequentDigit(self, n: int) -> int:
-        cnt = Counter(list(str(n)))
+        cnt = Counter(str(n))
         ans = 0
         f = inf
         for x, freq in cnt.items():
