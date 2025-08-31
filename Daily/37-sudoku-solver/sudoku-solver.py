@@ -26,19 +26,7 @@ class Solution:
             available = ((1 << 9) - 1) ^ used
             return available
         
-        def count_bits(mask: int) -> int:
-            return bin(mask).count('1')
-        
-        def get_first_bit(mask: int) -> int:
-            """獲取mask中第一個1的位置（最小可選數字）"""
-            if mask == 0:
-                return -1
-            return (mask & -mask).bit_length() - 1
-        
         def backtrack(idx: int) -> bool:
-            """
-            回溯算法：idx表示當前處理第幾個空格
-            """
             if idx == len(empty_cells):
                 return True
             
