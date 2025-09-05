@@ -10,7 +10,7 @@ class Solution:
         bit_count(num1 - k * num2) <= k <= num1 - k * num2 (全部都選2 ^ 0)
         那當然會選最少的bit_count()
         '''
-        for k in range(1, 61):
+        for k in range(1, 35):
             t = num1 - k * num2
             if t < 0:
                 continue
