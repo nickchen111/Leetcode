@@ -6,8 +6,6 @@ public:
         for (auto &x : s) {
             if (x != 'a') ch = min(ch, x);
         }
-        if (ch == 'z' + 1) return 0;
         return 'z' + 1 - ch;
-
     }
 };
