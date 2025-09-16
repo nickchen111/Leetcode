@@ -5,7 +5,7 @@ class Solution:
         st = []
         while i < n:
             l = nums[i]
-            while len(st) > 0 and gcd(st[-1], l) > 1:
+            while st and gcd(st[-1], l) > 1:
                 l = lcm(l, st[-1])
                 st.pop()
             st.append(l)
