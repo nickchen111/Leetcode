@@ -22,6 +22,8 @@
     }
     while (i < n1) nums[k++] = L[i++];
     while (j < n2) nums[k++] = R[j++];
+    free(L);
+    free(R);
  }
 int* sortArray(int* nums, int numsSize, int* returnSize) {
     merge(nums, 0, numsSize - 1);
