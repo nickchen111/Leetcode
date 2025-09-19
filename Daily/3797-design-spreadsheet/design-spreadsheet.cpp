@@ -14,19 +14,18 @@ public:
     }
     
     int getValue(string formula) {
-        formula = formula.substr(1);
         int left = 0, right = 0;
         int n = formula.size();
         int pos = -1;
         string tmp;
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i < n; i++) {
             if (formula[i] == '+') {
                 pos = i;
                 break;
             }
             tmp += formula[i];
         }
-        if (formula[0] >= 'A' && formula[0] <= 'Z') left = mp[tmp];
+        if (formula[1] >= 'A' && formula[1] <= 'Z') left = mp[tmp];
         else left = stoi(tmp);
         
 
