@@ -14,7 +14,7 @@ public:
     }
     
     int getValue(string formula) {
-        if (formula[0] == '=') formula = formula.substr(1);
+        formula = formula.substr(1);
         int left = 0, right = 0;
         int n = formula.size();
         int pos = -1;
