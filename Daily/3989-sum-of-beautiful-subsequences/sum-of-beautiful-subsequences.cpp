@@ -30,14 +30,14 @@ public:
                     time[i] = now;
                     tree[i] = 0;
                 }
-                tree[i] += val;
+                tree[i] = (tree[i] + val) % MOD;
                 i += i & -i;
             }
         };
         auto pre = [&] (int i) -> ll {
             ll ans = 0;
             while (i > 0) {
-                if (time[i] == now) ans += tree[i];
+                if (time[i] == now) ans = (ans + tree[i]) % MOD;
                 i &= i - 1; // i -= i & -i;
             }
             return ans;
