@@ -12,11 +12,7 @@ class Router {
     int memoryLimit;
 
     ll packTokey(int source, int destination, int timestamp) {
-        ll key = 0;
-        key |= (ll)source << 50;
-        key |= (ll)destination << 30;
-        key |= (ll)timestamp;
-        return key;
+        return  ((ll) source << 50) | ((ll) destination << 30) | (ll) timestamp;
     }
 public:
     Router(int memoryLimit) {
