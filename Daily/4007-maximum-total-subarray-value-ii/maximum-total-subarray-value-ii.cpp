@@ -51,7 +51,6 @@ public:
         int n = nums.size();
         SegmentTree st(nums);
 
-        // 優先隊列存 {最大值, 左邊界, 右邊界}
         priority_queue<tuple<int,int,int>> pq;
         for (int i = 0; i < n; i++) {
             auto node = st.query(i, n-1);
