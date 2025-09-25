@@ -1,3 +1,4 @@
+min = lambda a, b : a if a < b else b
 class Solution:
     def minimumTotal(self, triangle: List[List[int]]) -> int:
         n = len(triangle)
@@ -11,4 +12,7 @@ class Solution:
                 tmp[j + 1] = min(tmp[j + 1], dp[j] + triangle[i][j + 1])
             dp = tmp
         # print(dp)
-        return min(dp[i] for i in range(n))
+        ans = inf
+        for i in range(n):
+            ans = min(ans, dp[i])
+        return ans
