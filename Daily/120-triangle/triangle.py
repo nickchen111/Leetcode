@@ -6,10 +6,9 @@ class Solution:
         for i in range(1, n):
             tmp = [inf] * n
             m = len(triangle[i])
-            for j in range(m):
-                tmp[j] = min(tmp[j], (dp[j] if j < i + 1 else inf) + triangle[i][j])
-                if j + 1 < m:
-                    tmp[j + 1] = min(tmp[j + 1], (dp[j] if j < i + 1 else inf) + triangle[i][j + 1])
+            for j in range(m - 1):
+                tmp[j] = min(tmp[j], dp[j] + triangle[i][j])
+                tmp[j + 1] = min(tmp[j + 1], dp[j] + triangle[i][j + 1])
             dp = tmp
         # print(dp)
         return min(dp[i] for i in range(n))
