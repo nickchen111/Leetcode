@@ -2,6 +2,8 @@ class Solution:
     def triangleNumber(self, nums: List[int]) -> int:
         # 三角形 -> a + b > c sliding window
         n = len(nums)
+        if n <= 2:
+            return 0
         ans = i = 0
         nums.sort()
         for j in range(n - 1, 1, -1):
