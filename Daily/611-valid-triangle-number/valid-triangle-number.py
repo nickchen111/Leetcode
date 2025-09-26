@@ -4,7 +4,7 @@ class Solution:
         n = len(nums)
         if n <= 2:
             return 0
-        ans = i = 0
+        ans = 0
         nums.sort()
         for j in range(n - 1, 1, -1):
             l, r = 0, j - 1
