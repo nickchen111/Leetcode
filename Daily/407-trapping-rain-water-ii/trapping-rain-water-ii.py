@@ -18,7 +18,6 @@ class Solution:
         ans = 0
         while pq:
             (h, x, y) = heappop(pq)
-            print(h)
             if visited[x][y]: continue
             visited[x][y] = True
             if h > level:
