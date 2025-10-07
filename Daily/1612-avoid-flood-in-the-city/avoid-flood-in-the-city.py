@@ -4,11 +4,11 @@ class Solution:
         將這些機會存起來 當有個湖被flood時 找一個在他之前 但是在第一個位置之後的dry
         '''
         mp = defaultdict(int)
-        st = SortedList()
+        st = []
         ans = [-1] * len(rains)
         for i, r in enumerate(rains):
             if r == 0:
-                st.add(i)
+                st.append(i)
                 ans[i] = 1
             else:
                 if r in mp:
