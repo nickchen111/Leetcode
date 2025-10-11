@@ -2,20 +2,26 @@ class Solution {
     using ll = long long;
 public:
     long long maximumTotalDamage(vector<int>& power) {
-        map<ll, ll> cnt;
-        for (auto &p : power) cnt[p] += 1;
-        set<ll> st(power.begin(), power.end());
-        vector<ll> nums(st.begin(), st.end());
+        unordered_map<ll, ll> cnt;
+        for  (auto &p : power) cnt[p] += 1;
+        vector<ll> nums;
+        for (auto &[k, v] : cnt) nums.emplace_back(k);
+        ranges::sort(nums);
+        int n = nums.size();
+        vector<ll> memo(n, -1);
 
-        map<ll, ll> mp; // 走到某個數值的時候他的最大值
-        mp[-2] = 0;
-        ll mx = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            auto iter = mp.lower_bound(nums[i] - 2);
-            iter = prev(iter);
-            mp[nums[i]] = max(mx, iter->second + nums[i] * cnt[nums[i]]);
-            mx = max(mx, mp[nums[i]]);
-        }
-        return mx;
+        auto dfs = [&](this auto&& dfs, int i) -> ll {
+            if (i < 0) return 0;
+            ll &ret = memo[i];
+            if (ret != -1) return ret;
+            ret = dfs(i - 1); // 不選
+
+            int j = i;
+            while (j && nums[j - 1] >= nums[i] - 2) j -= 1;
+            ret = max(ret, dfs(j - 1) + cnt[nums[i]] * nums[i]);
+            return ret;
+        };
+
+        return dfs(n - 1);
     }
 };
