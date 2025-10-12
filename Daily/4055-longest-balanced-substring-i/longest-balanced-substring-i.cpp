@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int longestBalanced(string s) {
+        int n = s.size();
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            vector<int> cnt(26);
+            
+            for (int j = i; j < n; j++) {
+                cnt[s[j] - 'a'] += 1;
+                // 確定頻率是否都相同
+                int freq = -1;
+                bool flag = true;
+                for (int k = 0; k < 26; k++) {
+                    if (cnt[k]) {
+                        if (freq == -1) freq = cnt[k];
+                        else if (freq != cnt[k]) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+                if (flag) ans = max(ans, j - i + 1);
+            }
+        }
+
+        return ans;
+    }
+};
