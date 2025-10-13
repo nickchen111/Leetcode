@@ -4,7 +4,6 @@ public:
         /*
         前綴和? abc, ab, bc, ac, aaa, bbb, ccc
         考慮這幾種情況 求出最長前綴和
-        要設計怎樣的資料結構去存? abc -> 333用十進制表示
         */
         int n = s.size();
         int ans = 0;
