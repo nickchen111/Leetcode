@@ -10,17 +10,16 @@ public:
                 cnt[s[j] - 'a'] += 1;
                 // 確定頻率是否都相同
                 int freq = -1;
-                bool flag = true;
                 for (int k = 0; k < 26; k++) {
                     if (cnt[k]) {
                         if (freq == -1) freq = cnt[k];
                         else if (freq != cnt[k]) {
-                            flag = false;
+                            freq = -1;
                             break;
                         }
                     }
                 }
-                if (flag) ans = max(ans, j - i + 1);
+                if (freq != -1) ans = max(ans, j - i + 1);
             }
         }
 
