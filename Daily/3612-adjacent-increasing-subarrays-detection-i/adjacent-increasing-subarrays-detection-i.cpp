@@ -2,7 +2,7 @@ class Solution {
 public:
     bool hasIncreasingSubarrays(vector<int>& nums, int k) {
         int n = nums.size();
-        if (n == 2) return true;
+        if (k == 1) return true;
         vector<int> suf(n, 1);
         int cnt = 1;
         for (int i = n - 2; i >= 0; i--) {
