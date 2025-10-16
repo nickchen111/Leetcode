@@ -7,8 +7,7 @@ public:
         vector<int> cnt(value + 1);
         for (auto &x : nums) cnt[((x % value) + value) % value] += 1;
         int ans = 0;
-        while (true) {
-            if (cnt[ans % value] == 0) return ans;
+        while (cnt[ans % value]) {
             cnt[ans % value] -= 1;
             ans += 1;
         }
