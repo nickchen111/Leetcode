@@ -1,29 +1,12 @@
 class Solution:
-    def minOperations(self, nums):
-        n = len(nums)
-        pos = defaultdict(list)
-        for i, x in enumerate(nums):
-            pos[x].append(i)
-
-        sl = SortedList([-1, n])  # 哨兵邊界
+    def minOperations(self, nums: List[int]) -> int:
         ans = 0
-
-        for key in sorted(pos.keys()):
-            if key == 0:
-                for i in pos[key]:
-                    sl.add(i)
-                continue
-
-            indices = pos[key]
-            tot = 1
-            for j in range(1, len(indices)):
-                l = sl.bisect_right(indices[j - 1])
-                r = sl.bisect_left(indices[j])
-                if r > l:
-                    tot += 1
-            ans += tot
-
-            for i in indices:
-                sl.add(i)
-
-        return ans
+        st = []
+        for x in nums:
+            while st and x < st[-1]:
+                st.pop()
+                ans += 1
+            # 如果 x 与栈顶相同，那么 x 与栈顶可以在同一次操作中都变成 0，x 无需入栈
+            if not st or x != st[-1]:
+                st.append(x)
+        return ans + len(st) - (st[0] == 0)  # 0 不需要操作
