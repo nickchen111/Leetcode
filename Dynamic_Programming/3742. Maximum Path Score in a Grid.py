@@ -2,6 +2,22 @@
 class Solution:
     def maxPathScore(self, grid: List[List[int]], k: int) -> int:
         m, n = len(grid), len(grid[0])
+        # 遞歸
+        @cache 
+        def dfs(i:int, j:int, k:int) -> int:
+            if i < 0 or j < 0 or k < 0:
+                return -inf
+            if i == 0 and j == 0:
+                return 0
+            x = grid[i][j]
+            if x > 0:
+                return max(dfs(i - 1, j, k - 1), dfs(i, j - 1, k - 1)) + x
+            return max(dfs(i - 1, j, k), dfs(i, j - 1, k))
+        ans = dfs(m - 1, n - 1, k)
+        return ans if ans != -inf else -1
+
+        '''
+        遞推
         # dp[cost][j] = 走到目前列第 j 格，花費 cost 的最大分數
         prev = [[-inf] * (k + 1) for _ in range(n)]
 
@@ -30,3 +46,4 @@ class Solution:
 
         ans = max(prev[n - 1])
         return ans if ans != -inf else -1
+        '''
