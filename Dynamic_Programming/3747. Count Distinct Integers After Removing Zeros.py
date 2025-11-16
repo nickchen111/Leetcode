@@ -7,10 +7,11 @@ class Solution:
 
         # 數學解
         ans = 0
-        power9 = 1
-        for i in range(1, L):
-            power9 *= 9
-            ans += power9
+        # power9 = 1
+        # for i in range(1, L):
+        #     power9 *= 9
+        #     ans += power9
+        ans += (9 ** L - 9) // 8 # 錯位相減法
 
         for i, ch in enumerate(s):
             d = ord(ch) - ord('0')
