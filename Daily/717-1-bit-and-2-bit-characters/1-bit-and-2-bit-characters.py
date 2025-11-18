@@ -1,7 +1,7 @@
 class Solution:
     def isOneBitCharacter(self, bits: List[int]) -> bool:
         n = len(bits)
-        @cache
+        
         def dfs(i:int) -> bool:
             if i == n - 1:
                 return True
