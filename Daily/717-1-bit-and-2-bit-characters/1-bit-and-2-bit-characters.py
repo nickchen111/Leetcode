@@ -5,7 +5,7 @@ class Solution:
         def dfs(i:int) -> bool:
             if i == n - 1:
                 return True
-            if i >= n:
+            if i == n:
                 return False
             if bits[i] == 0:
                 return dfs(i + 1)
