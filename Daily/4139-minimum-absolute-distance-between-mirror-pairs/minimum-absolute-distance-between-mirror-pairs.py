@@ -1,17 +1,15 @@
 class Solution:
     def minMirrorPairDistance(self, nums: List[int]) -> int:
-        n = len(nums)
+        last_index = {}
         ans = inf
-        mp = defaultdict(list)
-        for i in range(n):
-            mp[nums[i]].append(i)
-        for i, x in enumerate(nums):
-            tmp = 0
-            while x:
+
+        for j, x in enumerate(nums):
+            if x in last_index:
+                ans = min(ans, j - last_index[x])
+            rev = 0
+            while x > 0:
                 x, d = divmod(x, 10)
-                tmp = tmp * 10 + d
-            if tmp in mp:
-                r = bisect_right(mp[tmp], i)
-                if r < len(mp[tmp]):
-                    ans = min(ans, mp[tmp][r] - i)
-        return ans if ans != inf else -1
+                rev = rev * 10 + d
+            last_index[rev] = j
+
+        return ans if ans < inf else -1
