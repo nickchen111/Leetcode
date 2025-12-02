@@ -17,7 +17,6 @@ class Solution:
         for arr in mp.values():
             x = len(arr)
             cur = x * (x - 1) // 2
-            if x > 1:
-                ans += cur * (tot - cur)
+            ans += cur * (tot - cur)
         return ans // 2 % MOD
         
