@@ -1,16 +1,15 @@
 class Solution:
-    def maxSubgraphScore(self, n, edges, good):
+    def maxSubgraphScore(self, n: int, edges: List[List[int]], good: List[int]) -> List[int]:
         g = [[] for _ in range(n)]
         for x, y in edges:
             g[x].append(y)
             g[y].append(x)
 
         val = [1 if good[i] == 1 else -1 for i in range(n)]
-
         dp = [0] * n
         up = [0] * n
 
-        def dfs1(u, p):
+        def dfs1(u:int, p:int) -> None:
             res = val[u]
             for v in g[u]:
                 if v == p: continue
@@ -20,7 +19,7 @@ class Solution:
 
         dfs1(0, -1)
 
-        def dfs2(u, p):
+        def dfs2(u:int, p:int) -> None:
             pref = []
             for v in g[u]:
                 if v == p: continue
