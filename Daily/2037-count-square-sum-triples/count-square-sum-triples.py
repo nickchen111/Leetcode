@@ -7,7 +7,7 @@ class Solution:
         for i in range(1, n + 1):
             st.add(i * i)
         ans = 0
-        print(st)
+        # print(st)
         for i in st:
             for j in st:
                 if i - j in st and (i - j) < i and j < i:
