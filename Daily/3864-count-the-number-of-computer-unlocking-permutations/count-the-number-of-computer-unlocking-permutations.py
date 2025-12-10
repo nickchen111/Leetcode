@@ -1,3 +1,10 @@
+MOD = 10**9 + 7
+facs = {}
+facs[1] = 1
+facs[2] = 2
+for i in range(2,(10**5)+1):
+    facs[i] = (facs[i-1] * i) % MOD
+
 class Solution:
     def countPermutations(self, c: List[int]) -> int:
         '''
@@ -10,9 +17,5 @@ class Solution:
         for i in range(1,n):
             if c[i] <= mn:
                 return 0
-        def fac(x:int) -> int:
-            if x == 1:
-                return 1
-            return x * fac(x - 1)
-        return fac(n - 1) % MOD
+        return facs[n - 1]
         
