@@ -1,17 +1,21 @@
+BUSINESS_LINE_TO_CATEGORY = {
+    "electronics": 0,
+    "grocery": 1,
+    "pharmacy": 2,
+    "restaurant": 3,
+}
+
 class Solution:
     def validateCoupons(self, code: List[str], businessLine: List[str], isActive: List[bool]) -> List[str]:
-        arr = []
-        n = len(code)
-        for i in range(n):
-            if not isActive[i] or businessLine[i] not in {"electronics", "grocery", "pharmacy", "restaurant"} or not code[i]:
-                continue
-            flag = True
-            for j in range(len(code[i])):
-                if not ("a" <= code[i][j] <= "z" or "A" <= code[i][j] <= "Z" or '0' <= code[i][j] <= "9" or code[i][j] == '_'):
-                    flag = False
-                    break
-            if flag:
-                arr.append((businessLine[i], code[i]))
-        arr.sort(key=lambda x: (x[0], x[1]))
-        return [y for x, y in arr]
-                
+        groups = [[] for _ in range(len(BUSINESS_LINE_TO_CATEGORY))]
+        for s, bus, active in zip(code, businessLine, isActive):
+            category = BUSINESS_LINE_TO_CATEGORY.get(bus, -1)
+            if s and category >= 0 and active and \
+               all(c == '_' or c.isalnum() for c in s):
+                groups[category].append(s)
+
+        ans = []
+        for g in groups:
+            g.sort()
+            ans += g
+        return ans
