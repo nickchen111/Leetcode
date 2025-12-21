@@ -1,49 +1,84 @@
-from typing import List
-from collections import Counter
-
 class Solution:
-    def interactionCosts(self, n: int, edges: List[List[int]], group: List[int]) -> int:
-        g = [[] for _ in range(n)]
-        for x, y in edges:
-            g[x].append(y)
-            g[y].append(x)
+    def interactionCosts(self, n: int, edges: list[list[int]], group: list[list[int]]) -> int:
+        adj = [[] for _ in range(n)]
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
         
-        total_group_cnt = Counter(group)
-        max_group = 21
+        # 1. 預處理：DFS 序、深度、倍增法 LCA
+        depth = [0] * n
+        parent = [[-1] * 20 for _ in range(n)]
+        dfn = [0] * n
+        timer = 0
         
-        sub_info = [[[0, 0] for _ in range(max_group)] for _ in range(n)]
+        stack = [(0, -1, 0)]
+        while stack:
+            u, p, d = stack.pop()
+            dfn[u] = timer
+            timer += 1
+            depth[u] = d
+            parent[u][0] = p
+            for v in adj[u]:
+                if v != p:
+                    stack.append((v, u, d + 1))
         
-        def dfs1(u, p):
-            gu = group[u]
-            sub_info[u][gu][0] = 1
-            
-            for v in g[u]:
-                if v == p: continue
-                dfs1(v, u)
-                for gr in range(max_group):
-                    cnt_v, dist_v = sub_info[v][gr]
-                    sub_info[u][gr][0] += cnt_v
-                    sub_info[u][gr][1] += (dist_v + cnt_v)
+        # 倍增 LCA 預處理
+        for j in range(1, 20):
+            for i in range(n):
+                if parent[i][j-1] != -1:
+                    parent[i][j] = parent[parent[i][j-1]][j-1]
+        
+        def get_lca(u, v):
+            if depth[u] < depth[v]: u, v = v, u
+            for j in range(19, -1, -1):
+                if depth[u] - (1 << j) >= depth[v]:
+                    u = parent[u][j]
+            if u == v: return u
+            for j in range(19, -1, -1):
+                if parent[u][j] != parent[v][j]:
+                    u = parent[u][j]
+                    v = parent[v][j]
+            return parent[u][0]
 
-        dfs1(0, -1)
-        
-        ans = 0
-        def dfs2(u, p, current_dist_sums):
-            nonlocal ans
-            ans += current_dist_sums[group[u]]
+        # 2. 按組別分類
+        groups_map = collections.defaultdict(list)
+        for i, g in enumerate(group):
+            groups_map[g].append(i)
             
-            for v in g[u]:
-                if v == p: continue
+        total_ans = 0
+        
+        # 3. 對每個組別單獨計算點對距離和
+        for g in groups_map:
+            nodes = groups_map[g]
+            m = len(nodes)
+            if m < 2: continue
+            
+            # 按 DFS 序排序，以便利用單調棧或相鄰 LCA 性質
+            nodes.sort(key=lambda x: dfn[x])
+            
+            # 計算 (|S|-1) * sum(depth)
+            sum_depth = sum(depth[u] for u in nodes)
+            current_group_dist = (m - 1) * sum_depth
+            
+            # 計算 2 * sum(depth(LCA(u,v)))
+            # 利用性質：sum_{i<j} depth(LCA(v_i, v_j)) 
+            # 可以透過單調棧在 O(m) 內算出
+            lca_depths = [depth[get_lca(nodes[i], nodes[i+1])] for i in range(m - 1)]
+            
+            # 這裡使用計算「所有子陣列最小值之和」的技巧
+            lca_sum = 0
+            stack = [] # (val, count)
+            accumulated = 0
+            for val in lca_depths:
+                count = 1
+                while stack and stack[-1][0] >= val:
+                    v, c = stack.pop()
+                    accumulated -= v * c
+                    count += c
+                stack.append((val, count))
+                accumulated += val * count
+                lca_sum += accumulated
                 
-                nxt_dist_sums = [0] * max_group
-                for gr in range(max_group):
-                    cnt_in_v = sub_info[v][gr][0]
-                    cnt_out_v = total_group_cnt[gr] - cnt_in_v
-                    # 換根公式：到 v 子樹內的點距離 -1，到外部的點距離 +1
-                    nxt_dist_sums[gr] = current_dist_sums[gr] - cnt_in_v + cnt_out_v
-                
-                dfs2(v, u, nxt_dist_sums)
-
-        initial_sums = [sub_info[0][gr][1] for gr in range(max_group)]
-        dfs2(0, -1, initial_sums)
-        return ans // 2
+            total_ans += current_group_dist - 2 * lca_sum
+            
+        return total_ans
