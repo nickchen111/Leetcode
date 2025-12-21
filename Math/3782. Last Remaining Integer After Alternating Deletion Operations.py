@@ -1,7 +1,7 @@
 # TC:O(logn) SC:O(1)
 class Solution:
     def lastInteger(self, n: int) -> int:
-        # python 內建
+        # python 內建 range是個對象不是list
         r = range(1, n + 1) # 不是真的生成數列
         while len(r) > 1:
             r = r[::2][::-1]
