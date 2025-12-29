@@ -3,11 +3,15 @@ class Solution:
         mp = defaultdict(list)
         for allow in allowed:
             mp[allow[:2]].append(allow[2])
-
+        vis = set()
         def dfs(prev:List[str], i:int, cur:List[str]) -> bool:
             if len(cur) == 1 and len(prev) == 2:
                 return True
             if i == len(prev) - 1:
+                row = ''.join(cur)
+                if row in vis:
+                    return False
+                vis.add(row)
                 if dfs(cur, 0, []):
                     return True
                 return False
