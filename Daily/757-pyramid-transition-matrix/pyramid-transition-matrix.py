@@ -3,22 +3,23 @@ class Solution:
         mp = defaultdict(list)
         for allow in allowed:
             mp[allow[:2]].append(allow[2])
+        n = len(bottom)
+        pyramid = [[''] * (i + 1) for i in range(n)]
+        pyramid[-1] = bottom
         vis = set()
-        def dfs(prev:List[str], i:int, cur:List[str]) -> bool:
-            if len(cur) == 1 and len(prev) == 2:
+        def dfs(i:int, j:int) -> bool:
+            if i < 0:
                 return True
-            if i == len(prev) - 1:
-                row = ''.join(cur)
+            if j == i + 1:
+                row = ''.join(pyramid[i])
                 if row in vis:
                     return False
                 vis.add(row)
-                if dfs(cur, 0, []):
+                return dfs(i - 1, 0)
+            for top in mp[pyramid[i + 1][j] + pyramid[i + 1][j + 1]]:
+                pyramid[i][j] = top
+                if dfs(i, j + 1):
                     return True
-                return False
-            for cand in mp[prev[i] + prev[i + 1]]:
-                cur.append(cand)
-                if dfs(prev, i + 1, cur):
-                    return True
-                cur.pop()
             return False
-        return dfs(list(bottom), 0, [])
+
+        return dfs(n - 2, 0)
