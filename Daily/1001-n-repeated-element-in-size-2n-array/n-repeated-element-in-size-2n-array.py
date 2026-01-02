@@ -1,9 +1,7 @@
 class Solution:
     def repeatedNTimes(self, nums: List[int]) -> int:
-        mp = defaultdict(int)
-        target = len(nums) // 2
-        for x in nums:
-            mp[x] += 1
-            if mp[x] == target:
-                return x
-        return -1
+        d={}
+        for i in nums:
+            if i in d:
+                return i
+            d[i]=1
