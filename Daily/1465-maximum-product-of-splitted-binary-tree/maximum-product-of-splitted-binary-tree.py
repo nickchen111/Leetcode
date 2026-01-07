@@ -8,8 +8,7 @@ class Solution:
     def maxProduct(self, root: Optional[TreeNode]) -> int:
         MOD = 10**9 + 7
         arr = []
-
-        def dfs(node):
+        def dfs(node: TreeNode) -> int:
             if not node:
                 return 0
             s = node.val + dfs(node.left) + dfs(node.right)
