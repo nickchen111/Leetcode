@@ -12,8 +12,10 @@ public:
             }
             if (memo[i][j] != INT_MAX) return memo[i][j];
             int &ans = memo[i][j];
-            if (s1[i] == s2[j])
+            if (s1[i] == s2[j]) {
                 ans = min(ans, dfs(i - 1, j - 1));
+                return ans;
+            }
 
             ans = min(ans,
                       min(dfs(i - 1, j) + s1[i],
