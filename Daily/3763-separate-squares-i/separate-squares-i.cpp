@@ -33,7 +33,7 @@ public:
         double left = minY, right = maxY, n = squares.size();
         
         double targetArea = totalArea / 2.0;
-        for(int i = 0; i < 49; i++) {
+        for(int i = 0; i < 48; i++) {
             double mid = left + (right - left) / 2.0;
             double areaAbove = getAreaAbove(squares, mid);
             if (areaAbove > targetArea) {
