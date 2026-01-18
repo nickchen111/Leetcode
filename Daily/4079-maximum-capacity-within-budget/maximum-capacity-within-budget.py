@@ -1,21 +1,15 @@
-from bisect import bisect_right
-from math import inf
-
 class Solution:
     def maxCapacity(self, costs: list[int], capacity: list[int], budget: int) -> int:
         nums = sorted(zip(costs, capacity))
         n = len(nums)
         
         prev_max = [0] * n
-        curr_max = 0
         for k in range(n):
-            curr_max = max(curr_max, nums[k][1])
-            prev_max[k] = curr_max
+            prev_max[k] = max(nums[k][1], prev_max[k - 1])
             
         ans = 0
         for i in range(n):
             cost_i, cap_i = nums[i]
-            
             if cost_i < budget:
                 ans = max(ans, cap_i)
             
@@ -27,7 +21,6 @@ class Solution:
             if limit >= 0:
                 found_idx = bisect_right(nums, (rem_budget, inf)) - 1
                 j = min(limit, found_idx)
-                
                 if j >= 0:
                     ans = max(ans, cap_i + prev_max[j])
                     
