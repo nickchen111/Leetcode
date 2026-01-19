@@ -12,10 +12,10 @@ class Solution:
                     if pre[i][j] - pre[i - mid][j] - pre[i][j - mid] + pre[i - mid][j - mid] <= threshold:
                         return True
             return False
-        while left < right:
-            mid = left + (right - left + 1) // 2
-            if check(mid):
-                left = mid
+        ans = 0
+        for i in range(1, min(m,n) + 1):
+            if check(i):
+                ans = i
             else:
-                right = mid - 1
-        return left
+                break
+        return ans
