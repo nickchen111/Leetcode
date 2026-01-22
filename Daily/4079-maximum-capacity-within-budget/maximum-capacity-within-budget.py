@@ -4,11 +4,12 @@ class Solution:
         nums.sort(key=lambda x:x[0])
         n = len(nums)
         
-        prev_max = [0] * (n + 1)
+        st = [(0, 0)]
         ans = 0
         for i, (cost, cap) in enumerate(nums):
-            j = bisect_left(range(i), budget - cost, key=lambda j:nums[j][0])
-            ans = max(ans, cap + prev_max[j])
-            prev_max[i + 1] = max(prev_max[i], cap)
-                    
+            while st and st[-1][0] + cost >= budget:
+                st.pop()
+            ans = max(ans, cap + st[-1][1])
+            if cap > st[-1][1]:
+                st.append((cost, cap))
         return ans
