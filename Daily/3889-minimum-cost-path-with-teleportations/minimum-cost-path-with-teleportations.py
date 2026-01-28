@@ -1,18 +1,52 @@
 class Solution:
     def minCost(self, grid: List[List[int]], k: int) -> int:
         m, n = len(grid), len(grid[0])
-        mx = max(map(max, grid))
-        suf_min_f = [inf] * (mx + 2)
+        INF = 10**18
 
-        for _ in range(k + 1):
-            min_f = [inf] * (mx + 1)
+        # dist[x][y][t]
+        dist = [[[INF] * (k + 1) for _ in range(n)] for _ in range(m)]
+        dist[0][0][0] = 0
 
-            f = [[inf] * (n + 1) for _ in range(m + 1)]
-            f[0][1] = f[1][0] = -grid[0][0]
-            for i in range(m):
-                for j in range(n):
-                    f[i + 1][j + 1] = min(min(f[i + 1][j], f[i][j + 1]) + grid[i][j], suf_min_f[grid[i][j]])
-                    min_f[grid[i][j]] = min(min_f[grid[i][j]], f[i + 1][j + 1])
-            for i in range(mx, -1, -1):
-                suf_min_f[i] = min(suf_min_f[i + 1], min_f[i])
-        return f[m][n]
+        # 所有格子依 grid value 排序（給 teleport 用）
+        cells = []
+        for i in range(m):
+            for j in range(n):
+                cells.append((grid[i][j], i, j))
+        cells.sort()
+
+        # pointer 指向「目前可被 teleport 的最大 grid 值」
+        ptr = [0] * (k + 1)
+        used = [[[False] * n for _ in range(m)] for _ in range(k + 1)]
+
+        pq = [(0, 0, 0, 0)]  # cost, x, y, used_teleports
+
+        while pq:
+            cost, x, y, t = heapq.heappop(pq)
+            if cost > dist[x][y][t]:
+                continue
+
+            # 抵達終點
+            if x == m - 1 and y == n - 1:
+                return cost
+
+            # ---------- 普通移動 ----------
+            for dx, dy in ((1, 0), (0, 1)):
+                nx, ny = x + dx, y + dy
+                if nx < m and ny < n:
+                    nc = cost + grid[nx][ny]
+                    if nc < dist[nx][ny][t]:
+                        dist[nx][ny][t] = nc
+                        heapq.heappush(pq, (nc, nx, ny, t))
+
+            # ---------- Teleport ----------
+            if t < k:
+                while ptr[t] < len(cells) and cells[ptr[t]][0] <= grid[x][y]:
+                    _, i, j = cells[ptr[t]]
+                    if not used[t][i][j]:
+                        used[t][i][j] = True
+                        if cost < dist[i][j][t + 1]:
+                            dist[i][j][t + 1] = cost
+                            heapq.heappush(pq, (cost, i, j, t + 1))
+                    ptr[t] += 1
+
+        return -1
