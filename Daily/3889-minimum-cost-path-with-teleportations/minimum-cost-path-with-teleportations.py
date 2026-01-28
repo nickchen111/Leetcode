@@ -25,11 +25,9 @@ class Solution:
             if cost > dist[x][y][t]:
                 continue
 
-            # 抵達終點
             if x == m - 1 and y == n - 1:
                 return cost
 
-            # ---------- 普通移動 ----------
             for dx, dy in ((1, 0), (0, 1)):
                 nx, ny = x + dx, y + dy
                 if nx < m and ny < n:
@@ -38,15 +36,12 @@ class Solution:
                         dist[nx][ny][t] = nc
                         heapq.heappush(pq, (nc, nx, ny, t))
 
-            # ---------- Teleport ----------
             if t < k:
                 while ptr[t] < len(cells) and cells[ptr[t]][0] <= grid[x][y]:
                     _, i, j = cells[ptr[t]]
-                    if not used[t][i][j]:
-                        used[t][i][j] = True
-                        if cost < dist[i][j][t + 1]:
-                            dist[i][j][t + 1] = cost
-                            heapq.heappush(pq, (cost, i, j, t + 1))
+                    if cost < dist[i][j][t + 1]:
+                        dist[i][j][t + 1] = cost
+                        heapq.heappush(pq, (cost, i, j, t + 1))
                     ptr[t] += 1
 
         return -1
