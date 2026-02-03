@@ -8,7 +8,7 @@ class Solution:
         dp[0][0] = 0
         for i in range(1, k + 1): # 要分幾組
             xor_val = 0
-            for j in range(i, n - (k - i) + 1): # 前面至少幾組 後面至多可以放幾組 n - (k - i) 
+            for j in range(i, n - (k - i) + 1): # 前面至少幾組 與 後面至多可以放幾組 n - (k - i)  因為枚舉到i組 總共k組 後面要預留多少長度 n - (k - i)
                 xor_val = 0
                 for t in range(j - 1, i - 2, -1):
                     xor_val ^= nums[t]
