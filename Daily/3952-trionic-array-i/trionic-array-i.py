@@ -8,7 +8,7 @@ class Solution:
             start = i
             while i + 1 < n and (nums[i + 1] - nums[i]) * sign > 0:
                 i += 1
-            return i - start >= 1
+            return i - start > 0
 
         pattern = (1, -1, 1)
         i = 0
