@@ -2,9 +2,8 @@ class Solution:
     def mergeAdjacent(self, nums: List[int]) -> List[int]:
         st = []
         for x in nums:
-            cur = x
-            while st and st[-1] == cur:
-                cur = st[-1] + cur
+            st.append(x)
+            while len(st) > 1 and st[-1] == st[-2]:
                 st.pop()
-            st.append(cur)
+                st[-1] *= 2
         return st
