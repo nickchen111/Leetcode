@@ -1,4 +1,4 @@
-# TC:O(n^2 logU) SC:O(1)
+# TC:O(mn logU) SC:O(1)
 class Solution:
     def minimumOR(self, grid: List[List[int]]) -> int:
         m, n = len(grid), len(grid[0])
