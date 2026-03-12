@@ -8,7 +8,6 @@ class Solution:
         1. 先確定能否形成spanning tree
         2. 找出最大可以是多少? 二分找
         3. must必定要先連 然後就看缺少哪些點 找出當前邊中有連接到該點的 可以用UF確認是否同一個邊 不同的話嘗試連
-        選擇的時候可以用dijkstra概念? 貪心找大的邊去用
         '''
         class UnionFind:
             def __init__(self, n):
@@ -36,25 +35,27 @@ class Solution:
         min_s, max_s = inf, -inf
         uf_all = UnionFind(n)
         uf_must = UnionFind(n)
+        min_must = inf
         for u, v, s, must in edges:
             if must == 1 and not uf_must.union(u, v):
                 return -1
             uf_all.union(u, v)
+            if must == 1:
+                min_must = min(min_must, s)
             min_s = min(min_s, s)
             max_s = max(max_s, s)
         if not uf_all.connected():
             return -1
-
+        uf_template = UnionFind(n)
+        for u, v, s, must in edges:
+            if must == 1:
+                uf_template.union(u, v)
         def check(mid):
-            uf = UnionFind(n)
+            if mid > min_must:
+                return False
+            uf = copy.deepcopy(uf_template)
             avalibleEdges = []
             cnt = 0
-            for u, v, s, must in edges:
-                if must == 1:
-                    if s >= mid:
-                        uf.union(u, v)
-                    else:
-                        return False
             for u, v, s, must in edges:
                 if must == 0:
                     if s >= mid:
