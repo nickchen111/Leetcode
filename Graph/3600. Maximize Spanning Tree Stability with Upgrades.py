@@ -35,25 +35,29 @@ class Solution:
         min_s, max_s = inf, -inf
         uf_all = UnionFind(n)
         uf_must = UnionFind(n)
+        min_must = inf
         for u, v, s, must in edges:
             if must == 1 and not uf_must.union(u, v):
                 return -1
             uf_all.union(u, v)
+            if must == 1:
+                min_must = min(min_must, s)
             min_s = min(min_s, s)
             max_s = max(max_s, s)
         if not uf_all.connected():
             return -1
-
-        def check(mid):
+        uf_template = UnionFind(n)
+        for u, v, s, must in edges:
+            if must == 1:
+                uf_template.union(u, v)
+        def check(mid) -> bool:
+            if mid > min_must:
+                return False
             uf = UnionFind(n)
+            uf.parent = uf_template.parent[:]
+            uf.components = uf_template.components
             avalibleEdges = []
             cnt = 0
-            for u, v, s, must in edges:
-                if must == 1:
-                    if s >= mid:
-                        uf.union(u, v)
-                    else:
-                        return False
             for u, v, s, must in edges:
                 if must == 0:
                     if s >= mid:
