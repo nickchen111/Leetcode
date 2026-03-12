@@ -53,7 +53,9 @@ class Solution:
         def check(mid):
             if mid > min_must:
                 return False
-            uf = copy.deepcopy(uf_template)
+            uf = UnionFind(n)
+            uf.parent = uf_template.parent[:]
+            uf.components = uf_template.components
             avalibleEdges = []
             cnt = 0
             for u, v, s, must in edges:
