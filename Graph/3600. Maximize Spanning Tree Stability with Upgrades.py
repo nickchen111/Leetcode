@@ -60,7 +60,7 @@ class Solution:
                         uf.union(u, v) # 不需升級
                     elif s * 2 >= mid:
                         avalibleEdges.append((u, v, s))
-            for u, v, s, needUpgrade in avalibleEdges:
+            for u, v, s in avalibleEdges:
                 if uf.find(u) != uf.find(v):
                     if cnt < k:
                         uf.union(u, v)
