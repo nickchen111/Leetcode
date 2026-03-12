@@ -50,7 +50,7 @@ class Solution:
         for u, v, s, must in edges:
             if must == 1:
                 uf_template.union(u, v)
-        def check(mid):
+        def check(mid) -> bool:
             if mid > min_must:
                 return False
             uf = UnionFind(n)
