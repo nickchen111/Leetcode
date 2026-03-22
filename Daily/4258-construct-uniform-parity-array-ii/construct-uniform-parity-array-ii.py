@@ -13,7 +13,6 @@ class Solution:
             return True
 
         for x in nums1:
-            if x % 2 == 0 and x - mn < 1:
+            if x % 2 == 0 and x <= mn:
                 return False
         return True
-                    
