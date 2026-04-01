@@ -13,35 +13,32 @@ class Solution:
         5. 將答案按照 original index 排序，只取 health
         '''
         # 1. 按照位置排序，帶上 health, direction, original index
-        robots = sorted(zip(positions, healths, directions, range(len(positions))), key=lambda x: x[0])
+        idx = sorted(range(len(positions)), key=lambda i: positions[i])
 
         st  = []   # 存活且向右的機器人 [health, orig_idx]
         ans = []   # 向左且存活的機器人 [health, orig_idx]
 
-        for _, health, dire, idx in robots:
+        for i in idx:
             # 2. 向右：直接入棧
-            if dire == 'R':
-                st.append([health, idx])
+            if directions[i] == 'R':
+                st.append(i)
                 continue
 
             # 3. 向左：與棧頂碰撞
             while st:
-                top_health, top_idx = st[-1]
-                if top_health > health:       # 右方勝，右方 -1 放回
-                    st[-1][0] -= 1
+                j = st[-1]
+                if healths[j] > healths[i]:       # 右方勝，右方 -1 放回
+                    healths[i] = 0
+                    healths[j] -= 1
                     break
-                elif top_health < health:     # 左方勝，左方 -1，繼續碰撞
-                    health -= 1
+                elif healths[j] < healths[i]:     # 左方勝，左方 -1，繼續碰撞
+                    healths[i] -= 1
+                    healths[j] = 0
                     st.pop()
                 else:                         # 同歸於盡
+                    healths[i] = 0
+                    healths[j] = 0
                     st.pop()
                     break
-            else:
-                # 3. st 空了仍存活：加入答案
-                ans.append([health, idx])
 
-        # 4. st 內剩餘向右存活者也加入答案
-        ans.extend(st)
-
-        # 5. 依 original index 排序，只回傳 health
-        return [h for h, _ in sorted(ans, key=lambda x: x[1])]
+        return [h for h in healths if h > 0]
