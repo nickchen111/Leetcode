@@ -9,8 +9,7 @@ class Solution:
             - 右 < 左：左方 health-1，彈出右方，繼續碰撞
             - 右 == 左：兩者同歸於盡
             - st 空了仍存活：左方加入答案
-        4. 碰撞結束後，st 內剩餘（向右存活）也加入答案
-        5. 將答案按照 original index 排序，只取 health
+        4. 只取 health > 0
         '''
         # 1. 按照位置排序，帶上 health, direction, original index
         idx = sorted(range(len(positions)), key=lambda i: positions[i])
@@ -40,5 +39,5 @@ class Solution:
                     healths[j] = 0
                     st.pop()
                     break
-
+        # 4. 只取 health > 0
         return [h for h in healths if h > 0]
