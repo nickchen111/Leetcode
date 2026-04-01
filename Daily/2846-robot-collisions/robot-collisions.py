@@ -2,7 +2,7 @@ class Solution:
     def survivedRobotsHealths(self, positions: List[int], healths: List[int], directions: str) -> List[int]:
         '''
         排序完做單調棧
-        1. 按照位置排序但要記得帶上healths, directions, original index
+        1. 按照位置排序
         2. 遇到向右的直接放入 st（存 [health, idx]）
         3. 遇到向左的，與 st 頂端碰撞：
             - 右 > 左：右方 health-1 放回，左方消滅
@@ -11,7 +11,7 @@ class Solution:
             - st 空了仍存活：左方加入答案
         4. 只取 health > 0
         '''
-        # 1. 按照位置排序，帶上 health, direction, original index
+        # 1. 按照位置排序
         idx = sorted(range(len(positions)), key=lambda i: positions[i])
 
         st  = []   # 存活且向右的機器人 [health, orig_idx]
