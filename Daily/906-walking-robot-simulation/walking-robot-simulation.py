@@ -3,7 +3,7 @@ class Solution:
         dirs = {0:(0,1), 1:(1,0), 2:(0,-1), 3:(-1,0)}
         dir = 0
         MOD = 4
-        obs = {tuple(o) for o in obstacles}
+        obs = set(map(tuple, obstacles))
         ans = x = y = 0
         for c in commands:
             if c == -1: # turn right
