@@ -1,0 +1,7 @@
+# TC:O(n) SC:O(1)
+class Solution:
+    def firstMatchingIndex(self, s: str) -> int:
+        for i in range(len(s) // 2 + 1):
+            if s[i] == s[-1 - i]:
+                return i
+        return -1
