@@ -1,4 +1,4 @@
-# TC:O(n) SC:O(n)
+# TC:O(n + q) SC:O(n)
 class Solution:
     def minCost(self, nums: list[int], queries: list[list[int]]) -> list[int]:
         '''
