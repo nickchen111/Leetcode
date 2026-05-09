@@ -1,22 +1,24 @@
-MX = 10 ** 6 + 1
-PRIME_FACTORS = [[] for _ in range(MX)]
+# 预处理每个数的质因子列表，思路同埃氏筛
+MX = 1_000_001
+prime_factors = [[] for _ in range(MX)]
 for i in range(2, MX):
-    if not PRIME_FACTORS[i]:
-        for j in range(i, MX, i):
-            PRIME_FACTORS[j].append(i)
+    if not prime_factors[i]:  # i 是质数
+        for j in range(i, MX, i):  # i 的倍数有质因子 i
+            prime_factors[j].append(i)
+
 class Solution:
     def minJumps(self, nums: List[int]) -> int:
         n = len(nums)
-        groups = defaultdict(list) # 每個質數可以跳去哪些地方
+        groups = defaultdict(list)
         for i, x in enumerate(nums):
-            for p in PRIME_FACTORS[x]:
-                groups[p].append(i) # prime -> list(pos)
-        q = [0]
-        ans = 0
+            for p in prime_factors[x]:
+                groups[p].append(i)  # 对于质数 p，可以跳到下标 i
+
         vis = [False] * n
         vis[0] = True
+        q = [0]
 
-        while True:
+        for ans in count(0):
             tmp = q
             q = []
             for i in tmp:
@@ -26,10 +28,8 @@ class Solution:
                 idx.append(i + 1)
                 if i:
                     idx.append(i - 1)
-                for j in idx:
+                for j in idx:  # 可以从 i 跳到 j
                     if not vis[j]:
-                        q.append(j)
                         vis[j] = True
-                idx.clear()
-            ans += 1
-        return -1
+                        q.append(j)
+                idx.clear()  # 避免重复访问下标列表
