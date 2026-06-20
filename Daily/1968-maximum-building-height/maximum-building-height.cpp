@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int maxBuilding(int n, vector<vector<int>>& restrictions) {
+        restrictions.push_back({1,0});
+        sort(restrictions.begin(), restrictions.end());
+        int m = restrictions.size();
+        vector<int> h(m);
+        vector<int> limit(m);
+        vector<int> pos(m);
+
+        for(int i = 0; i < m; i++){
+            pos[i] = restrictions[i][0];
+            limit[i] = restrictions[i][1];
+        }
+
+        for(int i = 1; i < m; i++){
+            h[i] = min(limit[i], pos[i] - pos[i-1] + h[i-1]);
+        }
+        
+        for(int i = m-2; i >= 0; i--){
+            h[i] = min(h[i], pos[i+1] - pos[i] + h[i+1]);
+        }
+        int res = 0;
+        for(int i = 1; i < m; i++){
+            int peak = h[i] + ((h[i-1]-h[i])+(pos[i]-pos[i-1]))/2;
+            res = max(res, peak);
+        }
+
+        res = max(res,h[m-1]+n-pos[m-1]);
+        
+        return res;
+    }
+};
