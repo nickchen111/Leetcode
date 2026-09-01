@@ -8,19 +8,28 @@ class Solution:
 
         for i in range(m):
             for j in range(n):
-                if classroom[i][j] == 'L':
+                c = classroom[i][j]
+
+                if c == 'L':
                     mp[(i, j)] = cnt
                     cnt += 1
-                elif classroom[i][j] == 'S':
+                elif c == 'S':
                     sx, sy = i, j
+
         if cnt == 0:
             return 0
+
         target = (1 << cnt) - 1
 
-        q = deque([(sx, sy, energy, 0)])
+        # best[x][y][mask] = 到過這個 state 時的最大 energy
+        best = [
+            [[-1] * (1 << cnt) for _ in range(n)]
+            for _ in range(m)
+        ]
 
-        # (x, y, energy, mask)
-        vis = {(sx, sy, energy, 0)}
+        q = deque()
+        q.append((sx, sy, energy, 0))
+        best[sx][sy][0] = energy
 
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
@@ -54,11 +63,11 @@ class Solution:
                     if classroom[nx][ny] == 'R':
                         ne = energy
 
-                    state = (nx, ny, ne, nmask)
+                    if ne <= best[nx][ny][nmask]:
+                        continue
 
-                    if state not in vis:
-                        vis.add(state)
-                        q.append(state)
+                    best[nx][ny][nmask] = ne
+                    q.append((nx, ny, ne, nmask))
 
             step += 1
 
