@@ -17,5 +17,8 @@ class Solution:
             f[i + 1] = f[i]
             for j in range(i - k + 1, -1, -1):
                 if dp[j][i]:
-                    f[i + 1] = max(f[i + 1], f[j] + 1)
+                    if f[i + 1] < f[j] + 1:
+                        f[i + 1] = f[j] + 1
+                    else:
+                        break
         return f[n] 
