@@ -1,24 +1,14 @@
 class Solution:
     def maxPalindromes(self, s: str, k: int) -> int:
         n = len(s)
-        dp = [[False] * n for _ in range(n)]
-        for i in range(n):
-            dp[i][i] = True
-            if i + 1 < n:
-                dp[i][i + 1] = True if s[i] == s[i + 1] else False
-        for i in range(n - 2, -1, -1):
-            for j in range(i + 2, n):
-                if s[i] == s[j] and dp[i + 1][j - 1]:
-                    dp[i][j] = True
         f = [0] * (n + 1)
-        for i in range(n):
-            if i < k - 1:
-                continue
-            f[i + 1] = f[i]
-            for j in range(i - k + 1, -1, -1):
-                if dp[j][i]:
-                    if f[i + 1] < f[j] + 1:
-                        f[i + 1] = f[j] + 1
-                    else:
-                        break
-        return f[n] 
+        for i in range(2 * n - 1):
+            l, r = i // 2, (i + 1) // 2
+            f[l + 1] = max(f[l + 1], f[l])
+            while l >= 0 and r < n and s[l] == s[r]:
+                if r - l + 1 >= k:
+                    f[r + 1] = max(f[r + 1], f[l] + 1)
+                    break
+                l -= 1
+                r += 1
+        return f[n]
