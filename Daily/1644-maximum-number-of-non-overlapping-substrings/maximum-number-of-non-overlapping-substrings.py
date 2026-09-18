@@ -1,112 +1,48 @@
 class Solution:
-    def maxNumOfSubstrings(self, s: str) -> list[str]:
+    def maxNumOfSubstrings(self, s: str) -> List[str]:
+        # 记录每种字母的出现位置
+        pos = defaultdict(list)
+        for i, b in enumerate(s):
+            pos[b].append(i)
 
-        n = len(s)
+        # 构建有向图
+        g = defaultdict(list)
+        for i, p in pos.items():
+            l, r = p[0], p[-1]
+            for j, q in pos.items():
+                if j == i:
+                    continue
+                k = bisect_left(q, l)
+                # [l, r] 包含第 j 个小写字母
+                if k < len(q) and q[k] <= r:
+                    g[i].append(j)
 
-        pre = [n] * 26
-        suf = [-1] * 26
+        # 遍历有向图
+        def dfs(x: str) -> None:
+            nonlocal l, r
+            vis.add(x)
+            p = pos[x]
+            l = min(l, p[0])  # 合并区间
+            r = max(r, p[-1])
+            for y in g[x]:
+                if y not in vis:
+                    dfs(y)
 
-        for i, ch in enumerate(s):
-            x = ord(ch) - ord('a')
-
-            if pre[x] == n:
-                pre[x] = i
-
-            suf[x] = i
-
-        # 找合法 intervals
         intervals = []
+        for i, p in pos.items():
+            # 如果要包含第 i 个小写字母，最终得到的区间是什么？
+            vis = set()
+            l, r = inf, 0
+            dfs(i)
+            intervals.append((l, r))
 
-        for x in range(26):
-
-            if suf[x] == -1:
-                continue
-
-            l = pre[x]
-            r = suf[x]
-
-            j = l
-            valid = True
-
-            while j <= r:
-
-                c = ord(s[j]) - ord('a')
-
-                if pre[c] < l:
-                    valid = False
-                    break
-
-                r = max(r, suf[c])
-                j += 1
-
-            if valid:
-                intervals.append((l, r))
-
-        intervals.sort(key=lambda x: x[1])
-
-        # dp[i]:
-        # 考慮 s[:i]
-        #
-        # dp_cnt[i] = 最大 substring 數量
-        # dp_len[i] = 在最大數量下的最小總長度
-
-        dp_cnt = [0] * (n + 1)
-        dp_len = [0] * (n + 1)
-
-        parent = [-1] * (n + 1)
-        choice = [None] * (n + 1)
-
-        k = 0
-
-        for i in range(1, n + 1):
-
-            # Case 1: 不選結尾在 i-1 的 substring
-            dp_cnt[i] = dp_cnt[i - 1]
-            dp_len[i] = dp_len[i - 1]
-
-            parent[i] = i - 1
-            choice[i] = None
-
-            # Case 2: 選擇 [l, r]
-            while k < len(intervals) and intervals[k][1] + 1 == i:
-
-                l, r = intervals[k]
-
-                new_cnt = dp_cnt[l] + 1
-                new_len = dp_len[l] + (r - l + 1)
-
-                if (
-                    new_cnt > dp_cnt[i]
-                    or (
-                        new_cnt == dp_cnt[i]
-                        and new_len < dp_len[i]
-                    )
-                ):
-                    dp_cnt[i] = new_cnt
-                    dp_len[i] = new_len
-
-                    parent[i] = l
-                    choice[i] = (l, r)
-
-                k += 1
-
-        # traceback
+        # 435. 无重叠区间
+        # 直接计算所选子串
         ans = []
-
-        i = n
-
-        while i > 0:
-
-            if choice[i] is not None:
-
-                l, r = choice[i]
-
-                ans.append(s[l:r + 1])
-
-                i = l
-
-            else:
-
-                i = parent[i]
-
+        intervals.sort(key=lambda x: x[1])
+        pre_r = -1
+        for l, r in intervals:
+            if l > pre_r:
+                ans.append(s[l: r + 1])
+                pre_r = r
         return ans
