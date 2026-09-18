@@ -6,7 +6,6 @@ class Solution:
         pre = [n] * 26
         suf = [-1] * 26
 
-        # 1. first / last occurrence
         for i, ch in enumerate(s):
             x = ord(ch) - ord('a')
 
@@ -15,7 +14,7 @@ class Solution:
 
             suf[x] = i
 
-        # 2. 找合法 intervals
+        # 找合法 intervals
         intervals = []
 
         for x in range(26):
@@ -33,51 +32,65 @@ class Solution:
 
                 c = ord(s[j]) - ord('a')
 
-                # 有 occurrence 在 l 左邊
                 if pre[c] < l:
                     valid = False
                     break
 
-                # 必須把右界延伸
                 r = max(r, suf[c])
-
                 j += 1
 
             if valid:
                 intervals.append((l, r))
 
-        # 3. DP
-        dp = [0] * (n + 1)
-
-        # parent[i] = 從哪裡轉移
-        parent = [-1] * (n + 1)
-
-        # choice[i] = 如果選 substring，記錄 [l, r]
-        choice = [None] * (n + 1)
-
-        # 先按照 r 排序
         intervals.sort(key=lambda x: x[1])
+
+        # dp[i]:
+        # 考慮 s[:i]
+        #
+        # dp_cnt[i] = 最大 substring 數量
+        # dp_len[i] = 在最大數量下的最小總長度
+
+        dp_cnt = [0] * (n + 1)
+        dp_len = [0] * (n + 1)
+
+        parent = [-1] * (n + 1)
+        choice = [None] * (n + 1)
 
         k = 0
 
         for i in range(1, n + 1):
 
-            # 不選任何 substring 結尾於 i-1
-            dp[i] = dp[i - 1]
-            parent[i] = i - 1
+            # Case 1: 不選結尾在 i-1 的 substring
+            dp_cnt[i] = dp_cnt[i - 1]
+            dp_len[i] = dp_len[i - 1]
 
+            parent[i] = i - 1
+            choice[i] = None
+
+            # Case 2: 選擇 [l, r]
             while k < len(intervals) and intervals[k][1] + 1 == i:
 
                 l, r = intervals[k]
 
-                if dp[l] + 1 > dp[i]:
-                    dp[i] = dp[l] + 1
+                new_cnt = dp_cnt[l] + 1
+                new_len = dp_len[l] + (r - l + 1)
+
+                if (
+                    new_cnt > dp_cnt[i]
+                    or (
+                        new_cnt == dp_cnt[i]
+                        and new_len < dp_len[i]
+                    )
+                ):
+                    dp_cnt[i] = new_cnt
+                    dp_len[i] = new_len
+
                     parent[i] = l
                     choice[i] = (l, r)
 
                 k += 1
 
-        # 4. traceback
+        # traceback
         ans = []
 
         i = n
@@ -85,10 +98,15 @@ class Solution:
         while i > 0:
 
             if choice[i] is not None:
+
                 l, r = choice[i]
+
                 ans.append(s[l:r + 1])
+
                 i = l
+
             else:
+
                 i = parent[i]
 
         return ans
